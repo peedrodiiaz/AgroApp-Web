@@ -27,14 +27,12 @@ body {
     color: #fff;
 }
 
-/* Logo grande: cuadrado y centrado */
 .card img.img-fluid {
     max-width: 150px;
     margin-top: 16px;
     margin-bottom: 24px;
 }
 
-/* Card de la imagen/logo derecha */
 .col-lg-5 .card.mb-3 {
     background: #fff;
     border-radius: 50% 50% 18px 18px;
@@ -56,7 +54,6 @@ body {
     color: #9aa4b2 !important;
 }
 
-/* Responsive para que se vea bien en móviles */
 @media (max-width: 768px) {
     .col-lg-5 .card.mb-3 {
         min-height: 180px;
@@ -73,7 +70,6 @@ body {
     }
 }
 
-/* Burbuja con glow */
 .card-logo-glow {
     position: relative;
     background: #fff;
