@@ -1,0 +1,105 @@
+body {
+    background-color: #f7f7f7;
+}
+
+.card {
+    border-radius: 18px;
+}
+
+.card.shadow-sm {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.text-success {
+    color: #29D44A !important;
+}
+
+.btn-success {
+    background: #29D44A;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 20px;
+    border: none;
+}
+
+.btn-success:hover {
+    background: #25c443;
+    color: #fff;
+}
+
+/* Logo grande: cuadrado y centrado */
+.card img.img-fluid {
+    max-width: 150px;
+    margin-top: 16px;
+    margin-bottom: 24px;
+}
+
+/* Card de la imagen/logo derecha */
+.col-lg-5 .card.mb-3 {
+    background: #fff;
+    border-radius: 50% 50% 18px 18px;
+    box-shadow: 0 8px 32px rgba(41, 212, 74, 0.07);
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.fw-bold.text-primary {
+    font-size: 1.18rem;
+}
+
+/* Footer */
+.text-muted.mt-4 {
+    font-size: 0.85rem !important;
+    color: #9aa4b2 !important;
+}
+
+/* Responsive para que se vea bien en móviles */
+@media (max-width: 768px) {
+    .col-lg-5 .card.mb-3 {
+        min-height: 180px;
+        padding: 1.5rem !important;
+    }
+
+    .card img.img-fluid {
+        max-width: 90px;
+        margin-bottom: 8px;
+    }
+
+    .text-success.fw-bold.fs-2 {
+        font-size: 1.5rem !important;
+    }
+}
+
+/* Burbuja con glow */
+.card-logo-glow {
+    position: relative;
+    background: #fff;
+    border-radius: 50% 50% 18px 18px;
+    box-shadow: 0 0 48px 12px rgba(41, 212, 74, 0.14); /* Glow verde */
+    padding: 52px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 440px;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.card-logo-glow img {
+    max-width: 300px;
+    margin-top: 18px;
+    margin-bottom: 20px;
+}
+
+/* Centrado vertical extra en móviles */
+@media (max-width: 768px) {
+    .card-logo-glow {
+        min-height: 230px;
+        padding: 28px 8px;
+        max-width: 100%;
+    }
+}
