@@ -1,0 +1,24 @@
+.admin-layout-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.content-area {
+    flex: 1;
+    margin-left: 250px;
+    background: #f5f6fa;
+    min-height: 100vh;
+}
+
+.main-content {
+    margin-top: 16px;
+}
+
+@media (max-width: 991.98px) {
+    .admin-layout-container {
+        flex-direction: column;
+    }
+    .content-area {
+        margin-left: 0;
+    }
+}

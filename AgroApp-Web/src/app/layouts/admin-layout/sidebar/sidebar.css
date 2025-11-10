@@ -1,0 +1,44 @@
+.sidebar {
+    width: 250px;
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    background-color: #f8f9fa;
+}
+
+.nav-link {
+    color: #495057;
+    transition: all 0.2s;
+    border-radius: 0;
+    font-size: 0.95rem;
+}
+
+.nav-link:hover {
+    background-color: #e9ecef;
+    color: #198754;
+}
+
+.nav-link.active {
+    background-color: #198754;
+    color: white;
+}
+
+.nav-link.active:hover {
+    background-color: #157347;
+}
+
+.chevron {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #6c757d;
+}
+
+.nav-link:hover .chevron {
+    color: #198754;
+}
+
+.nav-link.active .chevron {
+    color: white;
+}

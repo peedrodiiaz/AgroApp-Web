@@ -1,0 +1,9 @@
+.navbar {
+    height: 64px;
+    z-index: 1020;
+    position: sticky;
+    top: 0;
+}
+.dropdown-toggle::after {
+    margin-left: 0.5em;
+}

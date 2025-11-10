@@ -1,0 +1,30 @@
+<div class="sidebar bg-light border-end d-flex flex-column">
+    <!-- Logo -->
+    <div class="p-3 border-bottom">
+        <h4 class="text-success fw-bold mb-0">AgroApp</h4>
+        <small class="text-muted">Menu Principal</small>
+    </div>
+
+    <!-- Menu Items -->
+    <nav class="flex-grow-1 py-3">
+        <ul class="nav flex-column">
+            @for (item of menuItems; track item.route) {
+                <li class="nav-item">
+                    <a
+                        [href]="item.route"
+                        class="nav-link d-flex align-items-center justify-content-between px-3 py-2"
+                        [class.active]="item.active"
+                    >
+                        <div class="d-flex align-items-center gap-2">
+                            <span>{{ item.icon }}</span>
+                            <span>{{ item.label }}</span>
+                        </div>
+                        @if (item.hasSubmenu) {
+                            <span class="chevron">›</span>
+                        }
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
