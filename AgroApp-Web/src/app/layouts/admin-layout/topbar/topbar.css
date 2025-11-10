@@ -1,9 +1,22 @@
 .navbar {
-    height: 64px;
-    z-index: 1020;
-    position: sticky;
-    top: 0;
+  height: 60px;
+  z-index: 1020;
+  position: sticky;
+  top: 0;
 }
+
+.navbar .btn-link {
+  text-decoration: none;
+}
+
+.navbar .btn-link:hover i {
+  color: #28a745;
+}
+
+.badge {
+  padding: 0.25rem 0.4rem;
+}
+
 .dropdown-toggle::after {
-    margin-left: 0.5em;
+  margin-left: 0.5em;
 }

@@ -1,30 +1,40 @@
-<nav class="navbar navbar-expand bg-white shadow-sm border-bottom px-4" style="margin-left:250px; min-height:64px;">
-    <div class="container-fluid justify-content-between align-items-center">
-        <!-- Breadcrumb o sección actual -->
-        <div class="d-flex align-items-center gap-2">
-            <span class="fw-bold text-success fs-5">Panel de Control</span>
-            <span class="text-muted">/ Trabajadores</span>
-        </div>
-        <!-- Icono notificaciones y usuario -->
-        <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-link position-relative">
-                <i class="bi bi-bell fs-5 text-primary"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
-            </button>
-            <div class="dropdown">
-                <a href="#" class="d-flex align-items-center text-dark dropdown-toggle" data-bs-toggle="dropdown">
-                    <img src="/assets/images/LogoAPP.jpg" width="32" height="32" class="rounded-circle me-2" alt="User">
-                    <span>Usuario</span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                        <a class="dropdown-item" href="#">Perfil</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">Cerrar sesión</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+<nav class="navbar navbar-expand bg-white shadow-sm border-bottom px-4 py-2">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+
+    <!-- Breadcrumb izquierdo -->
+    <div class="d-flex align-items-center gap-2">
+      <a href="#" class="text-decoration-none">
+        <i class="bi bi-house-door text-muted"></i>
+      </a>
+      <span class="text-muted">›</span>
+      <span class="text-dark">Panel de control / Home</span>
     </div>
+
+    <!-- Notificaciones y usuario (derecha) -->
+    <div class="d-flex align-items-center gap-3">
+      <!-- Notificaciones -->
+      <div class="position-relative">
+        <button class="btn btn-link p-0 position-relative">
+          <i class="bi bi-bell fs-5 text-dark"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+            2
+          </span>
+        </button>
+      </div>
+
+      <!-- Usuario con dropdown -->
+      <div class="dropdown">
+        <a href="#" class="d-flex align-items-center gap-2 text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
+          <img src="https://via.placeholder.com/32" height="" class="rounded-circle" alt="User">
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#">Perfil</a></li>
+          <li><a class="dropdown-item" href="#">Configuración</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
 </nav>
