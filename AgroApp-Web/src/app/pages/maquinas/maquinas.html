@@ -1,0 +1,86 @@
+<div class="container-fluid">
+  <!-- Encabezado -->
+  <div class="mb-4">
+    <h2 class="fw-bold mb-3">Máquinas</h2>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <!-- Tabs -->
+      <ul class="nav nav-tabs border-0">
+        <li class="nav-item">
+          <a class="nav-link active fw-semibold" href="#">ACTIVAS</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-muted" href="#">INACTIVAS</a>
+        </li>
+      </ul>
+
+      <!-- Buscador -->
+      <div class="input-group" style="width: 300px;">
+        <input type="text" class="form-control" placeholder="Buscar por matrícula">
+        <button class="btn btn-outline-secondary" type="button">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón Nueva Máquina -->
+  <button
+    class="btn btn-info text-white fw-bold mb-3"
+    style="background-color: #17a2b8; border: none; padding: 0.5rem 1.5rem; border-radius: 6px;"
+  >
+    + NUEVA MÁQUINA
+  </button>
+
+  <!-- Tabla -->
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th>Matrícula</th>
+              <th>Fecha liberación</th>
+              <th>Localización</th>
+              <th>Trabajador(es)</th>
+              <th style="width: 50px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (maquina of maquinas; track maquina.id) {
+              <tr>
+                <td class="fw-semibold">{{ maquina.nombre }}</td>
+                <td>{{ maquina.matricula }}</td>
+                <td>{{ maquina.fechaLiberacion }}</td>
+                <td>{{ maquina.localizacion }}</td>
+                <td>{{ maquina.trabajadores }}</td>
+                <td class="text-end position-relative">
+                  <button
+                    class="btn btn-link text-dark p-0"
+                    (click)="toggleMenu(maquina.id)"
+                    style="font-size: 1.5rem; line-height: 1;"
+                  >
+                    ⋮
+                  </button>
+
+                  <!-- Menú desplegable -->
+                  @if (menuAbierto === maquina.id) {
+                    <div class="dropdown-menu-custom">
+                      <button class="dropdown-item-custom" (click)="verInfo(maquina)">
+                        <i class="bi bi-pencil-square text-danger"></i> Info
+                      </button>
+                      <button class="dropdown-item-custom" (click)="cancelar(maquina)">
+                        <i class="bi bi-x-circle text-danger"></i> Cancel
+                      </button>
+                    </div>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
