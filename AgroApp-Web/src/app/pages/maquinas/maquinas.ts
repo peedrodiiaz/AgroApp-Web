@@ -1,15 +1,27 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-maquinas',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './maquinas.html',
   styleUrl: './maquinas.css',
 })
 export class MaquinasComponent {
   tabActivo: 'activas' | 'inactivas' = 'activas';
   menuAbierto: number | null = null;
+  modalAbierto: boolean = false;
+
+  // Formulario nueva máquina (solo para binding visual)
+  nuevaMaquina = {
+    nombre: '',
+    matricula: '',
+    modelo: '',
+    fechaCompra: '',
+    localizacion: '',
+    trabajador: ''
+  };
 
   maquinasActivas = [
     { id: 1, nombre: 'Cosechadora', matricula: 'ER342BK', fechaLiberacion: '20/05/2025', localizacion: 'Finca 1', trabajadores: 5 },
@@ -31,7 +43,7 @@ export class MaquinasComponent {
 
   cambiarTab(tab: 'activas' | 'inactivas') {
     this.tabActivo = tab;
-    this.menuAbierto = null; // Cerrar menú al cambiar tab
+    this.menuAbierto = null;
   }
 
   toggleMenu(id: number) {
@@ -46,5 +58,31 @@ export class MaquinasComponent {
   cancelar(maquina: any) {
     console.log('Cancelar:', maquina);
     this.menuAbierto = null;
+  }
+
+  // Métodos del modal
+  abrirModal() {
+    this.modalAbierto = true;
+    this.resetFormulario();
+  }
+
+  cerrarModal() {
+    this.modalAbierto = false;
+  }
+
+  resetFormulario() {
+    this.nuevaMaquina = {
+      nombre: '',
+      matricula: '',
+      modelo: '',
+      fechaCompra: '',
+      localizacion: '',
+      trabajador: ''
+    };
+  }
+
+  guardarMaquina() {
+    console.log('Datos del formulario:', this.nuevaMaquina);
+    this.cerrarModal();
   }
 }
