@@ -12,4 +12,15 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './admin-layout.html',
   styleUrls: ['./admin-layout.css'],
 })
-export class AdminLayoutComponent {}
+export class AdminLayoutComponent {
+  sidebarVisible = false;
+
+  toggleSidebar() {
+    this.sidebarVisible = !this.sidebarVisible;
+  }
+
+  closeSidebar() {
+
+    this.sidebarVisible = false;
+  }
+}

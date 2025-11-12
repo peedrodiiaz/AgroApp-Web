@@ -1,3 +1,4 @@
+/* Estilos base del sidebar */
 .sidebar {
     width: 250px;
     min-height: 100vh;
@@ -41,4 +42,17 @@
 
 .nav-link.active .chevron {
     color: white;
+}
+
+@media (max-width: 991.98px) {
+    .sidebar {
+        left: -250px !important; 
+        transition: left 0.3s ease;
+        z-index: 1050 !important; 
+        box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+    }
+
+    :host.show .sidebar {
+        left: 0 !important;
+    }
 }

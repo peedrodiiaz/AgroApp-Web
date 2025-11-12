@@ -1,21 +1,32 @@
 <nav class="navbar navbar-expand bg-white shadow-sm border-bottom px-4 py-2">
   <div class="container-fluid d-flex justify-content-between align-items-center">
-
+    
+    <!-- Botón hamburguesa (solo visible en móviles) -->
+    <button class="btn btn-link d-lg-none p-0 me-3 text-dark" (click)="toggleSidebar()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+      </svg>
+    </button>
+    
     <!-- Breadcrumb izquierdo -->
     <div class="d-flex align-items-center gap-2">
-      <a href="#" class="text-decoration-none">
-        <i class="bi bi-house-door text-muted"></i>
+      <a href="#" class="text-decoration-none d-none d-md-block">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-muted" viewBox="0 0 16 16">
+          <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
+        </svg>
       </a>
-      <span class="text-muted">›</span>
-      <span class="text-dark">Home / {{breadcrumb}}</span>
+      <span class="text-muted d-none d-md-block">›</span>
+      <span class="text-dark">{{ breadcrumb }}</span>
     </div>
 
     <!-- Notificaciones y usuario (derecha) -->
     <div class="d-flex align-items-center gap-3">
       <!-- Notificaciones -->
-      <div class="position-relative">
+      <div class="position-relative d-none d-sm-block">
         <button class="btn btn-link p-0 position-relative">
-          <i class="bi bi-bell fs-5 text-dark"></i>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="text-dark" viewBox="0 0 16 16">
+            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+          </svg>
           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
             2
           </span>
@@ -25,7 +36,8 @@
       <!-- Usuario con dropdown -->
       <div class="dropdown">
         <a href="#" class="d-flex align-items-center gap-2 text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
-          <img src="https://via.placeholder.com/32" height="" class="rounded-circle" alt="User">
+          <img src="https://via.placeholder.com/32" width="32" height="32" class="rounded-circle" alt="User">
+          <span class="d-none d-sm-inline">User</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-end">
           <li><a class="dropdown-item" href="#">Perfil</a></li>

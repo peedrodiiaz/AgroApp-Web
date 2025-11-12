@@ -1,7 +1,10 @@
 <div class="admin-layout-container">
-    <app-sidebar></app-sidebar>
+    <app-sidebar [class.show]="sidebarVisible"></app-sidebar>
+    @if (sidebarVisible) {
+    <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+    }
     <div class="content-area">
-        <app-topbar></app-topbar>
+        <app-topbar (toggleSidebarEvent)="toggleSidebar()"></app-topbar>
         <div class="main-content p-4">
             <router-outlet></router-outlet>
         </div>

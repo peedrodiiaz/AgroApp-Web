@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
@@ -10,14 +10,12 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class TopbarComponent implements OnInit {
   breadcrumb: string = 'Panel de control';
+  @Output() toggleSidebarEvent = new EventEmitter<void>();
 
   constructor(private router: Router) {}
 
   ngOnInit() {
-    // Actualizar breadcrumb al inicio
     this.updateBreadcrumb();
-
-    // Actualizar breadcrumb cada vez que cambie la ruta
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.updateBreadcrumb();
@@ -27,8 +25,8 @@ export class TopbarComponent implements OnInit {
 
   updateBreadcrumb() {
     const url = this.router.url;
-    console.log('URL actual:', url); // Para debug
-
+    console.log('URL actual:', url);
+    
     if (url.includes('maquinas')) {
       this.breadcrumb = 'Máquinas';
     } else if (url.includes('trabajadores')) {
@@ -36,9 +34,14 @@ export class TopbarComponent implements OnInit {
     } else if (url.includes('incidencias')) {
       this.breadcrumb = 'Incidencias';
     } else if (url === '/' || url === '') {
-      this.breadcrumb = 'Panel de control ';
+      this.breadcrumb = 'Panel de control / Home';
     } else {
       this.breadcrumb = 'Panel de control';
     }
+  }
+
+  toggleSidebar() {
+    console.log('BOTÓN HAMBURGUESA CLICKEADO'); // Debug
+    this.toggleSidebarEvent.emit();
   }
 }

@@ -3,6 +3,7 @@
   z-index: 1020;
   position: sticky;
   top: 0;
+  transition: margin-left 0.3s ease;
 }
 
 .navbar .btn-link {
@@ -19,4 +20,10 @@
 
 .dropdown-toggle::after {
   margin-left: 0.5em;
+}
+
+@media (max-width: 991.98px) {
+  .navbar {
+    margin-left: 0;
+  }
 }
