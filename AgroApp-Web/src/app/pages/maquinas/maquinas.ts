@@ -1,27 +1,49 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-maquinas',
   standalone: true,
-  imports: [FormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './maquinas.html',
   styleUrl: './maquinas.css',
 })
 export class MaquinasComponent {
+  constructor(private router: Router) {}
+
   tabActivo: 'activas' | 'inactivas' = 'activas';
   menuAbierto: number | null = null;
   modalAbierto: boolean = false;
 
-  // Formulario nueva máquina (solo para binding visual)
-  nuevaMaquina = {
-    nombre: '',
-    matricula: '',
-    modelo: '',
-    fechaCompra: '',
-    localizacion: '',
-    trabajador: ''
-  };
+  nuevaMaquinaForm = new FormGroup({
+    nombre: new FormControl('', {
+      validators: [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
+      nonNullable: true
+    }),
+    matricula: new FormControl('', {
+      validators: [Validators.required, Validators.pattern(/^[A-Z0-9]{6,10}$/i)],
+      nonNullable: true
+    }),
+    modelo: new FormControl('', {
+      validators: [Validators.required, Validators.minLength(2), Validators.maxLength(30)],
+      nonNullable: true
+    }),
+    fechaCompra: new FormControl('', {
+      validators: [Validators.required],
+      nonNullable: true
+    }),
+    localizacion: new FormControl('', {
+      validators: [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
+      nonNullable: true
+    }),
+    trabajador: new FormControl('', {
+      validators: [Validators.minLength(3), Validators.maxLength(50)],
+      nonNullable: true
+    }),
+  });
+
+  get f() { return this.nuevaMaquinaForm.controls; }
 
   maquinasActivas = [
     { id: 1, nombre: 'Cosechadora', matricula: 'ER342BK', fechaLiberacion: '20/05/2025', localizacion: 'Finca 1', trabajadores: 5 },
@@ -51,7 +73,7 @@ export class MaquinasComponent {
   }
 
   verInfo(maquina: any) {
-    console.log('Ver info de:', maquina);
+    this.router.navigate(['/maquinas', maquina.id]);
     this.menuAbierto = null;
   }
 
@@ -60,29 +82,21 @@ export class MaquinasComponent {
     this.menuAbierto = null;
   }
 
-  // Métodos del modal
   abrirModal() {
     this.modalAbierto = true;
-    this.resetFormulario();
+    this.nuevaMaquinaForm.reset();
   }
 
   cerrarModal() {
     this.modalAbierto = false;
-  }
-
-  resetFormulario() {
-    this.nuevaMaquina = {
-      nombre: '',
-      matricula: '',
-      modelo: '',
-      fechaCompra: '',
-      localizacion: '',
-      trabajador: ''
-    };
+    this.nuevaMaquinaForm.reset();
   }
 
   guardarMaquina() {
-    console.log('Datos del formulario:', this.nuevaMaquina);
+    if (this.nuevaMaquinaForm.invalid) {
+      this.nuevaMaquinaForm.markAllAsTouched();
+      return;
+    }
     this.cerrarModal();
   }
 }

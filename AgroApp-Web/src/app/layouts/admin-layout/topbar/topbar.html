@@ -1,14 +1,12 @@
 <nav class="navbar navbar-expand bg-white shadow-sm border-bottom px-4 py-2">
   <div class="container-fluid d-flex justify-content-between align-items-center">
-    
-    <!-- Botón hamburguesa (solo visible en móviles) -->
+
     <button class="btn btn-link d-lg-none p-0 me-3 text-dark" (click)="toggleSidebar()">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
       </svg>
     </button>
-    
-    <!-- Breadcrumb izquierdo -->
+
     <div class="d-flex align-items-center gap-2">
       <a href="#" class="text-decoration-none d-none d-md-block">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-muted" viewBox="0 0 16 16">
@@ -19,7 +17,6 @@
       <span class="text-dark">{{ breadcrumb }}</span>
     </div>
 
-    <!-- Notificaciones y usuario (derecha) -->
     <div class="d-flex align-items-center gap-3">
       <!-- Notificaciones -->
       <div class="position-relative d-none d-sm-block">
@@ -36,7 +33,7 @@
       <!-- Usuario con dropdown -->
       <div class="dropdown">
         <a href="#" class="d-flex align-items-center gap-2 text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
-          <img src="https://via.placeholder.com/32" width="32" height="32" class="rounded-circle" alt="User">
+          <p style="width: 32px;">👤</p>
           <span class="d-none d-sm-inline">User</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-end">

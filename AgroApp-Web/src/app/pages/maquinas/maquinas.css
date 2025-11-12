@@ -78,7 +78,7 @@
     padding: 0.5rem;
     font-size: 0.85rem;
   }
-  
+
   .table thead th {
     padding: 0.5rem;
     font-size: 0.8rem;
@@ -126,7 +126,7 @@
 }
 
 .modal-header-custom {
-  background: linear-gradient(135deg, #17a2b8, #138496);
+  background: linear-gradient(135deg, #02b236, #25a720);
   color: white;
   padding: 1.5rem 2rem;
   display: flex;
@@ -179,12 +179,12 @@
 }
 
 .modal-body-custom::-webkit-scrollbar-thumb {
-  background: #17a2b8;
+  background: #3bb660;
   border-radius: 10px;
 }
 
 .modal-body-custom::-webkit-scrollbar-thumb:hover {
-  background: #138496;
+  background: #56df84;
 }
 
 .form-group-custom {
@@ -202,7 +202,7 @@
 }
 
 .form-label-custom svg {
-  color: #17a2b8;
+  color: #12cb59;
   flex-shrink: 0;
 }
 
@@ -255,7 +255,7 @@
 .btn-primary-custom {
   padding: 0.75rem 1.5rem;
   border: none;
-  background: linear-gradient(135deg, #17a2b8, #138496);
+  background: green;
   color: white;
   border-radius: 8px;
   font-weight: 600;
@@ -282,25 +282,25 @@
     max-height: 95vh;
     border-radius: 12px;
   }
-  
+
   .modal-header-custom,
   .modal-body-custom,
   .modal-footer-custom {
     padding: 1rem;
   }
-  
+
   .modal-title {
     font-size: 1.25rem;
   }
-  
+
   .form-control-custom {
     font-size: 16px; /* Evita zoom en iOS */
   }
-  
+
   .modal-footer-custom {
     flex-direction: column;
   }
-  
+
   .btn-secondary-custom,
   .btn-primary-custom {
     width: 100%;
