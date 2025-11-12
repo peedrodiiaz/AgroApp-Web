@@ -18,6 +18,22 @@
                             placeholder="Ingrese su usuario"
                             formControlName="usuario"
                         >
+                        @if (loginForm.touched && loginForm.invalid){
+                            <div class="invalid-feedback d-block">
+								@if (f.usuario.hasError('required')) {
+									<span>El nombre es obligatorio.</span>
+								}
+								@if (f.usuario.hasError('minLenght')) {
+									<span>Mínimo 2 caracteres.</span>
+								}
+								@if (f.usuario.hasError('maxlength')) {
+									<span>Máximo 50 caracteres.</span>
+								}
+								@if (f.usuario.hasError('pattern')) {
+									<span>Solo letras y espacios.</span>
+								}
+							</div>
+                        }
                     </div>
 
                     <div class="mb-3">
@@ -30,6 +46,22 @@
                             placeholder="Ingrese su contraseña"
                             formControlName="password"
                         >
+                        @if (f.password.touched && f.password.invalid){
+                        <div class="invalid-feedback d-block">
+								@if (f.password.hasError('required')) {
+									<span>El nombre es obligatorio.</span>
+								}
+								@if (f.password.hasError('minLenght')) {
+									<span>Mínimo 2 caracteres.</span>
+								}
+								@if (f.password.hasError('maxlength')) {
+									<span>Máximo 50 caracteres.</span>
+								}
+								
+								
+						</div>
+                        }
+                        
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mb-4">
