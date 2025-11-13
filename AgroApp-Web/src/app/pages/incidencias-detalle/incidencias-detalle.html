@@ -1,0 +1,62 @@
+<div class="container-fluid py-4">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a (click)="volverListado()" style="cursor:pointer;">
+          <i class="bi bi-arrow-left"></i> Volver a Incidencias
+        </a>
+      </li>
+    </ol>
+  </nav>
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h4 class="fw-bold">Detalle de Incidencia</h4>
+      <div class="text-muted small">ID: {{ incidencia.codigo }}</div>
+    </div>
+    <button class="btn btn-info text-white" (click)="editarIncidencia()">
+      <i class="bi bi-pencil"></i> Editar Incidencia
+    </button>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="d-flex align-items-center mb-3">
+        <span class="badge bg-danger bg-opacity-10 text-danger fw-semibold px-4 py-2" style="font-size: 1rem;">
+          {{ incidencia.estado }}
+        </span>
+      </div>
+
+      <hr class="my-3">
+
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <div class="mb-2 text-secondary fw-medium">Información General</div>
+          <div><i class="bi bi-person"></i> <b>Trabajador Reportante</b></div>
+          <div>{{ incidencia.trabajador }}</div>
+          <div class="small text-muted">{{ incidencia.codigo }}</div>
+          <div class="mt-3"><i class="bi bi-calendar"></i> <b>Fecha de Publicación</b></div>
+          <div>{{ incidencia.fechaPublicacion }}</div>
+          <div class="mt-3"><i class="bi bi-card-list"></i> <b>Categoría</b></div>
+          <div>{{ incidencia.categoria }}</div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-4"></div>
+          <div><i class="bi bi-gear"></i> <b>Máquina Afectada</b></div>
+          <div>{{ incidencia.maquina }}</div>
+          <div class="mt-3"><i class="bi bi-calendar-x"></i> <b>Fecha de Cierre</b></div>
+          <div>{{ incidencia.fechaCierre || 'Pendiente' }}</div>
+        </div>
+      </div>
+
+      <hr class="my-3">
+
+      <div class="fw-semibold mb-2">
+        <i class="bi bi-file-earmark-text"></i> Descripción del Problema
+      </div>
+      <div class="p-3 bg-light rounded">
+        {{ incidencia.descripcion }}
+      </div>
+    </div>
+  </div>
+</div>

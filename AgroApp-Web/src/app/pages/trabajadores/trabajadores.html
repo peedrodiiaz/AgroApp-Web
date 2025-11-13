@@ -1,0 +1,80 @@
+<div class="container-fluid">
+  <div class="mb-4">
+    <h2 class="fw-bold mb-3">Trabajadores</h2>
+    <div class="d-flex justify-content-between align-items-center">
+      <button
+        class="btn btn-info text-white fw-bold"
+        (click)="abrirModalNuevo()"
+        style="background-color: #17a2b8; border: none; padding: 0.5rem 1.5rem; border-radius: 6px;">
+        + AÑADIR TRABAJADOR
+      </button>
+
+      <div class="input-group" style="width: 300px;">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Worker Name"
+          [(ngModel)]="busqueda">
+        <button class="btn btn-outline-secondary" type="button">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="table-light">
+            <tr>
+              <th style="width: 50px;">
+                <input type="checkbox" class="form-check-input">
+              </th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th style="width: 100px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (trabajador of trabajadores; track trabajador.id) {
+              <tr>
+                <td>
+                  <input type="checkbox" class="form-check-input">
+                </td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="avatar-small">{{ trabajador.avatar }}</div>
+                    <span class="fw-semibold">{{ trabajador.nombre }}</span>
+                  </div>
+                </td>
+                <td>{{ trabajador.email }}</td>
+                <td>{{ trabajador.telefono }}</td>
+                <td class="text-end position-relative">
+                  <button
+                    class="btn btn-link text-dark p-0"
+                    (click)="toggleMenu(trabajador.id)"
+                    style="font-size: 1.5rem; line-height: 1;">
+                    ⋮
+                  </button>
+
+                  @if (menuAbierto === trabajador.id) {
+                    <div class="dropdown-menu-custom">
+                      <button class="dropdown-item-custom" (click)="verInfo(trabajador); $event.stopPropagation()">
+                        <i class="bi bi-pencil text-primary"></i> Info
+                      </button>
+                      <button class="dropdown-item-custom" (click)="cancelar(trabajador); $event.stopPropagation()">
+                        <i class="bi bi-x-circle text-danger"></i> Cancel
+                      </button>
+                    </div>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

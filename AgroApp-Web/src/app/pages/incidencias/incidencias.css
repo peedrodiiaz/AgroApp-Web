@@ -1,0 +1,90 @@
+.summary-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.2rem 1rem 1rem 1rem;
+  border: 1.2px solid #eee;
+  min-width: 160px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  text-align: center;
+}
+
+.summary-card .count {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 0.35rem;
+}
+
+.summary-card.danger {
+  border-left: 6px solid #ff6791;
+}
+
+.summary-card.warning {
+  border-left: 6px solid #f6c45a;
+}
+
+.summary-card.success {
+  border-left: 6px solid #49d18b;
+}
+
+.summary-card.neutral {
+  border-left: 6px solid #dbe4ee;
+}
+
+.card {
+  border-radius: 12px;
+  border: 1px solid #eee;
+  min-height: 480px;
+}
+
+.card-body {
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #222;
+}
+
+.form-control {
+  border-radius: 8px;
+}
+
+.disabled-bg {
+  background: #f4f7fa;
+  color: #555;
+}
+
+.btn-info {
+  background: #19c3e6;
+  border: none;
+  font-weight: 600;
+}
+
+.table > :not(caption) > * > * {
+  background: transparent;
+  border: none;
+}
+
+.table thead {
+  background-color: #f8fbfd;
+  color: #555;
+  font-size: 1rem;
+}
+
+.badge {
+  font-size: 0.93rem;
+  border-radius: 1em;
+  padding: 0.35em 0.95em;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 991px) {
+  .card-body {
+    padding: 1.1rem;
+  }
+
+  .summary-card {
+    min-width: 110px;
+    padding: 1rem;
+  }
+}

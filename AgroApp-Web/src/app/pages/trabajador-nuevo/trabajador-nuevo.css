@@ -1,0 +1,45 @@
+.card {
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+.form-label {
+  color: #264653;
+  font-size: 0.98rem;
+}
+
+input,
+.form-control {
+  border-radius: 7px;
+  font-size: 1rem;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  font-size: 0.86rem;
+  color: #dc3545;
+}
+
+.btn-info {
+  background: #17a2b8;
+  border: none;
+  box-shadow: 0 2px 8px rgba(23, 162, 184, 0.08);
+}
+
+.btn-info:disabled {
+  opacity: 0.7;
+}
+
+.btn-outline-primary {
+  border-color: #17a2b8;
+  color: #17a2b8;
+  font-weight: 600;
+}
+
+.btn-outline-primary:hover {
+  background: #17a2b8;
+  color: #fff;
+}

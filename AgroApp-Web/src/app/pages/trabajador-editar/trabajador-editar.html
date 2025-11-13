@@ -1,0 +1,94 @@
+<div class="container-fluid">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="['/trabajadores', trabajadorId]" style="cursor:pointer;"><i class="bi bi-house-door"></i></a></li>
+      <li class="breadcrumb-item"><a [routerLink]="['/trabajadores', trabajadorId]" style="cursor:pointer;">Trabajador</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Editar</li>
+    </ol>
+  </nav>
+
+  <h2 class="fw-bold mb-4">Editar trabajador</h2>
+
+  <div class="card shadow-sm" style="max-width:1100px;">
+    <div class="card-body">
+      <form [formGroup]="trabajadorForm" (ngSubmit)="guardar()" novalidate>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Nombre *</label>
+            <input type="text" formControlName="nombre" class="form-control" placeholder="Escribe aquí el nombre"
+              [class.is-invalid]="f.nombre.touched && f.nombre.invalid">
+            @if (f.nombre.touched && f.nombre.invalid) {
+              <div class="invalid-feedback">Nombre requerido mínimo 2 caracteres</div>
+            }
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Apellidos *</label>
+            <input type="text" formControlName="apellidos" class="form-control" placeholder="Escriba aquí los apellidos"
+              [class.is-invalid]="f.apellidos.touched && f.apellidos.invalid">
+            @if (f.apellidos.touched && f.apellidos.invalid) {
+              <div class="invalid-feedback">Apellidos requeridos mínimo 2 caracteres</div>
+            }
+          </div>
+        </div>
+        <div class="row g-3 mt-1">
+          <div class="col-12">
+            <label class="form-label fw-semibold">Descripción</label>
+            <input type="text" formControlName="descripcion" class="form-control" placeholder="Describete aquí brevemente"
+              [class.is-invalid]="f.descripcion.touched && f.descripcion.invalid">
+            @if (f.descripcion.touched && f.descripcion.invalid) {
+              <div class="invalid-feedback">Máximo 200 caracteres</div>
+            }
+          </div>
+        </div>
+        <div class="row g-3 mt-1">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Fecha Nacimiento *</label>
+            <input type="date" formControlName="fechaNacimiento" class="form-control"
+              [class.is-invalid]="f.fechaNacimiento.touched && f.fechaNacimiento.invalid">
+            @if (f.fechaNacimiento.touched && f.fechaNacimiento.invalid) {
+              <div class="invalid-feedback">La fecha es obligatoria</div>
+            }
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Dirección *</label>
+            <input type="text" formControlName="direccion" class="form-control" placeholder="Escribe aquí tu dirección"
+              [class.is-invalid]="f.direccion.touched && f.direccion.invalid">
+            @if (f.direccion.touched && f.direccion.invalid) {
+              <div class="invalid-feedback">Dirección requerida</div>
+            }
+          </div>
+        </div>
+        <div class="row g-3 mt-1">
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Ciudad *</label>
+            <input type="text" formControlName="ciudad" class="form-control" placeholder="Escribe aquí tu ciudad"
+              [class.is-invalid]="f.ciudad.touched && f.ciudad.invalid">
+            @if (f.ciudad.touched && f.ciudad.invalid) {
+              <div class="invalid-feedback">Ciudad requerida</div>
+            }
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Nacionalidad *</label>
+            <input type="text" formControlName="nacionalidad" class="form-control" placeholder="Escribe aquí tu nacionalidad"
+              [class.is-invalid]="f.nacionalidad.touched && f.nacionalidad.invalid">
+            @if (f.nacionalidad.touched && f.nacionalidad.invalid) {
+              <div class="invalid-feedback">Nacionalidad requerida</div>
+            }
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Código postal *</label>
+            <input type="text" formControlName="codigoPostal" class="form-control" placeholder="Cod Postal"
+              [class.is-invalid]="f.codigoPostal.touched && f.codigoPostal.invalid">
+            @if (f.codigoPostal.touched && f.codigoPostal.invalid) {
+              <div class="invalid-feedback">Código postal de 5 cifras</div>
+            }
+          </div>
+        </div>
+        <div class="d-flex justify-content-end gap-3 mt-4">
+          <button type="button" class="btn btn-outline-primary" (click)="atras()">ATRÁS</button>
+          <button type="submit" class="btn btn-info text-white px-4" [disabled]="trabajadorForm.invalid">GUARDAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,89 @@
+.avatar-big {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  border: 2.5px solid #d4edda;
+}
+
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.card-title {
+  font-size: 1.08rem;
+  color: #333;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid #f3f3f3;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #666;
+}
+
+.btn {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.badge {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.bg-info {
+  background: #e7f1fb !important;
+  color: #0c5460 !important;
+}
+
+.bg-warning {
+  background: #fff3cd !important;
+  color: #856404 !important;
+}
+
+.bg-success {
+  background: #d4edda !important;
+  color: #155724 !important;
+}
+
+@media (max-width: 600px) {
+  .avatar-big {
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+}

@@ -1,0 +1,63 @@
+.card {
+  border-radius: 16px;
+  border: 1.5px solid #e3e6ec;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.04);
+}
+
+.form-label {
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 0.5em;
+}
+
+input,
+textarea,
+.form-control {
+  border-radius: 7.5px;
+  font-size: 1rem;
+}
+
+.btn-outline-secondary {
+  border-color: #bfc7d1;
+  color: #9da8bc;
+  font-weight: 500;
+}
+
+.btn-outline-secondary:hover {
+  background: #f0f2f5;
+}
+
+.btn-success {
+  background-color: #1fd08c;
+  border: none;
+  font-weight: 600;
+}
+
+.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 0.91rem;
+}
+
+.badge {
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 1em;
+  padding: 0.45em 0.93em;
+  letter-spacing: 0.01em;
+}
+
+.bg-info {
+  background: #daeaf4 !important;
+  color: #17a2b8 !important;
+}
+
+.bg-secondary {
+  background: #d7dedf !important;
+  color: #718183 !important;
+}
