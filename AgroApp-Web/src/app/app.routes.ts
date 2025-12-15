@@ -33,6 +33,8 @@ export const routes: Routes = [
       { path: 'incidencias', component: IncidenciasComponent },
       { path: 'incidencias/:id/editar', component: IncidenciaEditarComponent},
       { path: 'incidencias/:id', component: IncidenciaDetalleComponent },
+      //login
+      {path: 'login', component: LoginComponent }, 
     ],
   },
 ];

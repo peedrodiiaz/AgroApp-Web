@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { TrabajadorService } from './../../services/trabajador';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,27 +11,37 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './trabajadores.html',
   styleUrl: './trabajadores.css',
 })
-export class TrabajadoresComponent {
+export class TrabajadoresComponent implements OnInit {
   menuAbierto: number | null = null;
   busqueda: string = '';
+  trabajadores: any[] = []; 
+  
+  constructor(private router:Router, private trabajadorService: TrabajadorService) {
+    
+  }
 
-  trabajadores = [
-    { id: 1, nombre: 'John Wick', email: 'john@gmail.com', telefono: '67578374', avatar: '👤' },
-    { id: 2, nombre: 'John Wick', email: 'john@gmail.com', telefono: '67578374', avatar: '👤' },
-    { id: 3, nombre: 'John Wick', email: 'john@gmail.com', telefono: '67578374', avatar: '👤' },
-    { id: 4, nombre: 'John Wick', email: 'john@gmail.com', telefono: '67578374', avatar: '👤' },
-    { id: 5, nombre: 'John Wick', email: 'john@gmail.com', telefono: '67578374', avatar: '👤' },
-    { id: 6, nombre: 'John Wick', email: 'john@gmail.com', telefono: '67578374', avatar: '👤' },
-  ];
+  ngOnInit() {
+    this.cargarTrabajadores(); 
+  }
 
-  constructor(private router: Router) {}
+  cargarTrabajadores() {
+    this.trabajadorService.getAll().subscribe({
+      next: (data) => {
+        this.trabajadores = data;
+        console.log('Trabajadores cargados:', data);
+      },
+      error: (error) => {
+        console.error('Error al cargar trabajadores:', error);
+      }
+    });
+  }
 
   toggleMenu(id: number) {
     this.menuAbierto = this.menuAbierto === id ? null : id;
   }
 
   verInfo(trabajador: any) {
-    this.router.navigate([ '/trabajadores', trabajador.id ]);
+    this.router.navigate(['/trabajadores', trabajador.id]);
     this.menuAbierto = null;
   }
 
