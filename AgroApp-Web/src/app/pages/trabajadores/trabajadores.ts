@@ -1,4 +1,5 @@
 import { TrabajadorService } from './../../services/trabajador';
+import { Trabajador } from './../../interfaces/trabajador.interface';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -14,7 +15,7 @@ import { FormsModule } from '@angular/forms';
 export class TrabajadoresComponent implements OnInit {
   menuAbierto: number | null = null;
   busqueda: string = '';
-  trabajadores: any[] = []; 
+  trabajadores: Trabajador[] = []; 
   
   constructor(private router:Router, private trabajadorService: TrabajadorService) {
     
@@ -25,10 +26,11 @@ export class TrabajadoresComponent implements OnInit {
   }
 
   cargarTrabajadores() {
-    this.trabajadorService.getAll().subscribe({
-      next: (data) => {
-        this.trabajadores = data;
-        console.log('Trabajadores cargados:', data);
+    this.trabajadorService.getAll({ per_page: 15 }).subscribe({
+      next: (response) => {
+        this.trabajadores = response.data; // Extraer el array de la respuesta paginada
+        console.log('Trabajadores cargados:', response.data);
+        console.log('Total:', response.total);
       },
       error: (error) => {
         console.error('Error al cargar trabajadores:', error);
@@ -40,12 +42,12 @@ export class TrabajadoresComponent implements OnInit {
     this.menuAbierto = this.menuAbierto === id ? null : id;
   }
 
-  verInfo(trabajador: any) {
+  verInfo(trabajador: Trabajador) {
     this.router.navigate(['/trabajadores', trabajador.id]);
     this.menuAbierto = null;
   }
 
-  cancelar(trabajador: any) {
+  cancelar(trabajador: Trabajador) {
     console.log('Cancelar:', trabajador);
     this.menuAbierto = null;
   }

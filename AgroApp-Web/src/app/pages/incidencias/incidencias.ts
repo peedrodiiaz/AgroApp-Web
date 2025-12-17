@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Incidencia } from '../../interfaces/incidencia.interface';
 
 @Component({
   selector: 'app-incidencias',
@@ -20,26 +21,60 @@ export class IncidenciasComponent {
   });
   constructor(private router: Router) {}
 
-  incidencias = [
-    { id: 1, codigo: 'INC-001', trabajador: 'María López', maquina: 'Tractor JD-320', estado: 'Abierta', fechaPublicacion: '28 nov 2024', fechaCierre: '', descripcion: '' },
-    { id: 2, codigo: 'INC-002', trabajador: 'John Wick', maquina: 'Cosechadora MX-200', estado: 'En progreso', fechaPublicacion: '22 nov 2024', fechaCierre: '', descripcion: '' },
-    { id: 3, codigo: 'INC-003', trabajador: 'Carlos Ortega', maquina: 'Sistema de riego PR-45', estado: 'Resuelta', fechaPublicacion: '05 nov 2024', fechaCierre: '12 nov 2024', descripcion: '' },
+  incidencias: Incidencia[] = [
+    { 
+      id: 1, 
+      titulo: 'Fallo en motor',
+      descripcion: 'El tractor presenta humo negro al arrancar', 
+      estado: 'abierta', 
+      prioridad: 'alta',
+      fechaApertura: '2024-11-28T10:00:00', 
+      maquina_id: 1,
+      trabajador_id: 1,
+      maquina: { id: 1, nombre: 'Tractor JD-320', modelo: 'JD-320' },
+      trabajador: { id: 1, nombre: 'María', apellido: 'López' }
+    },
+    { 
+      id: 2, 
+      titulo: 'Avería en cosechadora',
+      descripcion: 'La cosechadora no arranca correctamente', 
+      estado: 'en_progreso', 
+      prioridad: 'media',
+      fechaApertura: '2024-11-22T08:30:00', 
+      maquina_id: 2,
+      trabajador_id: 2,
+      maquina: { id: 2, nombre: 'Cosechadora MX-200', modelo: 'MX-200' },
+      trabajador: { id: 2, nombre: 'John', apellido: 'Wick' }
+    },
+    { 
+      id: 3, 
+      titulo: 'Sistema de riego',
+      descripcion: 'Fuga detectada en tubería principal', 
+      estado: 'resuelta', 
+      prioridad: 'baja',
+      fechaApertura: '2024-11-05T14:00:00',
+      fechaCierre: '2024-11-12T16:00:00', 
+      maquina_id: 3,
+      trabajador_id: 3,
+      maquina: { id: 3, nombre: 'Sistema de riego PR-45', modelo: 'PR-45' },
+      trabajador: { id: 3, nombre: 'Carlos', apellido: 'Ortega' }
+    },
   ];
 
   get abiertas() {
-    return this.incidencias.filter(i => i.estado === 'Abierta').length;
+    return this.incidencias.filter(i => i.estado === 'abierta').length;
   }
 
-  verIncidencia(incidencia: any) {
-  this.router.navigate(['/incidencias', incidencia.id]);
-}
+  verIncidencia(incidencia: Incidencia) {
+    this.router.navigate(['/incidencias', incidencia.id]);
+  }
 
   get enProgreso() {
-    return this.incidencias.filter(i => i.estado === 'En progreso').length;
+    return this.incidencias.filter(i => i.estado === 'en_progreso').length;
   }
 
   get resueltas() {
-    return this.incidencias.filter(i => i.estado === 'Resuelta').length;
+    return this.incidencias.filter(i => i.estado === 'resuelta').length;
   }
 
   get total() {
