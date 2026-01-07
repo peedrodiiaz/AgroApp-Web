@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TrabajadorService } from '../../services/trabajador';
 
 @Component({
   selector: 'app-trabajador-detalle',
@@ -11,33 +12,36 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './trabajador-detalle.css',
 })
 export class TrabajadorDetalleComponent implements OnInit {
-  trabajadorId: number = 0;
-  trabajador = {
-    id: 1,
-    nombre: 'John Wick',
-    avatar: '👤',
-    email: 'john@gmail.com',
-    telefono: '67578374',
-    fechaAlta: '2023-02-15',
-    puesto: 'Operario',
-    matriculaAsignada: 'C6434NM'
-  };
-  salario = {
-    base: 1800,
-    pluses: 150,
-    ultimoCobro: '2024-11-10'
-  };
-  historial = [
-    { id:1 ,tipo: 'incidencia', fecha: '2024-10-21', desc: 'Avería en máquina asignada' },
-    { id:2,tipo: 'salario', fecha: '2024-09-30', desc: 'Cobro salario mensual' },
-    { id:3,tipo: 'ausencia', fecha: '2024-09-14', desc: 'Día de asuntos propios' },
-    { id:4,tipo: 'salario', fecha: '2024-08-30', desc: 'Cobro salario mensual' }
-  ];
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private trabajadorService = inject(TrabajadorService);
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  trabajadorId: number = 0;
+  trabajador: any = null;
+  isLoading: boolean = false;
+
+  constructor() {}
 
   ngOnInit() {
     this.trabajadorId = Number(this.route.snapshot.paramMap.get('id'));
+    this.cargarTrabajador();
+  }
+
+  cargarTrabajador() {
+    this.isLoading = true;
+    this.trabajadorService.getById(this.trabajadorId).subscribe({
+      next: (response: any) => {
+        this.trabajador = response.data || response;
+        this.isLoading = false;
+        console.log('Trabajador cargado:', this.trabajador);
+      },
+      error: (error) => {
+        console.error('Error al cargar trabajador:', error);
+        this.isLoading = false;
+        alert('Error al cargar el trabajador');
+        this.volverListado();
+      }
+    });
   }
 
   volverListado() {
@@ -49,8 +53,26 @@ export class TrabajadorDetalleComponent implements OnInit {
   }
 
   eliminarTrabajador() {
-    if (confirm('¿Seguro que quieres eliminar a este trabajador?')) {
-      this.router.navigate(['/trabajadores']);
+    if (confirm(`¿Seguro que quieres eliminar a ${this.trabajador?.nombre}?`)) {
+      this.trabajadorService.delete(this.trabajadorId).subscribe({
+        next: () => {
+          console.log('Trabajador eliminado');
+          this.router.navigate(['/trabajadores']);
+        },
+        error: (error) => {
+          console.error('Error al eliminar trabajador:', error);
+          alert('Error al eliminar el trabajador');
+        }
+      });
     }
+  }
+
+  getInitials(nombre: string): string {
+    if (!nombre) return '??';
+    const palabras = nombre.split(' ');
+    if (palabras.length >= 2) {
+      return (palabras[0][0] + palabras[1][0]).toUpperCase();
+    }
+    return nombre.substring(0, 2).toUpperCase();
   }
 }

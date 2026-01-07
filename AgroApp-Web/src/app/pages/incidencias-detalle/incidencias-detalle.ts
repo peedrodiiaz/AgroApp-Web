@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { IncidenciaService } from '../../services/incidencia';
 
 @Component({
   selector: 'app-incidencia-detalle',
@@ -9,30 +10,58 @@ import { CommonModule } from '@angular/common';
   templateUrl: './incidencias-detalle.html',
   styleUrl: './incidencias-detalle.css',
 })
-export class IncidenciaDetalleComponent  {
-  incidencia = {
-    id: 1,
-    codigo: 'INC-001',
-    estado: 'Abierto',
-    trabajador: 'María López',
-    maquina: 'Tractor JD-320',
-    fechaPublicacion: '28 nov 2024',
-    fechaCierre: '',
-    categoria: 'Fallo Mecánico',
-    descripcion: 'El tractor JD-320 presenta problemas en el sistema de transmisión. Al intentar cambiar de marcha, se escuchan ruidos extraños y la palanca se traba. El problema comenzó esta mañana durante las labores de arado en el sector norte.',
-  };
+export class IncidenciaDetalleComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private incidenciaService = inject(IncidenciaService);
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  incidenciaId: number = 0;
+  incidencia: any = null;
+  isLoading = false;
 
+  ngOnInit() {
+    this.incidenciaId = Number(this.route.snapshot.paramMap.get('id'));
+    this.cargarIncidencia();
+  }
 
+  cargarIncidencia() {
+    this.isLoading = true;
+    this.incidenciaService.getById(this.incidenciaId).subscribe({
+      next: (data) => {
+        this.incidencia = data;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar incidencia:', error);
+        this.isLoading = false;
+        alert('Error al cargar la información de la incidencia');
+        this.volverListado();
+      }
+    });
+  }
 
   volverListado() {
     this.router.navigate(['/incidencias']);
   }
 
   editarIncidencia() {
+    this.router.navigate(['/incidencias', this.incidencia.id, 'editar']); 
+  }
 
-  this.router.navigate(['/incidencias', this.incidencia.id, 'editar']); 
+  eliminarIncidencia() {
+    if (!confirm('¿Estás seguro de eliminar esta incidencia?')) {
+      return;
+    }
 
+    this.incidenciaService.delete(this.incidenciaId).subscribe({
+      next: () => {
+        alert('Incidencia eliminada exitosamente');
+        this.volverListado();
+      },
+      error: (error) => {
+        console.error('Error al eliminar incidencia:', error);
+        alert('Error al eliminar la incidencia');
+      }
+    });
   }
 }

@@ -25,10 +25,21 @@
             INACTIVAS
           </a>
         </li>
+        <li class="nav-item">
+          <a
+            class="nav-link fw-semibold"
+            [class.active]="tabActivo === 'mantenimiento'"
+            (click)="cambiarTab('mantenimiento')"
+            style="cursor: pointer;"
+          >
+            MANTENIMIENTO
+          </a>
+        </li>
       </ul>
       <!-- Buscador -->
       <div class="input-group" style="width: 300px;">
-        <input type="text" class="form-control" placeholder="Buscar por matrícula">
+        <input type="text" class="form-control" placeholder="Buscar máquina" 
+                [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}">
         <button class="btn btn-outline-secondary" type="button">
           <i class="bi bi-search"></i>
         </button>
@@ -51,21 +62,37 @@
           <thead class="table-light">
             <tr>
               <th>Nombre</th>
-              <th>Matrícula</th>
-              <th>Fecha liberación</th>
-              <th>Localización</th>
-              <th>Trabajador(es)</th>
+              <th>N° Serie</th>
+              <th>Modelo</th>
+              <th>Tipo</th>
+              <th>Ubicación</th>
               <th style="width: 50px;"></th>
             </tr>
           </thead>
           <tbody>
+            @if (isLoading) {
+              <tr>
+                <td colspan="6" class="text-center py-4">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                  </div>
+                </td>
+              </tr>
+            }
+            @if (!isLoading && maquinasMostradas.length === 0) {
+              <tr>
+                <td colspan="6" class="text-center py-4 text-muted">
+                  No hay máquinas para mostrar
+                </td>
+              </tr>
+            }
             @for (maquina of maquinasMostradas; track maquina.id) {
               <tr>
                 <td class="fw-semibold">{{ maquina.nombre }}</td>
-                <td>{{ maquina.matricula }}</td>
-                <td>{{ maquina.fechaLiberacion }}</td>
-                <td>{{ maquina.localizacion }}</td>
-                <td>{{ maquina.trabajadores }}</td>
+                <td>{{ maquina.numSerie }}</td>
+                <td>{{ maquina.modelo }}</td>
+                <td>{{ maquina.tipo }}</td>
+                <td>{{ maquina.ubicacion || '-' }}</td>
                 <td class="text-end position-relative">
                   <button
                     class="btn btn-link text-dark p-0"
@@ -79,11 +106,33 @@
                     <div class="dropdown-menu-custom">
                       <button class="dropdown-item-custom"
                               (click)="verInfo(maquina); $event.stopPropagation()">
-                        <i class="bi bi-pencil-square text-danger"></i> Info
+                        <i class="bi bi-info-circle text-primary"></i> Ver detalle
                       </button>
-                      <button class="dropdown-item-custom"
-                              (click)="cancelar(maquina); $event.stopPropagation()">
-                        <i class="bi bi-x-circle text-danger"></i> Cancel
+                      @if (maquina.estado === 'activa') {
+                        <button class="dropdown-item-custom"
+                                (click)="cambiarEstado(maquina, 'mantenimiento'); $event.stopPropagation()">
+                          <i class="bi bi-wrench text-warning"></i> Mantenimiento
+                        </button>
+                        <button class="dropdown-item-custom"
+                                (click)="cambiarEstado(maquina, 'inactiva'); $event.stopPropagation()">
+                          <i class="bi bi-pause-circle text-secondary"></i> Desactivar
+                        </button>
+                      }
+                      @if (maquina.estado === 'inactiva') {
+                        <button class="dropdown-item-custom"
+                                (click)="cambiarEstado(maquina, 'activa'); $event.stopPropagation()">
+                          <i class="bi bi-play-circle text-success"></i> Activar
+                        </button>
+                      }
+                      @if (maquina.estado === 'mantenimiento') {
+                        <button class="dropdown-item-custom"
+                                (click)="cambiarEstado(maquina, 'activa'); $event.stopPropagation()">
+                          <i class="bi bi-check-circle text-success"></i> Finalizar mantenimiento
+                        </button>
+                      }
+                      <button class="dropdown-item-custom text-danger"
+                              (click)="eliminarMaquina(maquina); $event.stopPropagation()">
+                        <i class="bi bi-trash"></i> Eliminar
                       </button>
                     </div>
                   }
@@ -146,32 +195,32 @@
                   }
                 </div>
 
-                <!-- Matrícula * -->
+                <!-- N° Serie * -->
                 <div class="form-group-custom">
                   <label class="form-label-custom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                       <path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15h9.286zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zM.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8H.8z"/>
                     </svg>
-                    Matrícula <span class="text-danger">*</span>
+                    Número de Serie <span class="text-danger">*</span>
                   </label>
                   <input
                     type="text"
                     class="form-control-custom"
-                    formControlName="matricula"
-                    placeholder="Ej: ER342BK"
-                    maxlength="10"
-                    [class.is-invalid]="f.matricula.touched && f.matricula.invalid">
-                  @if (f.matricula.touched && f.matricula.invalid) {
+                    formControlName="numSerie"
+                    placeholder="Ej: ABC123XYZ"
+                    maxlength="20"
+                    [class.is-invalid]="f.numSerie.touched && f.numSerie.invalid">
+                  @if (f.numSerie.touched && f.numSerie.invalid) {
                     <div class="error-message">
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                         <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
                       </svg>
-                      @if (f.matricula.hasError('required')) {
-                        <span>La matrícula es obligatoria.</span>
+                      @if (f.numSerie.hasError('required')) {
+                        <span>El número de serie es obligatorio.</span>
                       }
-                      @if (f.matricula.hasError('pattern')) {
-                        <span>Formato inválido (Ej: ER342BK).</span>
+                      @if (f.numSerie.hasError('pattern')) {
+                        <span>Formato inválido (alfanumérico, 6-20 caracteres).</span>
                       }
                     </div>
                   }
@@ -231,62 +280,81 @@
                   }
                 </div>
 
-                <!-- Localización * -->
+                <!-- Tipo * -->
                 <div class="form-group-custom">
                   <label class="form-label-custom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                      <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 9.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
                     </svg>
-                    Localización <span class="text-danger">*</span>
+                    Tipo <span class="text-danger">*</span>
                   </label>
-                  <input
-                    type="text"
+                  <select
                     class="form-control-custom"
-                    formControlName="localizacion"
-                    placeholder="Ej: Finca 1 - Almacén Norte"
-                    [class.is-invalid]="f.localizacion.touched && f.localizacion.invalid">
-                  @if (f.localizacion.touched && f.localizacion.invalid) {
+                    formControlName="tipo"
+                    [class.is-invalid]="f.tipo.touched && f.tipo.invalid">
+                    <option value="">Seleccionar tipo</option>
+                    <option value="Tractor">Tractor</option>
+                    <option value="Cosechadora">Cosechadora</option>
+                    <option value="Empacadora">Empacadora</option>
+                    <option value="Fumigadora">Fumigadora</option>
+                    <option value="Arado">Arado</option>
+                    <option value="Sembradora">Sembradora</option>
+                    <option value="Otro">Otro</option>
+                  </select>
+                  @if (f.tipo.touched && f.tipo.invalid) {
                     <div class="error-message">
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                         <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
                       </svg>
-                      @if (f.localizacion.hasError('required')) {
-                        <span>La localización es obligatoria.</span>
-                      }
-                      @if (f.localizacion.hasError('minlength')) {
+                      <span>El tipo es obligatorio.</span>
+                    </div>
+                  }
+                </div>
+
+                <!-- Ubicación (Opcional) -->
+                <div class="form-group-custom">
+                  <label class="form-label-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                    </svg>
+                    Ubicación <span class="text-muted">(Opcional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control-custom"
+                    formControlName="ubicacion"
+                    placeholder="Ej: Finca 1 - Almacén Norte"
+                    [class.is-invalid]="f.ubicacion.touched && f.ubicacion.invalid">
+                  @if (f.ubicacion.touched && f.ubicacion.invalid) {
+                    <div class="error-message">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                      </svg>
+                      @if (f.ubicacion.hasError('minlength')) {
                         <span>Mínimo 3 caracteres.</span>
                       }
                     </div>
                   }
                 </div>
 
-                <!-- Trabajador (Opcional) -->
+                <!-- Descripción (Opcional) -->
                 <div class="form-group-custom">
                   <label class="form-label-custom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                      <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                      <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                      <path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8zm0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
                     </svg>
-                    Trabajador Asignado <span class="text-muted">(Opcional)</span>
+                    Descripción <span class="text-muted">(Opcional)</span>
                   </label>
-                  <input
-                    type="text"
+                  <textarea
                     class="form-control-custom"
-                    formControlName="trabajador"
-                    placeholder="Nombre del trabajador"
-                    [class.is-invalid]="f.trabajador.touched && f.trabajador.invalid">
-                  @if (f.trabajador.touched && f.trabajador.invalid) {
-                    <div class="error-message">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
-                      </svg>
-                      @if (f.trabajador.hasError('minlength')) {
-                        <span>Mínimo 3 caracteres.</span>
-                      }
-                    </div>
-                  }
+                    formControlName="descripcion"
+                    placeholder="Información adicional sobre la máquina"
+                    rows="3"
+                    style="resize: vertical;"
+                  ></textarea>
                 </div>
 
               </div>

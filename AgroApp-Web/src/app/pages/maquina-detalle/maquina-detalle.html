@@ -29,8 +29,13 @@
           <h5 class="card-title fw-bold mb-3">GENERAL</h5>
 
           <div class="info-row">
-            <span class="info-label">Matrícula</span>
-            <span class="info-value">{{ maquina.matricula }}</span>
+            <span class="info-label">Número de Serie</span>
+            <span class="info-value">{{ maquina.numSerie }}</span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Tipo</span>
+            <span class="info-value">{{ maquina.tipo }}</span>
           </div>
 
           <div class="info-row">
@@ -44,9 +49,28 @@
           </div>
 
           <div class="info-row">
-            <span class="info-label">Localización</span>
-            <span class="info-value">{{ maquina.localizacion }}</span>
+            <span class="info-label">Estado</span>
+            <span class="info-value">
+              <span class="badge"
+                    [class.bg-success]="maquina.estado === 'activa'"
+                    [class.bg-danger]="maquina.estado === 'inactiva'"
+                    [class.bg-warning]="maquina.estado === 'mantenimiento'">
+                {{ maquina.estado }}
+              </span>
+            </span>
           </div>
+
+          <div class="info-row">
+            <span class="info-label">Ubicación</span>
+            <span class="info-value">{{ maquina.ubicacion || 'No especificada' }}</span>
+          </div>
+
+          @if (maquina.descripcion) {
+            <div class="info-row">
+              <span class="info-label">Descripción</span>
+              <span class="info-value">{{ maquina.descripcion }}</span>
+            </div>
+          }
         </div>
       </div>
 
@@ -65,67 +89,36 @@
     <!-- Columna Derecha -->
     <div class="col-12 col-lg-6">
 
-      <!-- Card TRABAJADOR -->
+      <!-- Card ESTADO Y ACCIONES -->
       <div class="card shadow-sm mb-4">
         <div class="card-body">
-          <h5 class="card-title fw-bold mb-3">TRABAJADOR</h5>
+          <h5 class="card-title fw-bold mb-3">CAMBIAR ESTADO</h5>
 
-          <div class="d-flex align-items-center gap-3">
-            <div class="avatar-circle">{{ trabajador.avatar }}</div>
-            <div>
-              <h6 class="mb-1 fw-bold">{{ trabajador.nombre }}</h6>
-              <small class="text-muted">Fecha de inicio: {{ trabajador.fechaInicio }}</small>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card INCIDENCIAS -->
-      <div class="card shadow-sm mb-4">
-        <div class="card-body">
-          <h5 class="card-title fw-bold mb-3">INCIDENCIAS</h5>
-
-          <div class="table-responsive">
-            <table class="table table-sm table-hover mb-0">
-              <thead class="table-success">
-                <tr>
-                  <th>Estado</th>
-                  <th>Descripción</th>
-                  <th>Fecha</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (incidencia of incidencias; track incidencia.id) {
-                  <tr>
-                    <td>
-                      <span class="badge"
-                            [class.bg-warning]="incidencia.estado === 'Abierta'"
-                            [class.bg-secondary]="incidencia.estado === 'Cerrada'">
-                        {{ incidencia.estado }}
-                      </span>
-                    </td>
-                    <td>{{ incidencia.descripcion }}</td>
-                    <td>{{ incidencia.fecha }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
+          <div class="d-flex flex-column gap-2">
+            <button 
+              class="btn btn-outline-success w-100" 
+              (click)="cambiarEstado('activa')"
+              [disabled]="maquina.estado === 'activa'">
+              <i class="bi bi-check-circle me-2"></i>Marcar como Activa
+            </button>
+            <button 
+              class="btn btn-outline-danger w-100" 
+              (click)="cambiarEstado('inactiva')"
+              [disabled]="maquina.estado === 'inactiva'">
+              <i class="bi bi-x-circle me-2"></i>Marcar como Inactiva
+            </button>
+            <button 
+              class="btn btn-outline-warning w-100" 
+              (click)="cambiarEstado('mantenimiento')"
+              [disabled]="maquina.estado === 'mantenimiento'">
+              <i class="bi bi-wrench me-2"></i>Poner en Mantenimiento
+            </button>
           </div>
         </div>
       </div>
 
     </div>
 
-  </div>
-
-  <!-- Sección CRONOGRAMA (Full Width) -->
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h5 class="card-title fw-bold mb-3">CRONOGRAMA</h5>
-
-      <!-- FullCalendar -->
-      <full-calendar [options]="calendarOptions"></full-calendar>
-    </div>
   </div>
 
 </div>
@@ -174,26 +167,50 @@
             }
           </div>
 
-          <!-- Matrícula * -->
+          <!-- Número de Serie * -->
           <div class="form-group-custom">
             <label class="form-label-custom">
-              Matrícula <span class="text-danger">*</span>
+              Número de Serie <span class="text-danger">*</span>
             </label>
             <input
               type="text"
               class="form-control-custom"
-              formControlName="matricula"
-              placeholder="Ej: ER342BK"
-              maxlength="10"
-              [class.is-invalid]="f.matricula.touched && f.matricula.invalid">
-            @if (f.matricula.touched && f.matricula.invalid) {
+              formControlName="numSerie"
+              placeholder="Ej: JD2024-S780-001"
+              [class.is-invalid]="f.numSerie.touched && f.numSerie.invalid">
+            @if (f.numSerie.touched && f.numSerie.invalid) {
               <div class="error-message">
-                @if (f.matricula.hasError('required')) {
-                  <span>La matrícula es obligatoria.</span>
+                @if (f.numSerie.hasError('required')) {
+                  <span>El número de serie es obligatorio.</span>
                 }
-                @if (f.matricula.hasError('pattern')) {
-                  <span>Formato inválido (Ej: ER342BK).</span>
+                @if (f.numSerie.hasError('minlength')) {
+                  <span>Mínimo 3 caracteres.</span>
                 }
+              </div>
+            }
+          </div>
+
+          <!-- Tipo * -->
+          <div class="form-group-custom">
+            <label class="form-label-custom">
+              Tipo <span class="text-danger">*</span>
+            </label>
+            <select
+              class="form-control-custom"
+              formControlName="tipo"
+              [class.is-invalid]="f.tipo.touched && f.tipo.invalid">
+              <option value="">Seleccionar tipo...</option>
+              <option value="Tractor">Tractor</option>
+              <option value="Cosechadora">Cosechadora</option>
+              <option value="Empacadora">Empacadora</option>
+              <option value="Fumigadora">Fumigadora</option>
+              <option value="Arado">Arado</option>
+              <option value="Sembradora">Sembradora</option>
+              <option value="Otro">Otro</option>
+            </select>
+            @if (f.tipo.touched && f.tipo.invalid) {
+              <div class="error-message">
+                <span>El tipo es obligatorio.</span>
               </div>
             }
           </div>
@@ -235,44 +252,28 @@
             }
           </div>
 
-          <!-- Localización * -->
+          <!-- Ubicación (Opcional) -->
           <div class="form-group-custom">
             <label class="form-label-custom">
-              Localización <span class="text-danger">*</span>
+              Ubicación <span class="text-muted">(Opcional)</span>
             </label>
             <input
               type="text"
               class="form-control-custom"
-              formControlName="localizacion"
-              placeholder="Ej: Finca 1 - Almacén Norte"
-              [class.is-invalid]="f.localizacion.touched && f.localizacion.invalid">
-            @if (f.localizacion.touched && f.localizacion.invalid) {
-              <div class="error-message">
-                @if (f.localizacion.hasError('required')) {
-                  <span>La localización es obligatoria.</span>
-                }
-              </div>
-            }
+              formControlName="ubicacion"
+              placeholder="Ej: Finca 1 - Almacén Norte">
           </div>
 
-          <!-- Trabajador (Opcional) -->
+          <!-- Descripción (Opcional) -->
           <div class="form-group-custom">
             <label class="form-label-custom">
-              Trabajador Asignado <span class="text-muted">(Opcional)</span>
+              Descripción <span class="text-muted">(Opcional)</span>
             </label>
-            <input
-              type="text"
+            <textarea
               class="form-control-custom"
-              formControlName="trabajador"
-              placeholder="Nombre del trabajador"
-              [class.is-invalid]="f.trabajador.touched && f.trabajador.invalid">
-            @if (f.trabajador.touched && f.trabajador.invalid) {
-              <div class="error-message">
-                @if (f.trabajador.hasError('minlength')) {
-                  <span>Mínimo 3 caracteres.</span>
-                }
-              </div>
-            }
+              formControlName="descripcion"
+              placeholder="Detalles adicionales sobre la máquina"
+              rows="3"></textarea>
           </div>
 
         </div>

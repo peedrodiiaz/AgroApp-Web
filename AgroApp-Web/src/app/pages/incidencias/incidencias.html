@@ -3,7 +3,7 @@
   <h2 class="fw-bold mb-4">Incidencias</h2>
 
   <div class="row g-3 mb-4">
-    <div class="col"><div class="summary-card danger"><div>INCIDENCIAS</div><div class="count">{{ abiertas }}</div></div></div>
+    <div class="col"><div class="summary-card danger"><div>ABIERTAS</div><div class="count">{{ abiertas }}</div></div></div>
     <div class="col"><div class="summary-card warning"><div>EN PROGRESO</div><div class="count">{{ enProgreso }}</div></div></div>
     <div class="col"><div class="summary-card success"><div>RESUELTAS</div><div class="count">{{ resueltas }}</div></div></div>
     <div class="col"><div class="summary-card neutral"><div>TOTAL REGISTROS</div><div class="count">{{ total }}</div></div></div>
@@ -17,42 +17,98 @@
           <small class="text-muted mb-3 d-block">Completa la información para registrar una nueva incidencia.</small>
           <form [formGroup]="nuevoReporteForm" (ngSubmit)="registrarIncidencia()">
             <div class="mb-2">
-              <label class="form-label">Trabajador</label>
-              <input type="text" formControlName="trabajador" class="form-control" [class.is-invalid]="f.trabajador.touched && f.trabajador.invalid">
-              @if (f.trabajador.touched && f.trabajador.invalid) {
+              <label class="form-label">Título *</label>
+              <input type="text" formControlName="titulo" class="form-control" placeholder="Ej: Falla en el motor" [class.is-invalid]="f.titulo.touched && f.titulo.invalid">
+              @if (f.titulo.touched && f.titulo.invalid) {
+                <div class="invalid-feedback">
+                  @if (f.titulo.hasError('required')) {
+                    <span>Campo obligatorio.</span>
+                  }
+                  @if (f.titulo.hasError('minlength')) {
+                    <span>Mínimo 3 caracteres.</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Trabajador *</label>
+              <select formControlName="trabajador_id" class="form-select" [class.is-invalid]="f.trabajador_id.touched && f.trabajador_id.invalid">
+                <option value="">Seleccionar trabajador...</option>
+                @for (trabajador of trabajadores; track trabajador.id) {
+                  <option [value]="trabajador.id">{{ trabajador.nombre }} {{ trabajador.apellido }}</option>
+                }
+              </select>
+              @if (f.trabajador_id.touched && f.trabajador_id.invalid) {
                 <div class="invalid-feedback">Campo obligatorio.</div>
               }
             </div>
+
             <div class="mb-2">
-              <label class="form-label">Máquina afectada</label>
-              <input type="text" formControlName="maquina" class="form-control" [class.is-invalid]="f.maquina.touched && f.maquina.invalid">
-              @if (f.maquina.touched && f.maquina.invalid) {
+              <label class="form-label">Máquina afectada *</label>
+              <select formControlName="maquina_id" class="form-select" [class.is-invalid]="f.maquina_id.touched && f.maquina_id.invalid">
+                <option value="">Seleccionar máquina...</option>
+                @for (maquina of maquinas; track maquina.id) {
+                  <option [value]="maquina.id">{{ maquina.nombre }} - {{ maquina.modelo }}</option>
+                }
+              </select>
+              @if (f.maquina_id.touched && f.maquina_id.invalid) {
                 <div class="invalid-feedback">Campo obligatorio.</div>
               }
             </div>
+
             <div class="mb-2">
-              <label class="form-label">Estado</label>
-              <input type="text" formControlName="estado" class="form-control disabled-bg" >
+              <label class="form-label">Estado *</label>
+              <select formControlName="estado" class="form-select">
+                <option value="Abierta">Abierta</option>
+                <option value="En progreso">En progreso</option>
+                <option value="Resuelta">Resuelta</option>
+              </select>
             </div>
+
             <div class="mb-2">
-              <label class="form-label">Fecha de publicación</label>
-              <input type="date" formControlName="fechaPublicacion" class="form-control" [class.is-invalid]="f.fechaPublicacion.touched && f.fechaPublicacion.invalid">
-              @if (f.fechaPublicacion.touched && f.fechaPublicacion.invalid) {
+              <label class="form-label">Prioridad *</label>
+              <select formControlName="prioridad" class="form-select">
+                <option value="Baja">Baja</option>
+                <option value="Media">Media</option>
+                <option value="Alta">Alta</option>
+              </select>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Fecha de apertura *</label>
+              <input type="date" formControlName="fechaApertura" class="form-control" [class.is-invalid]="f.fechaApertura.touched && f.fechaApertura.invalid">
+              @if (f.fechaApertura.touched && f.fechaApertura.invalid) {
                 <div class="invalid-feedback">Campo obligatorio.</div>
               }
             </div>
+
             <div class="mb-2">
-              <label class="form-label">Fecha de cierre</label>
+              <label class="form-label">Fecha de cierre (opcional)</label>
               <input type="date" formControlName="fechaCierre" class="form-control">
             </div>
+
             <div class="mb-2">
-              <label class="form-label">Descripción</label>
-              <textarea formControlName="descripcion" class="form-control" rows="2" [class.is-invalid]="f.descripcion.touched && f.descripcion.invalid"></textarea>
+              <label class="form-label">Descripción *</label>
+              <textarea formControlName="descripcion" class="form-control" rows="3" placeholder="Describe el problema..." [class.is-invalid]="f.descripcion.touched && f.descripcion.invalid"></textarea>
               @if (f.descripcion.touched && f.descripcion.invalid) {
-                <div class="invalid-feedback">Campo obligatorio (máx 300).</div>
+                <div class="invalid-feedback">
+                  @if (f.descripcion.hasError('required')) {
+                    <span>Campo obligatorio.</span>
+                  }
+                  @if (f.descripcion.hasError('maxlength')) {
+                    <span>Máximo 500 caracteres.</span>
+                  }
+                </div>
               }
             </div>
-            <button class="btn btn-info w-100 mt-3" type="submit">REGISTRAR INCIDENCIA</button>
+
+            <button class="btn btn-info w-100 mt-3" type="submit" [disabled]="nuevoReporteForm.invalid || isLoading">
+              @if (isLoading) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+              }
+              REGISTRAR INCIDENCIA
+            </button>
           </form>
         </div>
       </div>
@@ -62,47 +118,113 @@
       <div class="card h-100">
         <div class="card-body">
           <div class="fw-semibold mb-3">Historial de incidencias</div>
-          <div class="row g-2 mb-2">
-            <div class="col"><input class="form-control" placeholder="Trabajador"></div>
-            <div class="col"><input class="form-control" placeholder="Estado"></div>
-            <div class="col"><input class="form-control" placeholder="Máquina"></div>
+
+          <!-- Filtros por pestañas -->
+          <ul class="nav nav-tabs mb-3">
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="estadoActivo === 'todas'" (click)="cambiarEstado('todas')" style="cursor: pointer;">
+                Todas ({{ total }})
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="estadoActivo === 'abierta'" (click)="cambiarEstado('abierta')" style="cursor: pointer;">
+                Abiertas ({{ abiertas }})
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="estadoActivo === 'en progreso'" (click)="cambiarEstado('en progreso')" style="cursor: pointer;">
+                En Progreso ({{ enProgreso }})
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="estadoActivo === 'resuelta'" (click)="cambiarEstado('resuelta')" style="cursor: pointer;">
+                Resueltas ({{ resueltas }})
+              </a>
+            </li>
+          </ul>
+
+          <!-- Búsqueda -->
+          <div class="mb-3">
+            <input 
+              type="text" 
+              class="form-control" 
+              placeholder="Buscar por título, descripción, máquina o trabajador..." 
+              [(ngModel)]="searchTerm"
+              (ngModelChange)="aplicarFiltros()">
           </div>
-          <div class="table-responsive">
-            <table class="table align-middle mb-0">
-              <thead>
-                <tr>
-                  <th>Trabajador</th>
-                  <th>Máquina</th>
-                  <th>Estado</th>
-                  <th>Publicación</th>
-                  <th>Cierre</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (i of incidencias; track i.id) {
+
+          @if (isLoading) {
+            <div class="text-center my-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+            </div>
+          }
+
+          @if (!isLoading) {
+            <div class="table-responsive">
+              <table class="table align-middle mb-0">
+                <thead>
                   <tr>
-                    <td><div class="fw-semibold">{{ i.trabajador }}</div><div class="text-secondary small">{{ i.codigo }}</div></td>
-                    <td>{{ i.maquina }}</td>
-                    <td>
-                      @if(i.estado==='Abierta') {
-                        <span class="badge bg-danger bg-opacity-10 text-danger fw-semibold">Abierta</span>
-                      }
-                      @if(i.estado==='En progreso') {
-                        <span class="badge bg-warning bg-opacity-10 text-warning fw-semibold">En progreso</span>
-                      }
-                      @if(i.estado==='Resuelta') {
-                        <span class="badge bg-success bg-opacity-10 text-success fw-semibold">Resuelta</span>
-                      }
-                    </td>
-                    <td>{{ i.fechaPublicacion }}</td>
-                    <td>{{ i.fechaCierre || 'Pendiente' }}</td>
-                    <td><a href="#" class="fw-semibold text-info" (click)="verIncidencia(i)">Ver</a></td>
+                    <th>Título</th>
+                    <th>Trabajador</th>
+                    <th>Máquina</th>
+                    <th>Estado</th>
+                    <th>Prioridad</th>
+                    <th>Fecha Apertura</th>
+                    <th>Acciones</th>
                   </tr>
-                }
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  @if (incidenciasFiltradas.length === 0) {
+                    <tr>
+                      <td colspan="7" class="text-center text-muted py-4">
+                        No hay incidencias para mostrar
+                      </td>
+                    </tr>
+                  }
+                  @for (i of incidenciasFiltradas; track i.id) {
+                    <tr style="cursor: pointer;" (click)="verIncidencia(i)">
+                      <td>
+                        <div class="fw-semibold">{{ i.titulo }}</div>
+                        <div class="text-secondary small">{{ i.descripcion | slice:0:50 }}...</div>
+                      </td>
+                      <td>{{ i.trabajador?.nombre }} {{ i.trabajador?.apellido }}</td>
+                      <td>{{ i.maquina?.nombre }}</td>
+                      <td>
+                        @if(i.estado==='Abierta') {
+                          <span class="badge bg-danger bg-opacity-10 text-danger fw-semibold">Abierta</span>
+                        }
+                        @if(i.estado==='En progreso') {
+                          <span class="badge bg-warning bg-opacity-10 text-warning fw-semibold">En progreso</span>
+                        }
+                        @if(i.estado==='Resuelta') {
+                          <span class="badge bg-success bg-opacity-10 text-success fw-semibold">Resuelta</span>
+                        }
+                      </td>
+                      <td>
+                        @if(i.prioridad==='Baja') {
+                          <span class="badge bg-info">Baja</span>
+                        }
+                        @if(i.prioridad==='Media') {
+                          <span class="badge bg-warning">Media</span>
+                        }
+                        @if(i.prioridad==='Alta') {
+                          <span class="badge bg-danger">Alta</span>
+                        }
+                      </td>
+                      <td>{{ i.fechaApertura | date:'dd/MM/yyyy' }}</td>
+                      <td>
+                        <button class="btn btn-sm btn-outline-danger" (click)="eliminarIncidencia(i.id, $event)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
         </div>
       </div>
     </div>

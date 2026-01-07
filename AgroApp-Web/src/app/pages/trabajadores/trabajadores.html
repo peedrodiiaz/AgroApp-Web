@@ -13,8 +13,9 @@
         <input
           type="text"
           class="form-control"
-          placeholder="Worker Name"
-          [(ngModel)]="busqueda">
+          placeholder="Buscar trabajador..."
+          [(ngModel)]="busqueda"
+          (ngModelChange)="filtrarTrabajadores()">
         <button class="btn btn-outline-secondary" type="button">
           <i class="bi bi-search"></i>
         </button>
@@ -38,39 +39,58 @@
             </tr>
           </thead>
           <tbody>
-            @for (trabajador of trabajadores; track trabajador.id) {
+            @if (isLoading) {
               <tr>
-                <td>
-                  <input type="checkbox" class="form-check-input">
-                </td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="avatar-small">{{ trabajador.avatar }}</div>
-                    <span class="fw-semibold">{{ trabajador.nombre }}</span>
+                <td colspan="5" class="text-center py-4">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
                   </div>
                 </td>
-                <td>{{ trabajador.email }}</td>
-                <td>{{ trabajador.telefono }}</td>
-                <td class="text-end position-relative">
-                  <button
-                    class="btn btn-link text-dark p-0"
-                    (click)="toggleMenu(trabajador.id)"
-                    style="font-size: 1.5rem; line-height: 1;">
-                    ⋮
-                  </button>
-
-                  @if (menuAbierto === trabajador.id) {
-                    <div class="dropdown-menu-custom">
-                      <button class="dropdown-item-custom" (click)="verInfo(trabajador); $event.stopPropagation()">
-                        <i class="bi bi-pencil text-primary"></i> Info
-                      </button>
-                      <button class="dropdown-item-custom" (click)="cancelar(trabajador); $event.stopPropagation()">
-                        <i class="bi bi-x-circle text-danger"></i> Cancel
-                      </button>
-                    </div>
-                  }
+              </tr>
+            } @else if (trabajadoresFiltrados.length === 0) {
+              <tr>
+                <td colspan="5" class="text-center py-4 text-muted">
+                  No se encontraron trabajadores
                 </td>
               </tr>
+            } @else {
+              @for (trabajador of trabajadoresFiltrados; track trabajador.id) {
+                <tr>
+                  <td>
+                    <input type="checkbox" class="form-check-input">
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="avatar-small">{{ getInitials(trabajador.nombre) }}</div>
+                      <span class="fw-semibold">{{ trabajador.nombre }}</span>
+                    </div>
+                  </td>
+                  <td>{{ trabajador.email || 'N/A' }}</td>
+                  <td>{{ trabajador.telefono || 'N/A' }}</td>
+                  <td class="text-end position-relative">
+                    <button
+                      class="btn btn-link text-dark p-0"
+                      (click)="toggleMenu(trabajador.id)"
+                      style="font-size: 1.5rem; line-height: 1;">
+                      ⋮
+                    </button>
+
+                    @if (menuAbierto === trabajador.id) {
+                      <div class="dropdown-menu-custom">
+                        <button class="dropdown-item-custom" (click)="verInfo(trabajador); $event.stopPropagation()">
+                          <i class="bi bi-eye text-info"></i> Ver Detalle
+                        </button>
+                        <button class="dropdown-item-custom" (click)="editarTrabajador(trabajador); $event.stopPropagation()">
+                          <i class="bi bi-pencil text-primary"></i> Editar
+                        </button>
+                        <button class="dropdown-item-custom text-danger" (click)="eliminarTrabajador(trabajador); $event.stopPropagation()">
+                          <i class="bi bi-trash text-danger"></i> Eliminar
+                        </button>
+                      </div>
+                    }
+                  </td>
+                </tr>
+              }
             }
           </tbody>
         </table>

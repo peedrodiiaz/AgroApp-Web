@@ -11,16 +11,20 @@ import { TrabajadorNuevoComponent } from './pages/trabajador-nuevo/trabajador-nu
 import { TrabajadorEditarComponent } from './pages/trabajador-editar/trabajador-editar';
 import { IncidenciasComponent } from './pages/incidencias/incidencias';
 import { IncidenciaDetalleComponent } from './pages/incidencias-detalle/incidencias-detalle';
+import { authGuard } from './guards/auth.guard';
 
 
 export const routes: Routes = [
+  // Ruta de login completamente independiente (sin layout)
   {
-    path: 'inicio-sesion',
+    path: 'login',
     component: LoginComponent,
   },
+  // Rutas principales con AdminLayout (protegidas con authGuard)
   {
     path: '',
     component: AdminLayoutComponent,
+    canActivate: [authGuard], // Protege todas las rutas hijas
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
@@ -33,8 +37,10 @@ export const routes: Routes = [
       { path: 'incidencias', component: IncidenciasComponent },
       { path: 'incidencias/:id/editar', component: IncidenciaEditarComponent},
       { path: 'incidencias/:id', component: IncidenciaDetalleComponent },
-      //login
-      {path: 'login', component: LoginComponent }, 
     ],
   },
+  {
+    path: '**',
+    redirectTo: 'login'
+  }
 ];

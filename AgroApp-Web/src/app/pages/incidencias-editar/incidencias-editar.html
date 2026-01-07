@@ -3,79 +3,146 @@
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
         <a (click)="volver()" style="cursor:pointer;">
-          <i class="bi bi-arrow-left"></i> Volver a Incidencias
+          <i class="bi bi-arrow-left"></i> Volver a Detalle
         </a>
       </li>
     </ol>
   </nav>
 
-  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
-    <div>
-      <h4 class="fw-bold">Editar Incidencia</h4>
-      <div class="text-muted small">ID: {{ f.codigo.value }}</div>
-    </div>
-    <div class="d-flex gap-2">
-      <button class="btn btn-outline-secondary" type="button" (click)="cancelar()">Cancelar</button>
-      <button class="btn btn-success" (click)="guardar()">Guardar Cambios</button>
-    </div>
-  </div>
-
-  <form [formGroup]="editarForm" novalidate autocomplete="off">
-    <div class="card p-4 mb-3">
-      <!-- Estado y Prioridad -->
-      <div class="row mb-4">
-        <div class="col-md-6 mb-3 mb-md-0">
-          <label class="form-label">Estado</label>
-          <input type="text" class="form-control" formControlName="estado"  style="background:#f6f8fa;" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Prioridad</label>
-          <input type="text" class="form-control" formControlName="prioridad"  style="background:#f6f8fa;" />
-        </div>
-      </div>
-
-      <!-- Etiquetas visuales -->
-      <div class="mb-3">
-        <span class="badge bg-secondary me-2">Cerrado</span>
-        <span class="badge bg-info">Prioridad Baja</span>
-      </div>
-
-      <!-- Información General -->
-      <div class="row mb-4">
-        <div class="col-md-6">
-          <label class="form-label">Trabajador Reportante</label>
-          <input type="text" class="form-control" formControlName="trabajador"  style="background:#f6f8fa;">
-          <input type="text" class="form-control mt-2" formControlName="codigo"  style="background:#f6f8fa;">
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Máquina Afectada</label>
-          <input type="text" class="form-control" formControlName="maquina"  style="background:#f6f8fa;">
-        </div>
-      </div>
-      <div class="row mb-4">
-        <div class="col-md-6">
-          <label class="form-label">Fecha de Publicación</label>
-          <input type="date" class="form-control" formControlName="fechaPublicacion" style="background:#f6f8fa;">
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Fecha de Cierre</label>
-          <input type="date" class="form-control" formControlName="fechaCierre">
-        </div>
-      </div>
-      <div class="mb-4">
-        <label class="form-label">Categoría</label>
-        <input type="text" class="form-control" formControlName="categoria">
-      </div>
-
-      <!-- Descripción -->
-      <div class="mb-2">
-        <div class="form-label fw-semibold mb-1">Descripción del Problema</div>
-        <textarea class="form-control" rows="3" formControlName="descripcion"
-          [class.is-invalid]="f.descripcion.touched && f.descripcion.invalid"></textarea>
-        @if (f.descripcion.touched && f.descripcion.invalid) {
-          <div class="invalid-feedback">Descripción obligatoria (máx 300).</div>
-        }
+  @if (isLoading) {
+    <div class="text-center my-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
       </div>
     </div>
-  </form>
+  }
+
+  @if (!isLoading) {
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
+      <div>
+        <h4 class="fw-bold">Editar Incidencia</h4>
+        <div class="text-muted small">ID: #{{ incidenciaId }}</div>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" type="button" (click)="cancelar()">Cancelar</button>
+        <button class="btn btn-success" (click)="guardar()" [disabled]="editarForm.invalid || isLoading">
+          @if (isLoading) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+
+    <form [formGroup]="editarForm" novalidate autocomplete="off">
+      <div class="card p-4 mb-3">
+        
+        <!-- Título -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Título *</label>
+          <input type="text" class="form-control" formControlName="titulo" placeholder="Ej: Falla en el motor"
+            [class.is-invalid]="f.titulo.touched && f.titulo.invalid">
+          @if (f.titulo.touched && f.titulo.invalid) {
+            <div class="invalid-feedback">
+              @if (f.titulo.hasError('required')) {
+                <span>El título es obligatorio.</span>
+              }
+              @if (f.titulo.hasError('minlength')) {
+                <span>Mínimo 3 caracteres.</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Estado y Prioridad -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Estado *</label>
+            <select class="form-select" formControlName="estado" [class.is-invalid]="f.estado.touched && f.estado.invalid">
+              <option value="">Seleccionar estado...</option>
+              <option value="Abierta">Abierta</option>
+              <option value="En progreso">En progreso</option>
+              <option value="Resuelta">Resuelta</option>
+            </select>
+            @if (f.estado.touched && f.estado.invalid) {
+              <div class="invalid-feedback">Estado obligatorio.</div>
+            }
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Prioridad *</label>
+            <select class="form-select" formControlName="prioridad" [class.is-invalid]="f.prioridad.touched && f.prioridad.invalid">
+              <option value="">Seleccionar prioridad...</option>
+              <option value="Baja">Baja</option>
+              <option value="Media">Media</option>
+              <option value="Alta">Alta</option>
+            </select>
+            @if (f.prioridad.touched && f.prioridad.invalid) {
+              <div class="invalid-feedback">Prioridad obligatoria.</div>
+            }
+          </div>
+        </div>
+
+        <!-- Información General -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Trabajador Reportante *</label>
+            <select class="form-select" formControlName="trabajador_id" [class.is-invalid]="f.trabajador_id.touched && f.trabajador_id.invalid">
+              <option value="">Seleccionar trabajador...</option>
+              @for (trabajador of trabajadores; track trabajador.id) {
+                <option [value]="trabajador.id">{{ trabajador.nombre }} {{ trabajador.apellido }}</option>
+              }
+            </select>
+            @if (f.trabajador_id.touched && f.trabajador_id.invalid) {
+              <div class="invalid-feedback">Trabajador obligatorio.</div>
+            }
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Máquina Afectada *</label>
+            <select class="form-select" formControlName="maquina_id" [class.is-invalid]="f.maquina_id.touched && f.maquina_id.invalid">
+              <option value="">Seleccionar máquina...</option>
+              @for (maquina of maquinas; track maquina.id) {
+                <option [value]="maquina.id">{{ maquina.nombre }} - {{ maquina.modelo }}</option>
+              }
+            </select>
+            @if (f.maquina_id.touched && f.maquina_id.invalid) {
+              <div class="invalid-feedback">Máquina obligatoria.</div>
+            }
+          </div>
+        </div>
+
+        <!-- Fechas -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Fecha de Apertura *</label>
+            <input type="date" class="form-control" formControlName="fechaApertura"
+              [class.is-invalid]="f.fechaApertura.touched && f.fechaApertura.invalid">
+            @if (f.fechaApertura.touched && f.fechaApertura.invalid) {
+              <div class="invalid-feedback">Fecha obligatoria.</div>
+            }
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Fecha de Cierre (opcional)</label>
+            <input type="date" class="form-control" formControlName="fechaCierre">
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="mb-2">
+          <label class="form-label fw-semibold">Descripción del Problema *</label>
+          <textarea class="form-control" rows="4" formControlName="descripcion" placeholder="Describe detalladamente el problema..."
+            [class.is-invalid]="f.descripcion.touched && f.descripcion.invalid"></textarea>
+          @if (f.descripcion.touched && f.descripcion.invalid) {
+            <div class="invalid-feedback">
+              @if (f.descripcion.hasError('required')) {
+                <span>Descripción obligatoria.</span>
+              }
+              @if (f.descripcion.hasError('maxlength')) {
+                <span>Máximo 500 caracteres.</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </form>
+  }
 </div>

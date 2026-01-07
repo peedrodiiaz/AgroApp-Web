@@ -15,25 +15,44 @@ export class TrabajadoresComponent implements OnInit {
   menuAbierto: number | null = null;
   busqueda: string = '';
   trabajadores: any[] = []; 
+  trabajadoresFiltrados: any[] = [];
+  isLoading: boolean = false;
   
-  constructor(private router:Router, private trabajadorService: TrabajadorService) {
-    
-  }
+  constructor(private router: Router, private trabajadorService: TrabajadorService) {}
 
   ngOnInit() {
     this.cargarTrabajadores(); 
   }
 
   cargarTrabajadores() {
+    this.isLoading = true;
     this.trabajadorService.getAll().subscribe({
-      next: (data) => {
-        this.trabajadores = data;
-        console.log('Trabajadores cargados:', data);
+      next: (response: any) => {
+        // La respuesta del backend puede venir en diferentes formatos
+        this.trabajadores = response.data || response;
+        this.trabajadoresFiltrados = this.trabajadores;
+        this.isLoading = false;
+        console.log('Trabajadores cargados:', this.trabajadores);
       },
       error: (error) => {
         console.error('Error al cargar trabajadores:', error);
+        this.isLoading = false;
       }
     });
+  }
+
+  filtrarTrabajadores() {
+    if (!this.busqueda.trim()) {
+      this.trabajadoresFiltrados = this.trabajadores;
+      return;
+    }
+
+    const busquedaLower = this.busqueda.toLowerCase();
+    this.trabajadoresFiltrados = this.trabajadores.filter(trabajador =>
+      trabajador.nombre?.toLowerCase().includes(busquedaLower) ||
+      trabajador.email?.toLowerCase().includes(busquedaLower) ||
+      trabajador.telefono?.includes(busquedaLower)
+    );
   }
 
   toggleMenu(id: number) {
@@ -45,12 +64,37 @@ export class TrabajadoresComponent implements OnInit {
     this.menuAbierto = null;
   }
 
-  cancelar(trabajador: any) {
-    console.log('Cancelar:', trabajador);
+  editarTrabajador(trabajador: any) {
+    this.router.navigate(['/trabajadores', trabajador.id, 'editar']);
+    this.menuAbierto = null;
+  }
+
+  eliminarTrabajador(trabajador: any) {
+    if (confirm(`¿Estás seguro de eliminar a ${trabajador.nombre}?`)) {
+      this.trabajadorService.delete(trabajador.id).subscribe({
+        next: () => {
+          console.log('Trabajador eliminado');
+          this.cargarTrabajadores(); // Recargar la lista
+        },
+        error: (error) => {
+          console.error('Error al eliminar trabajador:', error);
+          alert('Error al eliminar el trabajador');
+        }
+      });
+    }
     this.menuAbierto = null;
   }
 
   abrirModalNuevo() {
     this.router.navigate(['/trabajadores/nuevo']);
+  }
+
+  getInitials(nombre: string): string {
+    if (!nombre) return '??';
+    const palabras = nombre.split(' ');
+    if (palabras.length >= 2) {
+      return (palabras[0][0] + palabras[1][0]).toUpperCase();
+    }
+    return nombre.substring(0, 2).toUpperCase();
   }
 }

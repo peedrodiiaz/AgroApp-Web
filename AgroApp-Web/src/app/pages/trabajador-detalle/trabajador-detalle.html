@@ -1,99 +1,86 @@
 <div class="container-fluid py-4">
-  <nav aria-label="breadcrumb" class="mb-3">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a (click)="volverListado()" style="cursor: pointer;">
-          <i class="bi bi-house-door"></i>
-        </a>
-      </li>
-      <li class="breadcrumb-item">
-        <a (click)="volverListado()" style="cursor: pointer;">Trabajadores</a>
-      </li>
-      <li class="breadcrumb-item active" aria-current="page">Información</li>
-    </ol>
-  </nav>
-
-  <div class="d-flex align-items-center mb-4 gap-3">
-    <div class="avatar-big">{{ trabajador.avatar }}</div>
-    <div>
-      <h2 class="fw-bold mb-1">{{ trabajador.nombre }}</h2>
-      <div class="text-muted">{{ trabajador.puesto }}</div>
+  @if (isLoading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
     </div>
-  </div>
+  } @else if (trabajador) {
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a (click)="volverListado()" style="cursor: pointer;">
+            <i class="bi bi-house-door"></i>
+          </a>
+        </li>
+        <li class="breadcrumb-item">
+          <a (click)="volverListado()" style="cursor: pointer;">Trabajadores</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Información</li>
+      </ol>
+    </nav>
 
-  <div class="row g-4">
-    <div class="col-12 col-lg-6">
-      <div class="card shadow-sm mb-4">
-        <div class="card-body">
-          <h5 class="card-title fw-bold mb-3">Datos personales</h5>
-          <div class="info-row">
-            <span class="info-label">Email</span>
-            <span>{{ trabajador.email }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Teléfono</span>
-            <span>{{ trabajador.telefono }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Fecha alta</span>
-            <span>{{ trabajador.fechaAlta }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Puesto</span>
-            <span>{{ trabajador.puesto }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Máquina asignada</span>
-            <span>{{ trabajador.matriculaAsignada || 'Ninguna' }}</span>
+    <div class="d-flex align-items-center mb-4 gap-3">
+      <div class="avatar-big">{{ getInitials(trabajador.nombre) }}</div>
+      <div>
+        <h2 class="fw-bold mb-1">{{ trabajador.nombre }}</h2>
+        <div class="text-muted">{{ trabajador.puesto || 'Sin puesto asignado' }}</div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="card-title fw-bold mb-3">Datos personales</h5>
+            <div class="info-row">
+              <span class="info-label">Email</span>
+              <span>{{ trabajador.email || 'N/A' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Teléfono</span>
+              <span>{{ trabajador.telefono || 'N/A' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Fecha alta</span>
+              <span>{{ trabajador.fechaAlta || trabajador.created_at || 'N/A' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Puesto</span>
+              <span>{{ trabajador.puesto || 'N/A' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">DNI</span>
+              <span>{{ trabajador.dni || 'N/A' }}</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="d-flex gap-3 mb-4">
-        <button class="btn btn-success flex-fill" (click)="editarTrabajador()">
-          <i class="bi bi-pencil-square me-2"></i>Editar
-        </button>
-        <button class="btn btn-danger flex-fill" (click)="eliminarTrabajador()">
-          <i class="bi bi-trash me-2"></i>Eliminar
-        </button>
-      </div>
-    </div>
-
-    <div class="col-12 col-lg-6">
-      <div class="card shadow-sm mb-4">
-        <div class="card-body">
-          <h5 class="card-title fw-bold mb-3">Salario</h5>
-          <div class="mb-2">
-            Base: <strong>{{ salario.base }} €</strong>
-          </div>
-          <div class="mb-2">
-            Pluses: <strong>{{ salario.pluses }} €</strong>
-          </div>
-          <div class="mb-2">
-            Último cobro: <span class="text-muted">{{ salario.ultimoCobro }}</span>
-          </div>
-          <button class="btn btn-primary btn-sm mt-2" disabled>
-            Recalcular
+        <div class="d-flex gap-3 mb-4">
+          <button class="btn btn-success flex-fill" (click)="editarTrabajador()">
+            <i class="bi bi-pencil-square me-2"></i>Editar
+          </button>
+          <button class="btn btn-danger flex-fill" (click)="eliminarTrabajador()">
+            <i class="bi bi-trash me-2"></i>Eliminar
           </button>
         </div>
       </div>
-      <div class="card shadow-sm mb-4">
-        <div class="card-body">
-          <h5 class="card-title fw-bold mb-3">Historial</h5>
-          <ul class="list-unstyled mb-0">
-            @for (h of historial; track h.id) {
-              <li>
-                <span class="badge me-2" [ngClass]="{
-                  'bg-warning': h.tipo==='incidencia',
-                  'bg-info': h.tipo==='ausencia',
-                  'bg-success': h.tipo==='salario'
-                }">{{ h.tipo | titlecase }}</span>
-                <span class="me-2">{{ h.fecha }}</span>
-                <span>{{ h.desc }}</span>
-              </li>
-            }
-          </ul>
+
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="card-title fw-bold mb-3">Información Adicional</h5>
+            <div class="mb-2">
+              Dirección: <strong>{{ trabajador.direccion || 'N/A' }}</strong>
+            </div>
+            <div class="mb-2">
+              Ciudad: <strong>{{ trabajador.ciudad || 'N/A' }}</strong>
+            </div>
+            <div class="mb-2">
+              Código Postal: <strong>{{ trabajador.codigo_postal || 'N/A' }}</strong>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 </div>

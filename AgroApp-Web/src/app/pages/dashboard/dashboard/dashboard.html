@@ -1,150 +1,202 @@
 <div class="container-fluid">
   <h3 class="fw-bold mb-4">Panel de Control</h3>
 
-  <div class="row g-4">
-    <!-- Columna izquierda: Tabla de trabajadores -->
-    <div class="col-lg-7">
-      <div class="card shadow-sm border-0">
-        <div class="card-header bg-white border-0 pt-3 pb-0">
-          <h5 class="text-success fw-bold mb-0">Vista General</h5>
-          <a href="#" class="text-primary small">View All ›</a>
-        </div>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table table-hover mb-0 align-middle">
-              <thead style="background-color: #28a745; color: white;">
-                <tr>
-                  <th></th>
-                  <th>Máquinas</th>
-                  <th>En uso</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <img src="https://via.placeholder.com/40" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; border: 2px solid #28a745;">
-                  </td>
-                  <td>
-                    <strong>Cosechadora</strong><br>
-                    <small class="text-muted">Pepe</small>
-                  </td>
-                  <td>
-                    <strong>Si</strong>
-                  </td>
-                  <td>
-                    <button class="btn btn-sm btn-outline-secondary rounded-circle p-1" style="width: 30px; height: 30px;">
-                      <i class="bi bi-chat-dots"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <img src="https://via.placeholder.com/40" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; border: 2px solid #28a745;">
-                  </td>
-                  <td>
-                    <strong>Cosechadora</strong><br>
-                    <small class="text-muted">Pepe</small>
-                  </td>
-                  <td>
-                    <strong>Si</strong>
-                  </td>
-                  <td>
-                    <button class="btn btn-sm btn-outline-secondary rounded-circle p-1" style="width: 30px; height: 30px;">
-                      <i class="bi bi-chat-dots"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <img src="https://via.placeholder.com/40" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; border: 2px solid #28a745;">
-                  </td>
-                  <td>
-                    <strong>Cosechadora</strong><br>
-                    <small class="text-muted">Pepe</small>
-                  </td>
-                  <td>
-                    <strong>Si</strong>
-                  </td>
-                  <td>
-                    <button class="btn btn-sm btn-outline-secondary rounded-circle p-1" style="width: 30px; height: 30px;">
-                      <i class="bi bi-chat-dots"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <img src="https://via.placeholder.com/40" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; border: 2px solid #28a745;">
-                  </td>
-                  <td>
-                    <strong>Cosechadora</strong><br>
-                    <small class="text-muted">Pepe</small>
-                  </td>
-                  <td>
-                    <strong>Si</strong>
-                  </td>
-                  <td>
-                    <button class="btn btn-sm btn-outline-secondary rounded-circle p-1" style="width: 30px; height: 30px;">
-                      <i class="bi bi-chat-dots"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+  @if (isLoading) {
+    <div class="text-center my-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
       </div>
     </div>
+  }
 
-    <!-- Columna derecha: Widgets -->
-    <div class="col-lg-5">
-      <!-- Widget Trabajadores -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="text-success fw-bold mb-0">Trabajadores</h5>
-            <a href="#" class="text-primary small">View All ›</a>
-          </div>
-          <div class="text-center mb-3">
-            <div class="display-3 fw-bold text-primary">10</div>
-            <small class="text-muted">Active Workers</small>
-          </div>
-          <div>
-            <p class="fw-bold mb-2">Nuevos</p>
-            <ul class="list-unstyled">
-              <li class="mb-1">
-                <a href="#" class="text-primary text-decoration-none">Evan Powell</a>
-              </li>
-              <li class="mb-1">
-                <a href="#" class="text-primary text-decoration-none">Susan Sanderson</a>
-              </li>
-              <li class="mb-1">
-                <a href="#" class="text-primary text-decoration-none">Rick Richardson</a>
-              </li>
-            </ul>
+  @if (!isLoading) {
+    <div class="row g-4 mb-4">
+      <!-- Card Total Trabajadores -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card shadow-sm border-0 bg-primary text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-uppercase mb-1">Trabajadores</h6>
+                <h2 class="mb-0 fw-bold">{{ totalTrabajadores }}</h2>
+              </div>
+              <div class="display-4 opacity-50">
+                <i class="bi bi-people-fill"></i>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Widget Reportes de incidencias -->
-      <div class="card shadow-sm border-0">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="text-success fw-bold mb-0">Reportes de incidencias</h5>
-            <a href="#" class="text-primary small">View All ›</a>
-          </div>
-          <div class="row text-center">
-            <div class="col-6">
-              <div class="display-4 fw-bold text-primary">17</div>
-              <small class="text-muted">Abiertas</small>
+      <!-- Card Total Máquinas -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card shadow-sm border-0 bg-success text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-uppercase mb-1">Máquinas</h6>
+                <h2 class="mb-0 fw-bold">{{ totalMaquinas }}</h2>
+              </div>
+              <div class="display-4 opacity-50">
+                <i class="bi bi-gear-fill"></i>
+              </div>
             </div>
-            <div class="col-6">
-              <div class="display-4 fw-bold text-primary">42</div>
-              <small class="text-muted">Completadas</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Máquinas Activas -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card shadow-sm border-0 bg-info text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-uppercase mb-1">Activas</h6>
+                <h2 class="mb-0 fw-bold">{{ maquinasPorEstado['activa'] || 0 }}</h2>
+              </div>
+              <div class="display-4 opacity-50">
+                <i class="bi bi-check-circle-fill"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Máquinas en Mantenimiento -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card shadow-sm border-0 bg-warning text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-uppercase mb-1">Mantenimiento</h6>
+                <h2 class="mb-0 fw-bold">{{ maquinasPorEstado['mantenimiento'] || 0 }}</h2>
+              </div>
+              <div class="display-4 opacity-50">
+                <i class="bi bi-wrench"></i>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+
+    <div class="row g-4">
+      <!-- Estadísticas de Trabajadores por Rol -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white border-0 pt-3">
+            <h5 class="text-success fw-bold mb-0">
+              <i class="bi bi-people"></i> Trabajadores por Rol
+            </h5>
+          </div>
+          <div class="card-body">
+            @if (getRoles().length === 0) {
+              <p class="text-muted text-center py-4">No hay datos disponibles</p>
+            }
+            @if (getRoles().length > 0) {
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Rol</th>
+                      <th class="text-end">Cantidad</th>
+                      <th class="text-end">Porcentaje</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (rol of getRoles(); track rol) {
+                      <tr>
+                        <td class="fw-semibold">{{ rol }}</td>
+                        <td class="text-end">
+                          <span class="badge bg-primary">{{ trabajadoresPorRol[rol] }}</span>
+                        </td>
+                        <td class="text-end">
+                          {{ ((trabajadoresPorRol[rol] / totalTrabajadores) * 100).toFixed(1) }}%
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Estadísticas de Máquinas por Estado -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white border-0 pt-3">
+            <h5 class="text-success fw-bold mb-0">
+              <i class="bi bi-gear"></i> Máquinas por Estado
+            </h5>
+          </div>
+          <div class="card-body">
+            @if (getEstados().length === 0) {
+              <p class="text-muted text-center py-4">No hay datos disponibles</p>
+            }
+            @if (getEstados().length > 0) {
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Estado</th>
+                      <th class="text-end">Cantidad</th>
+                      <th class="text-end">Porcentaje</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (estado of getEstados(); track estado) {
+                      <tr>
+                        <td class="fw-semibold text-capitalize">{{ estado }}</td>
+                        <td class="text-end">
+                          <span class="badge" [ngClass]="getEstadoClass(estado)">
+                            {{ maquinasPorEstado[estado] }}
+                          </span>
+                        </td>
+                        <td class="text-end">
+                          {{ ((maquinasPorEstado[estado] / totalMaquinas) * 100).toFixed(1) }}%
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Estadísticas de Máquinas por Tipo -->
+      <div class="col-lg-12">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white border-0 pt-3">
+            <h5 class="text-success fw-bold mb-0">
+              <i class="bi bi-tools"></i> Máquinas por Tipo
+            </h5>
+          </div>
+          <div class="card-body">
+            @if (getTipos().length === 0) {
+              <p class="text-muted text-center py-4">No hay datos disponibles</p>
+            }
+            @if (getTipos().length > 0) {
+              <div class="row g-3">
+                @for (tipo of getTipos(); track tipo) {
+                  <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="card border">
+                      <div class="card-body text-center">
+                        <i class="bi bi-tools text-success display-4 mb-2"></i>
+                        <h4 class="fw-bold text-primary mb-1">{{ maquinasPorTipo[tipo] }}</h4>
+                        <p class="text-muted mb-0 text-capitalize">{{ tipo }}</p>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 </div>

@@ -9,86 +9,127 @@
 
   <h2 class="fw-bold mb-4">Editar trabajador</h2>
 
-  <div class="card shadow-sm" style="max-width:1100px;">
-    <div class="card-body">
-      <form [formGroup]="trabajadorForm" (ngSubmit)="guardar()" novalidate>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label fw-semibold">Nombre *</label>
-            <input type="text" formControlName="nombre" class="form-control" placeholder="Escribe aquí el nombre"
-              [class.is-invalid]="f.nombre.touched && f.nombre.invalid">
-            @if (f.nombre.touched && f.nombre.invalid) {
-              <div class="invalid-feedback">Nombre requerido mínimo 2 caracteres</div>
-            }
-          </div>
-          <div class="col-md-6">
-            <label class="form-label fw-semibold">Apellidos *</label>
-            <input type="text" formControlName="apellidos" class="form-control" placeholder="Escriba aquí los apellidos"
-              [class.is-invalid]="f.apellidos.touched && f.apellidos.invalid">
-            @if (f.apellidos.touched && f.apellidos.invalid) {
-              <div class="invalid-feedback">Apellidos requeridos mínimo 2 caracteres</div>
-            }
-          </div>
-        </div>
-        <div class="row g-3 mt-1">
-          <div class="col-12">
-            <label class="form-label fw-semibold">Descripción</label>
-            <input type="text" formControlName="descripcion" class="form-control" placeholder="Describete aquí brevemente"
-              [class.is-invalid]="f.descripcion.touched && f.descripcion.invalid">
-            @if (f.descripcion.touched && f.descripcion.invalid) {
-              <div class="invalid-feedback">Máximo 200 caracteres</div>
-            }
-          </div>
-        </div>
-        <div class="row g-3 mt-1">
-          <div class="col-md-6">
-            <label class="form-label fw-semibold">Fecha Nacimiento *</label>
-            <input type="date" formControlName="fechaNacimiento" class="form-control"
-              [class.is-invalid]="f.fechaNacimiento.touched && f.fechaNacimiento.invalid">
-            @if (f.fechaNacimiento.touched && f.fechaNacimiento.invalid) {
-              <div class="invalid-feedback">La fecha es obligatoria</div>
-            }
-          </div>
-          <div class="col-md-6">
-            <label class="form-label fw-semibold">Dirección *</label>
-            <input type="text" formControlName="direccion" class="form-control" placeholder="Escribe aquí tu dirección"
-              [class.is-invalid]="f.direccion.touched && f.direccion.invalid">
-            @if (f.direccion.touched && f.direccion.invalid) {
-              <div class="invalid-feedback">Dirección requerida</div>
-            }
-          </div>
-        </div>
-        <div class="row g-3 mt-1">
-          <div class="col-md-4">
-            <label class="form-label fw-semibold">Ciudad *</label>
-            <input type="text" formControlName="ciudad" class="form-control" placeholder="Escribe aquí tu ciudad"
-              [class.is-invalid]="f.ciudad.touched && f.ciudad.invalid">
-            @if (f.ciudad.touched && f.ciudad.invalid) {
-              <div class="invalid-feedback">Ciudad requerida</div>
-            }
-          </div>
-          <div class="col-md-4">
-            <label class="form-label fw-semibold">Nacionalidad *</label>
-            <input type="text" formControlName="nacionalidad" class="form-control" placeholder="Escribe aquí tu nacionalidad"
-              [class.is-invalid]="f.nacionalidad.touched && f.nacionalidad.invalid">
-            @if (f.nacionalidad.touched && f.nacionalidad.invalid) {
-              <div class="invalid-feedback">Nacionalidad requerida</div>
-            }
-          </div>
-          <div class="col-md-4">
-            <label class="form-label fw-semibold">Código postal *</label>
-            <input type="text" formControlName="codigoPostal" class="form-control" placeholder="Cod Postal"
-              [class.is-invalid]="f.codigoPostal.touched && f.codigoPostal.invalid">
-            @if (f.codigoPostal.touched && f.codigoPostal.invalid) {
-              <div class="invalid-feedback">Código postal de 5 cifras</div>
-            }
-          </div>
-        </div>
-        <div class="d-flex justify-content-end gap-3 mt-4">
-          <button type="button" class="btn btn-outline-primary" (click)="atras()">ATRÁS</button>
-          <button type="submit" class="btn btn-info text-white px-4" [disabled]="trabajadorForm.invalid">GUARDAR</button>
-        </div>
-      </form>
+  @if (isLoading) {
+    <div class="text-center my-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
     </div>
-  </div>
+  }
+
+  @if (!isLoading) {
+    <div class="card shadow-sm" style="max-width:1100px;">
+      <div class="card-body">
+        <form [formGroup]="trabajadorForm" (ngSubmit)="guardar()" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Nombre *</label>
+              <input type="text" formControlName="nombre" class="form-control" placeholder="Escribe aquí el nombre"
+                [class.is-invalid]="f.nombre.touched && f.nombre.invalid">
+              @if (f.nombre.touched && f.nombre.invalid) {
+                <div class="invalid-feedback">Nombre requerido mínimo 2 caracteres</div>
+              }
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Apellido *</label>
+              <input type="text" formControlName="apellido" class="form-control" placeholder="Escribe aquí el apellido"
+                [class.is-invalid]="f.apellido.touched && f.apellido.invalid">
+              @if (f.apellido.touched && f.apellido.invalid) {
+                <div class="invalid-feedback">Apellido requerido mínimo 2 caracteres</div>
+              }
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">DNI *</label>
+              <input type="text" formControlName="dni" class="form-control" placeholder="Ej: 12345678A"
+                maxlength="9"
+                [class.is-invalid]="f.dni.touched && f.dni.invalid">
+              @if (f.dni.touched && f.dni.invalid) {
+                <div class="invalid-feedback">
+                  @if (f.dni.hasError('required')) {
+                    <span>DNI requerido</span>
+                  }
+                  @if (f.dni.hasError('pattern')) {
+                    <span>Formato: 8 dígitos + letra (Ej: 12345678A)</span>
+                  }
+                </div>
+              }
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Email *</label>
+              <input type="email" formControlName="email" class="form-control" placeholder="ejemplo@correo.com"
+                [class.is-invalid]="f.email.touched && f.email.invalid">
+              @if (f.email.touched && f.email.invalid) {
+                <div class="invalid-feedback">
+                  @if (f.email.hasError('required')) {
+                    <span>Email requerido</span>
+                  }
+                  @if (f.email.hasError('email')) {
+                    <span>Email inválido</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Teléfono *</label>
+              <input type="text" formControlName="telefono" class="form-control" placeholder="Ej: 612345678"
+                maxlength="9"
+                [class.is-invalid]="f.telefono.touched && f.telefono.invalid">
+              @if (f.telefono.touched && f.telefono.invalid) {
+                <div class="invalid-feedback">
+                  @if (f.telefono.hasError('required')) {
+                    <span>Teléfono requerido</span>
+                  }
+                  @if (f.telefono.hasError('pattern')) {
+                    <span>Debe tener 9 dígitos</span>
+                  }
+                </div>
+              }
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Rol *</label>
+              <select formControlName="rol" class="form-select"
+                [class.is-invalid]="f.rol.touched && f.rol.invalid">
+                <option value="">Seleccionar rol...</option>
+                <option value="Agricultor">Agricultor</option>
+                <option value="Operador de Maquinaria">Operador de Maquinaria</option>
+                <option value="Supervisor">Supervisor</option>
+                <option value="Técnico">Técnico</option>
+                <option value="Administrador">Administrador</option>
+              </select>
+              @if (f.rol.touched && f.rol.invalid) {
+                <div class="invalid-feedback">Rol requerido</div>
+              }
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Fecha de Alta *</label>
+              <input type="date" formControlName="fechaAlta" class="form-control"
+                [class.is-invalid]="f.fechaAlta.touched && f.fechaAlta.invalid">
+              @if (f.fechaAlta.touched && f.fechaAlta.invalid) {
+                <div class="invalid-feedback">La fecha es obligatoria</div>
+              }
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-3 mt-4">
+            <button type="button" class="btn btn-outline-primary" (click)="atras()">ATRÁS</button>
+            <button type="submit" class="btn btn-info text-white px-4" [disabled]="trabajadorForm.invalid || isLoading">
+              @if (isLoading) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+              }
+              GUARDAR
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
 </div>

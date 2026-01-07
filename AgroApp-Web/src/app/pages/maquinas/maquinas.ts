@@ -1,69 +1,101 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MaquinaService } from '../../services/maquina';
 
 @Component({
   selector: 'app-maquinas',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './maquinas.html',
   styleUrl: './maquinas.css',
 })
-export class MaquinasComponent {
-  constructor(private router: Router) {}
+export class MaquinasComponent implements OnInit {
+  private router = inject(Router);
+  private maquinaService = inject(MaquinaService);
 
-  tabActivo: 'activas' | 'inactivas' = 'activas';
+  tabActivo: 'activas' | 'inactivas' | 'mantenimiento' = 'activas';
   menuAbierto: number | null = null;
   modalAbierto: boolean = false;
+  isLoading: boolean = false;
+  searchTerm: string = '';
+
+  maquinas: any[] = [];
 
   nuevaMaquinaForm = new FormGroup({
     nombre: new FormControl('', {
       validators: [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
       nonNullable: true
     }),
-    matricula: new FormControl('', {
-      validators: [Validators.required, Validators.pattern(/^[A-Z0-9]{6,10}$/i)],
+    numSerie: new FormControl('', {
+      validators: [Validators.required, Validators.pattern(/^[A-Z0-9]{6,20}$/i)],
       nonNullable: true
     }),
     modelo: new FormControl('', {
-      validators: [Validators.required, Validators.minLength(2), Validators.maxLength(30)],
+      validators: [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
+      nonNullable: true
+    }),
+    tipo: new FormControl('', {
+      validators: [Validators.required],
       nonNullable: true
     }),
     fechaCompra: new FormControl('', {
       validators: [Validators.required],
       nonNullable: true
     }),
-    localizacion: new FormControl('', {
-      validators: [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
+    ubicacion: new FormControl('', {
+      validators: [Validators.minLength(3), Validators.maxLength(100)],
       nonNullable: true
     }),
-    trabajador: new FormControl('', {
-      validators: [Validators.minLength(3), Validators.maxLength(50)],
+    descripcion: new FormControl('', {
       nonNullable: true
     }),
   });
 
   get f() { return this.nuevaMaquinaForm.controls; }
 
-  maquinasActivas = [
-    { id: 1, nombre: 'Cosechadora', matricula: 'ER342BK', fechaLiberacion: '20/05/2025', localizacion: 'Finca 1', trabajadores: 5 },
-    { id: 2, nombre: 'Empacadora', matricula: 'B3223CV', fechaLiberacion: '13/09/2025', localizacion: 'Finca 3', trabajadores: 3 },
-    { id: 3, nombre: 'Tractor', matricula: 'C6434NM', fechaLiberacion: '14/01/2026', localizacion: 'Finca 2', trabajadores: 1 },
-    { id: 4, nombre: 'Fumigadora', matricula: 'L3465LK', fechaLiberacion: '25/08/2025', localizacion: 'Finca 3', trabajadores: 2 },
-  ];
-
-  maquinasInactivas = [
-    { id: 5, nombre: 'Cosechadora', matricula: 'ER342BK', fechaLiberacion: '-', localizacion: 'Finca 1', trabajadores: '-' },
-    { id: 6, nombre: 'Empacadora', matricula: 'B3223CV', fechaLiberacion: '-', localizacion: 'Finca 3', trabajadores: '-' },
-    { id: 7, nombre: 'Tractor', matricula: 'C6434NM', fechaLiberacion: '-', localizacion: 'Finca 2', trabajadores: '-' },
-    { id: 8, nombre: 'Fumigadora', matricula: 'L3465LK', fechaLiberacion: '-', localizacion: 'Finca 3', trabajadores: '-' },
-  ];
-
-  get maquinasMostradas() {
-    return this.tabActivo === 'activas' ? this.maquinasActivas : this.maquinasInactivas;
+  ngOnInit() {
+    this.cargarMaquinas();
   }
 
-  cambiarTab(tab: 'activas' | 'inactivas') {
+  cargarMaquinas() {
+    this.isLoading = true;
+    this.maquinaService.getAll().subscribe({
+      next: (maquinas) => {
+        this.maquinas = maquinas;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar máquinas:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  get maquinasMostradas() {
+    let filtered = this.maquinas.filter(m => {
+      if (this.tabActivo === 'activas') return m.estado === 'activa';
+      if (this.tabActivo === 'inactivas') return m.estado === 'inactiva';
+      if (this.tabActivo === 'mantenimiento') return m.estado === 'mantenimiento';
+      return true;
+    });
+
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(m => 
+        m.nombre.toLowerCase().includes(term) ||
+        m.numSerie.toLowerCase().includes(term) ||
+        m.modelo.toLowerCase().includes(term) ||
+        m.tipo.toLowerCase().includes(term) ||
+        (m.ubicacion && m.ubicacion.toLowerCase().includes(term))
+      );
+    }
+
+    return filtered;
+  }
+
+  cambiarTab(tab: 'activas' | 'inactivas' | 'mantenimiento') {
     this.tabActivo = tab;
     this.menuAbierto = null;
   }
@@ -77,9 +109,32 @@ export class MaquinasComponent {
     this.menuAbierto = null;
   }
 
-  cancelar(maquina: any) {
-    console.log('Cancelar:', maquina);
-    this.menuAbierto = null;
+  cambiarEstado(maquina: any, nuevoEstado: string) {
+    this.maquinaService.cambiarEstado(maquina.id, nuevoEstado).subscribe({
+      next: () => {
+        this.cargarMaquinas();
+        this.menuAbierto = null;
+      },
+      error: (error) => {
+        console.error('Error al cambiar estado:', error);
+        alert('Error al cambiar el estado de la máquina');
+      }
+    });
+  }
+
+  eliminarMaquina(maquina: any) {
+    if (confirm(`¿Estás seguro de que deseas eliminar la máquina "${maquina.nombre}"?`)) {
+      this.maquinaService.delete(maquina.id).subscribe({
+        next: () => {
+          this.cargarMaquinas();
+          this.menuAbierto = null;
+        },
+        error: (error) => {
+          console.error('Error al eliminar máquina:', error);
+          alert('Error al eliminar la máquina');
+        }
+      });
+    }
   }
 
   abrirModal() {
@@ -97,6 +152,23 @@ export class MaquinasComponent {
       this.nuevaMaquinaForm.markAllAsTouched();
       return;
     }
-    this.cerrarModal();
+
+    const maquinaData = {
+      ...this.nuevaMaquinaForm.value,
+      estado: 'activa'
+    };
+
+    this.maquinaService.create(maquinaData).subscribe({
+      next: () => {
+        this.cargarMaquinas();
+        this.cerrarModal();
+        alert('Máquina creada exitosamente');
+      },
+      error: (error) => {
+        console.error('Error al crear máquina:', error);
+        alert('Error al crear la máquina');
+      }
+    });
   }
 }
+
