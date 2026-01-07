@@ -1,8 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+<<<<<<< HEAD
 import { CommonModule } from '@angular/common';
 import { MaquinaService } from '../../services/maquina';
+=======
+import { Maquina } from '../../interfaces/maquina.interface';
+>>>>>>> a8ea3b81f347502c9f91f9e9c880a972f9b4c8a8
 
 @Component({
   selector: 'app-maquinas',
@@ -55,8 +59,103 @@ export class MaquinasComponent implements OnInit {
 
   get f() { return this.nuevaMaquinaForm.controls; }
 
+<<<<<<< HEAD
   ngOnInit() {
     this.cargarMaquinas();
+=======
+  maquinasActivas: Maquina[] = [
+    { 
+      id: 1, 
+      nombre: 'Cosechadora Case IH', 
+      numSerie: 'CASE-2025-001', 
+      modelo: 'Axial-Flow 250', 
+      tipo: 'Cosechadora',
+      fechaCompra: '2024-06-15', 
+      estado: 'activa', 
+      ubicacion: 'Finca 1',
+      tipoCultivo: 'Trigo, Cebada',
+      anchoCorte: '7.6m',
+      capacidadTolva: 10500
+    },
+    { 
+      id: 2, 
+      nombre: 'Empacadora New Holland', 
+      numSerie: 'NH-2025-002', 
+      modelo: 'BR6090', 
+      tipo: 'Empacadora',
+      fechaCompra: '2024-08-20', 
+      estado: 'activa', 
+      ubicacion: 'Finca 3',
+      tipoBala: 'Redonda',
+      capacidadEmpaque: 80
+    },
+    { 
+      id: 3, 
+      nombre: 'Tractor John Deere', 
+      numSerie: 'JD5090E-2025-001', 
+      modelo: '5090E', 
+      tipo: 'Tractor',
+      fechaCompra: '2025-01-10', 
+      estado: 'activa', 
+      ubicacion: 'Finca 2',
+      potenciaCv: 90,
+      tipoCombustible: 'Diésel',
+      capacidadRemolque: 3500
+    },
+    { 
+      id: 4, 
+      nombre: 'Tractor Massey Ferguson', 
+      numSerie: 'MF-2024-003', 
+      modelo: 'MF 5700', 
+      tipo: 'Tractor',
+      fechaCompra: '2024-05-15', 
+      estado: 'activa', 
+      ubicacion: 'Finca 3',
+      potenciaCv: 120,
+      tipoCombustible: 'Diésel',
+      capacidadRemolque: 4000
+    },
+  ];
+
+  maquinasInactivas: Maquina[] = [
+    { 
+      id: 5, 
+      nombre: 'Cosechadora Antigua', 
+      numSerie: 'OLD-CASE-001', 
+      modelo: 'Legacy 100', 
+      tipo: 'Cosechadora',
+      fechaCompra: '2015-03-10', 
+      estado: 'inactiva', 
+      ubicacion: 'Almacén',
+      descripcion: 'Fuera de servicio por antigüedad'
+    },
+    { 
+      id: 6, 
+      nombre: 'Empacadora Vieja', 
+      numSerie: 'OLD-NH-002', 
+      modelo: 'BR4000', 
+      tipo: 'Empacadora',
+      fechaCompra: '2016-07-20', 
+      estado: 'inactiva', 
+      ubicacion: 'Almacén',
+      descripcion: 'Reemplazada por modelo nuevo'
+    },
+    { 
+      id: 7, 
+      nombre: 'Tractor en Reparación', 
+      numSerie: 'REP-JD-003', 
+      modelo: 'JD 4000', 
+      tipo: 'Tractor',
+      fechaCompra: '2018-01-15', 
+      estado: 'mantenimiento', 
+      ubicacion: 'Taller',
+      descripcion: 'En mantenimiento mayor'
+    },
+  ];
+
+  get maquinasMostradas() {
+    return this.tabActivo === 'activas' ? this.maquinasActivas : this.maquinasInactivas;
+>>>>>>> a8ea3b81f347502c9f91f9e9c880a972f9b4c8a8
   }
 
   cargarMaquinas() {
@@ -104,11 +203,12 @@ export class MaquinasComponent implements OnInit {
     this.menuAbierto = this.menuAbierto === id ? null : id;
   }
 
-  verInfo(maquina: any) {
+  verInfo(maquina: Maquina) {
     this.router.navigate(['/maquinas', maquina.id]);
     this.menuAbierto = null;
   }
 
+<<<<<<< HEAD
   cambiarEstado(maquina: any, nuevoEstado: string) {
     this.maquinaService.cambiarEstado(maquina.id, nuevoEstado).subscribe({
       next: () => {
@@ -135,6 +235,11 @@ export class MaquinasComponent implements OnInit {
         }
       });
     }
+=======
+  cancelar(maquina: Maquina) {
+    console.log('Cancelar:', maquina);
+    this.menuAbierto = null;
+>>>>>>> a8ea3b81f347502c9f91f9e9c880a972f9b4c8a8
   }
 
   abrirModal() {

@@ -1,4 +1,5 @@
 import { TrabajadorService } from './../../services/trabajador';
+import { Trabajador } from './../../interfaces/trabajador.interface';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -14,9 +15,13 @@ import { FormsModule } from '@angular/forms';
 export class TrabajadoresComponent implements OnInit {
   menuAbierto: number | null = null;
   busqueda: string = '';
+<<<<<<< HEAD
   trabajadores: any[] = []; 
   trabajadoresFiltrados: any[] = [];
   isLoading: boolean = false;
+=======
+  trabajadores: Trabajador[] = []; 
+>>>>>>> a8ea3b81f347502c9f91f9e9c880a972f9b4c8a8
   
   constructor(private router: Router, private trabajadorService: TrabajadorService) {}
 
@@ -25,6 +30,7 @@ export class TrabajadoresComponent implements OnInit {
   }
 
   cargarTrabajadores() {
+<<<<<<< HEAD
     this.isLoading = true;
     this.trabajadorService.getAll().subscribe({
       next: (response: any) => {
@@ -33,6 +39,13 @@ export class TrabajadoresComponent implements OnInit {
         this.trabajadoresFiltrados = this.trabajadores;
         this.isLoading = false;
         console.log('Trabajadores cargados:', this.trabajadores);
+=======
+    this.trabajadorService.getAll({ per_page: 15 }).subscribe({
+      next: (response) => {
+        this.trabajadores = response.data; // Extraer el array de la respuesta paginada
+        console.log('Trabajadores cargados:', response.data);
+        console.log('Total:', response.total);
+>>>>>>> a8ea3b81f347502c9f91f9e9c880a972f9b4c8a8
       },
       error: (error) => {
         console.error('Error al cargar trabajadores:', error);
@@ -59,11 +72,12 @@ export class TrabajadoresComponent implements OnInit {
     this.menuAbierto = this.menuAbierto === id ? null : id;
   }
 
-  verInfo(trabajador: any) {
+  verInfo(trabajador: Trabajador) {
     this.router.navigate(['/trabajadores', trabajador.id]);
     this.menuAbierto = null;
   }
 
+<<<<<<< HEAD
   editarTrabajador(trabajador: any) {
     this.router.navigate(['/trabajadores', trabajador.id, 'editar']);
     this.menuAbierto = null;
@@ -82,6 +96,10 @@ export class TrabajadoresComponent implements OnInit {
         }
       });
     }
+=======
+  cancelar(trabajador: Trabajador) {
+    console.log('Cancelar:', trabajador);
+>>>>>>> a8ea3b81f347502c9f91f9e9c880a972f9b4c8a8
     this.menuAbierto = null;
   }
 
