@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TrabajadorService } from '../../services/trabajador';
+import { TrabajadorService } from '../../services/trabajador.service';
 
 @Component({
   selector: 'app-trabajador-nuevo',
@@ -45,7 +45,7 @@ export class TrabajadorNuevoComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    const trabajadorData = this.trabajadorForm.value;
+    const trabajadorData: any = this.trabajadorForm.value;
 
     this.trabajadorService.create(trabajadorData).subscribe({
       next: (response) => {

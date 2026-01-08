@@ -8,7 +8,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
-import { MaquinaService } from '../../services/maquina';
+import { MaquinaService } from '../../services/maquina.service';
 
 @Component({
   selector: 'app-maquina-detalle',
@@ -95,11 +95,11 @@ export class MaquinaDetalleComponent implements OnInit {
   cargarMaquina() {
     this.isLoading = true;
     this.maquinaService.getById(this.maquinaId).subscribe({
-      next: (maquina) => {
+      next: (maquina: any) => {
         this.maquina = maquina;
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al cargar máquina:', error);
         this.isLoading = false;
         alert('Error al cargar la información de la máquina');
@@ -135,12 +135,12 @@ export class MaquinaDetalleComponent implements OnInit {
     const maquinaData = this.editarMaquinaForm.value;
 
     this.maquinaService.update(this.maquinaId, maquinaData).subscribe({
-      next: (maquina) => {
+      next: (maquina: any) => {
         this.maquina = maquina;
         this.cerrarModalEditar();
         alert('Máquina actualizada exitosamente');
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al actualizar máquina:', error);
         alert('Error al actualizar la máquina');
       }

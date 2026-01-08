@@ -47,9 +47,15 @@ export class LoginComponent {
 
       const { usuario, password } = this.loginForm.value;
 
-      this.authService.login(usuario!, password!).subscribe({
+      this.authService.login({ usuario: usuario, password: password }).subscribe({
         next: (response) => {
           console.log('Login exitoso', response);
+          
+          // Guardar el token en localStorage
+          if (response.token) {
+            this.authService.saveToken(response.token);
+          }
+          
           this.isLoading = false;
           this.router.navigate(['/dashboard']);
         },
@@ -59,11 +65,6 @@ export class LoginComponent {
           this.errorMessage = error.error?.message || 'Error al iniciar sesión. Verifica tus credenciales.';
         }
       });
-    } else {
-      // Marcar todos los campos como touched para mostrar errores
-      Object.keys(this.loginForm.controls).forEach(key => {
-        this.loginForm.get(key)?.markAsTouched();
-      });
-    }
+    } 
   }
 }

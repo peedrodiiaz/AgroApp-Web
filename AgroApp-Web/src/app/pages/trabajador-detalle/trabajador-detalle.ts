@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TrabajadorService } from '../../services/trabajador';
+import { TrabajadorService } from '../../services/trabajador.service';
 
 @Component({
   selector: 'app-trabajador-detalle',
@@ -31,11 +31,11 @@ export class TrabajadorDetalleComponent implements OnInit {
     this.isLoading = true;
     this.trabajadorService.getById(this.trabajadorId).subscribe({
       next: (response: any) => {
-        this.trabajador = response.data || response;
+        this.trabajador = response;
         this.isLoading = false;
         console.log('Trabajador cargado:', this.trabajador);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al cargar trabajador:', error);
         this.isLoading = false;
         alert('Error al cargar el trabajador');

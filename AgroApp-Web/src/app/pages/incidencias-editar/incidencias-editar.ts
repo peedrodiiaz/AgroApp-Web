@@ -2,9 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { IncidenciaService } from '../../services/incidencia';
-import { TrabajadorService } from '../../services/trabajador';
-import { MaquinaService } from '../../services/maquina';
+import { IncidenciaService } from '../../services/incidencia.service';
+import { TrabajadorService } from '../../services/trabajador.service';
+import { MaquinaService } from '../../services/maquina.service';
 
 @Component({
   selector: 'app-incidencia-editar',
@@ -32,8 +32,8 @@ export class IncidenciaEditarComponent implements OnInit {
     prioridad: new FormControl('', [Validators.required]),
     fechaApertura: new FormControl('', [Validators.required]),
     fechaCierre: new FormControl(''),
-    trabajador_id: new FormControl('', [Validators.required]),
-    maquina_id: new FormControl('', [Validators.required])
+    trabajador_id: new FormControl<number | null>(null, [Validators.required]),
+    maquina_id: new FormControl<number | null>(null, [Validators.required])
   });
 
   get f() { return this.editarForm.controls; }
@@ -48,7 +48,7 @@ export class IncidenciaEditarComponent implements OnInit {
   cargarIncidencia() {
     this.isLoading = true;
     this.incidenciaService.getById(this.incidenciaId).subscribe({
-      next: (incidencia) => {
+      next: (incidencia: any) => {
         this.editarForm.patchValue({
           titulo: incidencia.titulo,
           descripcion: incidencia.descripcion,
@@ -61,7 +61,7 @@ export class IncidenciaEditarComponent implements OnInit {
         });
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al cargar incidencia:', error);
         this.isLoading = false;
         alert('Error al cargar la información de la incidencia');
@@ -71,10 +71,10 @@ export class IncidenciaEditarComponent implements OnInit {
 
   cargarTrabajadores() {
     this.trabajadorService.getAll().subscribe({
-      next: (data) => {
-        this.trabajadores = data;
+      next: (response: any) => {
+        this.trabajadores = response || [];
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al cargar trabajadores:', error);
       }
     });
@@ -82,10 +82,10 @@ export class IncidenciaEditarComponent implements OnInit {
 
   cargarMaquinas() {
     this.maquinaService.getAll().subscribe({
-      next: (data) => {
-        this.maquinas = data;
+      next: (response: any) => {
+        this.maquinas = response || [];
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al cargar máquinas:', error);
       }
     });
@@ -106,7 +106,7 @@ export class IncidenciaEditarComponent implements OnInit {
     }
 
     this.isLoading = true;
-    const incidenciaData = this.editarForm.value;
+    const incidenciaData: any = this.editarForm.value;
 
     this.incidenciaService.update(this.incidenciaId, incidenciaData).subscribe({
       next: (incidencia) => {

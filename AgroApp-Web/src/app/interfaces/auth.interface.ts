@@ -1,29 +1,20 @@
-// Interfaz de usuario autenticado
-export interface User {
+export interface Usuario {
   id: number;
   name: string;
+  usuario?: string;
   email: string;
-  email_verified_at?: string;
-  created_at: string;
-  updated_at: string;
+  role?: string;
 }
 
-// Respuesta de login y register
-export interface AuthResponse {
+export interface LoginResponse {
+  success: boolean;
+  message?: string;
   token: string;
-  user: User;
+  user: Usuario;
 }
 
-// Payload para login
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-// Payload para registro
-export interface RegisterRequest {
-  name: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
+export interface RegistroResponse {
+  message: string;
+  token: string;
+  user: Usuario;
 }

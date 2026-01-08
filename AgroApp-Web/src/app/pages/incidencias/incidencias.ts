@@ -1,15 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-<<<<<<< HEAD
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IncidenciaService } from '../../services/incidencia';
-import { TrabajadorService } from '../../services/trabajador';
-import { MaquinaService } from '../../services/maquina';
-=======
+import { IncidenciaService } from '../../services/incidencia.service';
+import { TrabajadorService } from '../../services/trabajador.service';
+import { MaquinaService } from '../../services/maquina.service';
 import { Incidencia } from '../../interfaces/incidencia.interface';
->>>>>>> a8ea3b81f347502c9f91f9e9c880a972f9b4c8a8
 
 @Component({
   selector: 'app-incidencias',
@@ -24,9 +21,7 @@ export class IncidenciasComponent implements OnInit {
   private trabajadorService = inject(TrabajadorService);
   private maquinaService = inject(MaquinaService);
 
-<<<<<<< HEAD
-  incidencias: any[] = [];
-  incidenciasFiltradas: any[] = [];
+  incidencias: Incidencia[] = [];
   trabajadores: any[] = [];
   maquinas: any[] = [];
   searchTerm = '';
@@ -36,12 +31,12 @@ export class IncidenciasComponent implements OnInit {
   nuevoReporteForm = new FormGroup({
     titulo: new FormControl('', [Validators.required, Validators.minLength(3)]),
     descripcion: new FormControl('', [Validators.required, Validators.maxLength(500)]),
-    estado: new FormControl('Abierta', [Validators.required]),
-    prioridad: new FormControl('Media', [Validators.required]),
+    estado: new FormControl('abierta', [Validators.required]),
+    prioridad: new FormControl('media', [Validators.required]),
     fechaApertura: new FormControl('', [Validators.required]),
     fechaCierre: new FormControl(''),
-    trabajador_id: new FormControl('', [Validators.required]),
-    maquina_id: new FormControl('', [Validators.required])
+    trabajador_id: new FormControl<number | null>(null, [Validators.required]),
+    maquina_id: new FormControl<number | null>(null, [Validators.required])
   });
 
   ngOnInit() {
@@ -50,15 +45,18 @@ export class IncidenciasComponent implements OnInit {
     this.cargarMaquinas();
   }
 
+  aplicarFiltros() {
+    // Los filtros se aplican automáticamente a través del getter incidenciasFiltradas
+  }
+
   cargarIncidencias() {
     this.isLoading = true;
     this.incidenciaService.getAll().subscribe({
-      next: (data) => {
-        this.incidencias = data;
-        this.aplicarFiltros();
+      next: (response: any) => {
+        this.incidencias = response || [];
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al cargar incidencias:', error);
         this.isLoading = false;
         alert('Error al cargar las incidencias');
@@ -68,10 +66,10 @@ export class IncidenciasComponent implements OnInit {
 
   cargarTrabajadores() {
     this.trabajadorService.getAll().subscribe({
-      next: (data) => {
-        this.trabajadores = data;
+      next: (response: any) => {
+        this.trabajadores = response || [];
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al cargar trabajadores:', error);
       }
     });
@@ -79,16 +77,16 @@ export class IncidenciasComponent implements OnInit {
 
   cargarMaquinas() {
     this.maquinaService.getAll().subscribe({
-      next: (data) => {
-        this.maquinas = data;
+      next: (response: any) => {
+        this.maquinas = response || [];
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al cargar máquinas:', error);
       }
     });
   }
 
-  aplicarFiltros() {
+  get incidenciasFiltradas() {
     let resultado = [...this.incidencias];
 
     // Filtrar por estado
@@ -102,71 +100,21 @@ export class IncidenciasComponent implements OnInit {
       resultado = resultado.filter(i =>
         i.titulo?.toLowerCase().includes(term) ||
         i.descripcion?.toLowerCase().includes(term) ||
-        i.maquina?.nombre?.toLowerCase().includes(term) ||
-        i.trabajador?.nombre?.toLowerCase().includes(term)
+        i.prioridad?.toLowerCase().includes(term)
       );
     }
 
-    this.incidenciasFiltradas = resultado;
+    return resultado;
   }
 
   cambiarEstado(estado: string) {
     this.estadoActivo = estado;
-    this.aplicarFiltros();
   }
-=======
-  incidencias: Incidencia[] = [
-    { 
-      id: 1, 
-      titulo: 'Fallo en motor',
-      descripcion: 'El tractor presenta humo negro al arrancar', 
-      estado: 'abierta', 
-      prioridad: 'alta',
-      fechaApertura: '2024-11-28T10:00:00', 
-      maquina_id: 1,
-      trabajador_id: 1,
-      maquina: { id: 1, nombre: 'Tractor JD-320', modelo: 'JD-320' },
-      trabajador: { id: 1, nombre: 'María', apellido: 'López' }
-    },
-    { 
-      id: 2, 
-      titulo: 'Avería en cosechadora',
-      descripcion: 'La cosechadora no arranca correctamente', 
-      estado: 'en_progreso', 
-      prioridad: 'media',
-      fechaApertura: '2024-11-22T08:30:00', 
-      maquina_id: 2,
-      trabajador_id: 2,
-      maquina: { id: 2, nombre: 'Cosechadora MX-200', modelo: 'MX-200' },
-      trabajador: { id: 2, nombre: 'John', apellido: 'Wick' }
-    },
-    { 
-      id: 3, 
-      titulo: 'Sistema de riego',
-      descripcion: 'Fuga detectada en tubería principal', 
-      estado: 'resuelta', 
-      prioridad: 'baja',
-      fechaApertura: '2024-11-05T14:00:00',
-      fechaCierre: '2024-11-12T16:00:00', 
-      maquina_id: 3,
-      trabajador_id: 3,
-      maquina: { id: 3, nombre: 'Sistema de riego PR-45', modelo: 'PR-45' },
-      trabajador: { id: 3, nombre: 'Carlos', apellido: 'Ortega' }
-    },
-  ];
->>>>>>> a8ea3b81f347502c9f91f9e9c880a972f9b4c8a8
 
   get abiertas() {
     return this.incidencias.filter(i => i.estado === 'abierta').length;
   }
 
-<<<<<<< HEAD
-=======
-  verIncidencia(incidencia: Incidencia) {
-    this.router.navigate(['/incidencias', incidencia.id]);
-  }
-
->>>>>>> a8ea3b81f347502c9f91f9e9c880a972f9b4c8a8
   get enProgreso() {
     return this.incidencias.filter(i => i.estado === 'en_progreso').length;
   }
@@ -179,7 +127,7 @@ export class IncidenciasComponent implements OnInit {
     return this.incidencias.length;
   }
 
-  verIncidencia(incidencia: any) {
+  verIncidencia(incidencia: Incidencia) {
     this.router.navigate(['/incidencias', incidencia.id]);
   }
 
@@ -212,13 +160,13 @@ export class IncidenciasComponent implements OnInit {
     }
 
     this.isLoading = true;
-    const incidenciaData = this.nuevoReporteForm.value;
+    const incidenciaData: any = this.nuevoReporteForm.value;
 
     this.incidenciaService.create(incidenciaData).subscribe({
       next: (incidencia) => {
         this.isLoading = false;
         alert('Incidencia registrada exitosamente');
-        this.nuevoReporteForm.reset({ estado: 'Abierta', prioridad: 'Media' });
+        this.nuevoReporteForm.reset({ estado: 'abierta', prioridad: 'media' });
         this.cargarIncidencias();
         // Cerrar modal si existe
         const modal = document.getElementById('modalNuevoReporte');

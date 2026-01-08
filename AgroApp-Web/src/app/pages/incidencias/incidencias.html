@@ -148,9 +148,8 @@
             <input 
               type="text" 
               class="form-control" 
-              placeholder="Buscar por título, descripción, máquina o trabajador..." 
-              [(ngModel)]="searchTerm"
-              (ngModelChange)="aplicarFiltros()">
+              placeholder="Buscar por título, descripción o prioridad..." 
+              [(ngModel)]="searchTerm">
           </div>
 
           @if (isLoading) {
@@ -189,8 +188,8 @@
                         <div class="fw-semibold">{{ i.titulo }}</div>
                         <div class="text-secondary small">{{ i.descripcion | slice:0:50 }}...</div>
                       </td>
-                      <td>{{ i.trabajador?.nombre }} {{ i.trabajador?.apellido }}</td>
-                      <td>{{ i.maquina?.nombre }}</td>
+                      <td>ID: {{ i.trabajador_id }}</td>
+                      <td>ID: {{ i.maquina_id }}</td>
                       <td>
                         @if(i.estado==='Abierta') {
                           <span class="badge bg-danger bg-opacity-10 text-danger fw-semibold">Abierta</span>

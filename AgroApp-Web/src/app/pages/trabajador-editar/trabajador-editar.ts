@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TrabajadorService } from '../../services/trabajador';
+import { TrabajadorService } from '../../services/trabajador.service';
 
 @Component({
   selector: 'app-trabajador-editar',
@@ -38,7 +38,7 @@ export class TrabajadorEditarComponent implements OnInit {
   cargarTrabajador() {
     this.isLoading = true;
     this.trabajadorService.getById(this.trabajadorId).subscribe({
-      next: (trabajador) => {
+      next: (trabajador: any) => {
         this.trabajadorForm.patchValue({
           nombre: trabajador.nombre,
           apellido: trabajador.apellido,
@@ -50,7 +50,7 @@ export class TrabajadorEditarComponent implements OnInit {
         });
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al cargar trabajador:', error);
         this.isLoading = false;
         alert('Error al cargar la información del trabajador');
@@ -69,7 +69,7 @@ export class TrabajadorEditarComponent implements OnInit {
     }
 
     this.isLoading = true;
-    const trabajadorData = this.trabajadorForm.value;
+    const trabajadorData: any = this.trabajadorForm.value;
 
     this.trabajadorService.update(this.trabajadorId, trabajadorData).subscribe({
       next: (trabajador) => {

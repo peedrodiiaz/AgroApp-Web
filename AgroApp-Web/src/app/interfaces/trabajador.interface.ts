@@ -5,35 +5,27 @@ export interface Trabajador {
   dni: string;
   telefono: string;
   email: string;
-  rol: 'trabajador' | 'supervisor' | 'administrador';
-  fechaAlta: string;
-  avatar?: string;
-  created_at?: string;
-  updated_at?: string;
-  // Relaciones opcionales
-  cronogramas?: any[];
-  incidencias?: any[];
-}
-
-export interface TrabajadorCrear {
-  nombre: string;
-  apellido: string;
-  dni: string;
-  telefono: string;
-  email: string;
-  rol: 'trabajador' | 'supervisor' | 'administrador';
+  rol: string;
   fechaAlta: string;
 }
 
-export interface TrabajadorSalario {
-  base: number;
-  pluses: number;
-  ultimoCobro: string;
+export interface TrabajadoresApiResponse {
+  success: boolean;
+  data: {
+    current_page: number;
+    data: Trabajador[];
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: any[];
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
+  };
 }
 
-export interface TrabajadorHistorial {
-  id: number;
-  tipo: 'incidencia' | 'salario' | 'ausencia';
-  fecha: string;
-  desc: string;
-}
+export type TrabajadoresResponse = Trabajador[];

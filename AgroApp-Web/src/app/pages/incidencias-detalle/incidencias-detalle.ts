@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { IncidenciaService } from '../../services/incidencia';
+import { IncidenciaService } from '../../services/incidencia.service';
 
 @Component({
   selector: 'app-incidencia-detalle',
@@ -27,11 +27,11 @@ export class IncidenciaDetalleComponent implements OnInit {
   cargarIncidencia() {
     this.isLoading = true;
     this.incidenciaService.getById(this.incidenciaId).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.incidencia = data;
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al cargar incidencia:', error);
         this.isLoading = false;
         alert('Error al cargar la información de la incidencia');

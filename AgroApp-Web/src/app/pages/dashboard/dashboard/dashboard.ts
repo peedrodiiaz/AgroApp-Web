@@ -1,8 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TrabajadorService } from '../../../services/trabajador';
-import { MaquinaService } from '../../../services/maquina';
+import { TrabajadorService } from '../../../services/trabajador.service';
+import { MaquinaService } from '../../../services/maquina.service';
 import { forkJoin } from 'rxjs';
+import { Trabajador } from '../../../interfaces/trabajador.interface';
+import { Maquina } from '../../../interfaces/maquina.interface';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,27 +36,40 @@ export class DashboardComponent implements OnInit {
     this.isLoading = true;
     
     forkJoin({
-      trabajadoresStats: this.trabajadorService.getStats(),
-      maquinasStats: this.maquinaService.getStats()
+      trabajadores: this.trabajadorService.getAll(),
+      maquinas: this.maquinaService.getAll()
     }).subscribe({
       next: (result) => {
-        // Procesar estadísticas de trabajadores
-        this.totalTrabajadores = result.trabajadoresStats.total || 0;
-        this.trabajadoresPorRol = result.trabajadoresStats.por_rol || {};
+        // Calcular estadísticas de trabajadores
+        const trabajadores = result.trabajadores as Trabajador[];
+        this.totalTrabajadores = trabajadores.length;
+        this.trabajadoresPorRol = this.contarPorPropiedad(trabajadores, 'rol');
 
-        // Procesar estadísticas de máquinas
-        this.totalMaquinas = result.maquinasStats.total || 0;
-        this.maquinasPorEstado = result.maquinasStats.por_estado || {};
-        this.maquinasPorTipo = result.maquinasStats.por_tipo || {};
+        // Calcular estadísticas de máquinas
+        const maquinas = result.maquinas as Maquina[];
+        this.totalMaquinas = maquinas.length;
+        this.maquinasPorEstado = this.contarPorPropiedad(maquinas, 'estado');
+        this.maquinasPorTipo = this.contarPorPropiedad(maquinas, 'tipo');
 
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al cargar estadísticas:', error);
         this.isLoading = false;
         alert('Error al cargar las estadísticas del dashboard');
       }
     });
+  }
+
+  // Función auxiliar para contar elementos por una propiedad
+  private contarPorPropiedad(items: any[], propiedad: string): any {
+    return items.reduce((acc, item) => {
+      const valor = item[propiedad];
+      if (valor) {
+        acc[valor] = (acc[valor] || 0) + 1;
+      }
+      return acc;
+    }, {});
   }
 
   // Helpers para obtener valores de forma segura

@@ -36,15 +36,17 @@
 
 .dropdown-menu-custom {
   position: absolute;
-  right: 20px;
-  top: 35px;
+  right: 0;
+  top: 100%;
+  margin-top: 0.25rem;
   background: white;
   border: 1px solid #dee2e6;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   padding: 0.25rem 0;
   z-index: 1050;
-  min-width: 130px;
+  min-width: 180px;
+  white-space: nowrap;
 }
 
 .dropdown-item-custom {
@@ -68,9 +70,27 @@
 .dropdown-item-custom i {
   font-size: 1rem;
 }
+.card-body {
+  overflow: visible !important;
+}
+
 .table-responsive {
   overflow-x: auto;
+  overflow-y: visible;
   -webkit-overflow-scrolling: touch;
+}
+
+.position-relative {
+  position: relative;
+  overflow: visible;
+}
+
+table {
+  position: relative;
+}
+
+tbody tr {
+  position: relative;
 }
 
 @media (max-width: 768px) {
