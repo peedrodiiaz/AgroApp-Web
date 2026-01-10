@@ -6,7 +6,7 @@
 
 .content-area {
   flex: 1;
-  margin-left: 250px;
+  margin-left: 280px;
   background: #f5f6fa;
   min-height: 100vh;
   transition: margin-left 0.3s ease;

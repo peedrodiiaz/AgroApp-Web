@@ -1,29 +1,45 @@
-<div class="sidebar bg-light border-end d-flex flex-column">
+<div class="sidebar d-flex flex-column">
   <!-- Logo -->
-  <div class="p-3 border-bottom">
-    <h4 class="text-success fw-bold mb-0">AgroApp</h4>
-    <small class="text-muted">Menu Principal</small>
+  <div class="sidebar-header">
+    <div class="logo-container">
+      
+      <div class="logo-text">
+        <h4 class="mb-0">AgroApp</h4>
+        <small class="text-muted">Gestión Agrícola</small>
+      </div>
+    </div>
   </div>
 
-  <!-- Menu Items -->
-  <nav class="flex-grow-1 py-3">
+  <nav class="sidebar-menu">
     <ul class="nav flex-column">
       @for (item of menuItems; track item.label) {
         <li class="nav-item">
           <a [routerLink]="item.route"
               routerLinkActive="active"
               [routerLinkActiveOptions]="{ exact: true }"
-              class="nav-link d-flex align-items-center justify-content-between px-3 py-2">
-            <div class="d-flex align-items-center gap-2">
-              <span>{{ item.icon }}</span>
-              <span>{{ item.label }}</span>
-            </div>
+              class="nav-link">
+            <span class="nav-icon">{{ item.icon }}</span>
+            <span class="nav-label">{{ item.label }}</span>
             @if (item.hasSubmenu) {
-              <span class="chevron">›</span>
+              <span class="nav-arrow">
+                <i class="bi bi-chevron-right"></i>
+              </span>
             }
           </a>
         </li>
       }
     </ul>
   </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-avatar">
+        <i class="bi bi-person-circle"></i>
+      </div>
+      <div class="user-details">
+        <span class="user-name">Usuario</span>
+        <small class="user-role">Administrador</small>
+      </div>
+    </div>
+  </div>
 </div>

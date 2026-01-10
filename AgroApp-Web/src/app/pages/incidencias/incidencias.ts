@@ -97,11 +97,25 @@ export class IncidenciasComponent implements OnInit {
     // Filtrar por búsqueda
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
-      resultado = resultado.filter(i =>
-        i.titulo?.toLowerCase().includes(term) ||
-        i.descripcion?.toLowerCase().includes(term) ||
-        i.prioridad?.toLowerCase().includes(term)
-      );
+      resultado = resultado.filter(i => {
+        // Búsqueda en campos básicos
+        const basicMatch = 
+          i.titulo?.toLowerCase().includes(term) ||
+          i.descripcion?.toLowerCase().includes(term) ||
+          i.prioridad?.toLowerCase().includes(term);
+        
+        // Búsqueda en trabajador
+        const trabajadorMatch = i.trabajador ? 
+          (i.trabajador.nombre?.toLowerCase().includes(term) ||
+           i.trabajador.apellido?.toLowerCase().includes(term)) : false;
+        
+        // Búsqueda en máquina
+        const maquinaMatch = i.maquina ?
+          (i.maquina.nombre?.toLowerCase().includes(term) ||
+           i.maquina.modelo?.toLowerCase().includes(term)) : false;
+        
+        return basicMatch || trabajadorMatch || maquinaMatch;
+      });
     }
 
     return resultado;

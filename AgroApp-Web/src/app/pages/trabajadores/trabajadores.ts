@@ -30,17 +30,12 @@ export class TrabajadoresComponent implements OnInit {
       next: (response: any) => {
         this.trabajadores = response || [];
         this.isLoading = false;
-        console.log('Trabajadores cargados:', response);
       },
       error: (error: any) => {
         console.error('Error al cargar trabajadores:', error);
         this.isLoading = false;
       }
     });
-  }
-
-  filtrarTrabajadores() {
-    // El filtro se aplica a través del getter trabajadoresFiltrados
   }
 
   get trabajadoresFiltrados() {

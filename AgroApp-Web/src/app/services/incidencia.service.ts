@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Incidencia, IncidenciasResponse } from '../interfaces/incidencia.interface';
+import { map } from 'rxjs/operators';
+import { Incidencia, IncidenciasResponse, IncidenciasApiResponse } from '../interfaces/incidencia.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -13,15 +14,15 @@ export class IncidenciaService {
   constructor(private http: HttpClient) {}
 
   getIncidencias(): Observable<IncidenciasResponse> {
-    return this.http.get<IncidenciasResponse>(`${this.URL_BASE}/incidencias`);
+    return this.http.get<IncidenciasApiResponse>(`${this.URL_BASE}/incidencias`).pipe(
+      map(response => response.data.data)
+    );
   }
 
-  // Alias para compatibilidad
   getAll(): Observable<IncidenciasResponse> {
     return this.getIncidencias();
   }
 
-  // Obtener una incidencia por ID
   getById(id: number): Observable<Incidencia> {
     return this.http.get<Incidencia>(`${this.URL_BASE}/incidencias/${id}`);
   }
@@ -30,7 +31,6 @@ export class IncidenciaService {
     return this.http.delete<IncidenciasResponse>(`${this.URL_BASE}/incidencias/${id}`);
   }
 
-  // Alias para compatibilidad
   delete(id: number): Observable<IncidenciasResponse> {
     return this.removeIncidencia(id);
   }
@@ -39,7 +39,6 @@ export class IncidenciaService {
     return this.http.post<IncidenciasResponse>(`${this.URL_BASE}/incidencias`, incidencia);
   }
 
-  // Alias para compatibilidad
   create(incidencia: any): Observable<IncidenciasResponse> {
     return this.crearIncidencia(incidencia);
   }
@@ -48,7 +47,6 @@ export class IncidenciaService {
     return this.http.put<Incidencia>(`${this.URL_BASE}/incidencias/${id}`, incidencia);
   }
 
-  // Alias para compatibilidad
   update(id: number, incidencia: any): Observable<Incidencia> {
     return this.actualizarIncidencia(id, incidencia);
   }

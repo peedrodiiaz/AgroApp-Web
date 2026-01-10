@@ -19,11 +19,9 @@ export class DashboardComponent implements OnInit {
 
   isLoading = false;
   
-  // Estadísticas de trabajadores
   totalTrabajadores = 0;
   trabajadoresPorRol: any = {};
   
-  // Estadísticas de máquinas
   totalMaquinas = 0;
   maquinasPorEstado: any = {};
   maquinasPorTipo: any = {};
@@ -40,12 +38,10 @@ export class DashboardComponent implements OnInit {
       maquinas: this.maquinaService.getAll()
     }).subscribe({
       next: (result) => {
-        // Calcular estadísticas de trabajadores
         const trabajadores = result.trabajadores as Trabajador[];
         this.totalTrabajadores = trabajadores.length;
         this.trabajadoresPorRol = this.contarPorPropiedad(trabajadores, 'rol');
 
-        // Calcular estadísticas de máquinas
         const maquinas = result.maquinas as Maquina[];
         this.totalMaquinas = maquinas.length;
         this.maquinasPorEstado = this.contarPorPropiedad(maquinas, 'estado');
@@ -61,7 +57,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // Función auxiliar para contar elementos por una propiedad
   private contarPorPropiedad(items: any[], propiedad: string): any {
     return items.reduce((acc, item) => {
       const valor = item[propiedad];
@@ -72,7 +67,6 @@ export class DashboardComponent implements OnInit {
     }, {});
   }
 
-  // Helpers para obtener valores de forma segura
   getRoles(): string[] {
     return Object.keys(this.trabajadoresPorRol);
   }

@@ -1,55 +1,189 @@
-/* Estilos base del sidebar */
 .sidebar {
-    width: 250px;
+    width: 280px;
     min-height: 100vh;
     position: fixed;
     left: 0;
     top: 0;
     z-index: 1000;
-    background-color: #f8f9fa;
+    background: linear-gradient(180deg, #1a5f3d 0%, #198754 100%);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-header {
+    padding: 2rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+    backdrop-filter: blur(10px);
+}
+
+.logo-text h4 {
+    color: white;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.logo-text small {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+}
+
+.sidebar-menu {
+    flex-grow: 1;
+    padding: 1.5rem 0;
+    overflow-y: auto;
+}
+
+.sidebar-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.nav-item {
+    margin: 0.25rem 0.75rem;
 }
 
 .nav-link {
-    color: #495057;
-    transition: all 0.2s;
-    border-radius: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
     font-size: 0.95rem;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: white;
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
 }
 
 .nav-link:hover {
-    background-color: #e9ecef;
-    color: #198754;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    transform: translateX(5px);
 }
 
 .nav-link.active {
-    background-color: #198754;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link.active::before {
+    transform: scaleY(1);
+}
+
+.nav-icon {
+    font-size: 1.3rem;
+    min-width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-label {
+    flex-grow: 1;
+}
+
+.nav-arrow {
+    font-size: 0.9rem;
+    opacity: 0.6;
+    transition: transform 0.3s ease;
+}
+
+.nav-link:hover .nav-arrow {
+    transform: translateX(3px);
+    opacity: 1;
+}
+
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-info:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
     color: white;
 }
 
-.nav-link.active:hover {
-    background-color: #157347;
+.user-details {
+    display: flex;
+    flex-direction: column;
 }
 
-.chevron {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #6c757d;
-}
-
-.nav-link:hover .chevron {
-    color: #198754;
-}
-
-.nav-link.active .chevron {
+.user-name {
     color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.user-role {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
 }
 
 @media (max-width: 991.98px) {
     .sidebar {
-        left: -250px !important; 
+        left: -280px !important; 
         transition: left 0.3s ease;
         z-index: 1050 !important; 
-        box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+        box-shadow: 4px 0 20px rgba(0,0,0,0.3);
     }
 
     :host.show .sidebar {
