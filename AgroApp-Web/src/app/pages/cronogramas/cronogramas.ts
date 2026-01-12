@@ -276,23 +276,50 @@ crearReserva() {
     }
 
     this.isLoading = true;
-    const reservaData: any = this.reservaForm.value;
+    const formValue = this.reservaForm.value;
+    
+    const reservaData: any = {
+    maquina_id: formValue.maquina_id,
+    trabajador_id: formValue.trabajador_id,
+    fechaInicio: formValue.fechaInicio,
+    fechaFin: formValue.fechaFin,
+    color: formValue.color || '#198754',
+    descripcion: formValue.descripcion || '',
+    estado: formValue.estado || 'pendiente'
+    };
+    
+
+
+    if (formValue.horaInicio && formValue.horaInicio.trim() !== '') {
+    reservaData.horaInicio = formValue.horaInicio;
+    }
+    if (formValue.horaFin && formValue.horaFin.trim() !== '') {
+    reservaData.horaFin = formValue.horaFin;
+    }
+
+    console.log('Datos enviados al backend:', reservaData);
 
     this.cronogramaService.create(reservaData).subscribe({
     next: () => {
+        this.isLoading = false;
         alert('Reserva creada exitosamente');
         this.cerrarModal();
         this.cargarDatos();
     },
     error: (error) => {
         this.isLoading = false;
+        console.error('Error al crear reserva:', error);
+        console.error('Respuesta del servidor:', error.error);
+        
         if (error.status === 409) {
         alert('La máquina ya está reservada en ese periodo de tiempo');
         } else if (error.error?.errors) {
         const errors = Object.values(error.error.errors).flat();
         alert('Errores de validación:\n' + errors.join('\n'));
+        } else if (error.error?.message) {
+        alert('Error: ' + error.error.message);
         } else {
-        alert('Error al crear la reserva');
+        alert('Error al crear la reserva. Revisa la consola para más detalles.');
         }
     }
     });
