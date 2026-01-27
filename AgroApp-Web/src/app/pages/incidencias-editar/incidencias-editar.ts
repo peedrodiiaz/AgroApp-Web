@@ -48,7 +48,8 @@ export class IncidenciaEditarComponent implements OnInit {
   cargarIncidencia() {
     this.isLoading = true;
     this.incidenciaService.getById(this.incidenciaId).subscribe({
-      next: (incidencia: any) => {
+      next: (response: any) => {
+        const incidencia = response && response.data ? response.data : response;
         this.editarForm.patchValue({
           titulo: incidencia.titulo,
           descripcion: incidencia.descripcion,
@@ -72,7 +73,13 @@ export class IncidenciaEditarComponent implements OnInit {
   cargarTrabajadores() {
     this.trabajadorService.getAll().subscribe({
       next: (response: any) => {
-        this.trabajadores = response || [];
+        if (response && response.data && Array.isArray(response.data)) {
+          this.trabajadores = response.data;
+        } else if (Array.isArray(response)) {
+          this.trabajadores = response;
+        } else {
+          this.trabajadores = [];
+        }
       },
       error: (error: any) => {
         console.error('Error al cargar trabajadores:', error);
@@ -83,7 +90,13 @@ export class IncidenciaEditarComponent implements OnInit {
   cargarMaquinas() {
     this.maquinaService.getAll().subscribe({
       next: (response: any) => {
-        this.maquinas = response || [];
+        if (response && response.data && Array.isArray(response.data)) {
+          this.maquinas = response.data;
+        } else if (Array.isArray(response)) {
+          this.maquinas = response;
+        } else {
+          this.maquinas = [];
+        }
       },
       error: (error: any) => {
         console.error('Error al cargar máquinas:', error);

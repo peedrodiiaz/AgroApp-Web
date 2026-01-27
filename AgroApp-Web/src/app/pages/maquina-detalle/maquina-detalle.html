@@ -1,137 +1,204 @@
 <div class="container-fluid py-4">
 
-  <!-- Breadcrumb -->
-  <nav aria-label="breadcrumb" class="mb-3">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a (click)="volverListado()" style="cursor: pointer;">
-          <i class="bi bi-house-door"></i>
-        </a>
-      </li>
-      <li class="breadcrumb-item">
-        <a (click)="volverListado()" style="cursor: pointer;">Máquinas</a>
-      </li>
-      <li class="breadcrumb-item active" aria-current="page">Información</li>
-    </ol>
-  </nav>
+  @if (isLoading) {
+    <div class="d-flex justify-content-center align-items-center loading-container">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+  }
 
-  <!-- Título -->
-  <h2 class="fw-bold mb-4">{{ maquina.nombre }} {{ maquina.modelo }}</h2>
+  @if (!isLoading && maquina) {
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a (click)="volverListado()" class="breadcrumb-link">
+            <i class="bi bi-house-door"></i> Inicio
+          </a>
+        </li>
+        <li class="breadcrumb-item">
+          <a (click)="volverListado()" class="breadcrumb-link">Máquinas</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{{ maquina.nombre }}</li>
+      </ol>
+    </nav>
 
-  <div class="row g-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">{{ maquina.nombre }}</h2>
+        <p class="text-muted mb-0">{{ maquina.modelo }} - {{ maquina.tipo }}</p>
+      </div>
+      <span class="badge fs-6 px-3 py-2"
+            [class.bg-success]="maquina.estado === 'activa'"
+            [class.bg-danger]="maquina.estado === 'inactiva'"
+            [class.bg-warning]="maquina.estado === 'mantenimiento'"
+            [class.text-dark]="maquina.estado === 'mantenimiento'">
+        <i class="bi" 
+            [class.bi-check-circle]="maquina.estado === 'activa'"
+            [class.bi-x-circle]="maquina.estado === 'inactiva'"
+            [class.bi-wrench]="maquina.estado === 'mantenimiento'"></i>
+        {{ maquina.estado | titlecase }}
+      </span>
+    </div>
 
-    <!-- Columna Izquierda -->
-    <div class="col-12 col-lg-6">
+    <div class="row g-4">
 
-      <!-- Card GENERAL -->
-      <div class="card shadow-sm mb-4">
-        <div class="card-body">
-          <h5 class="card-title fw-bold mb-3">GENERAL</h5>
+      <!-- Columna Izquierda - Información General -->
+      <div class="col-12 col-lg-7">
 
-          <div class="info-row">
-            <span class="info-label">Número de Serie</span>
-            <span class="info-value">{{ maquina.numSerie }}</span>
+        <!-- Card INFORMACIÓN GENERAL -->
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-header bg-white border-bottom py-3">
+            <h5 class="mb-0 fw-bold">
+              <i class="bi bi-info-circle text-primary me-2"></i>Información General
+            </h5>
           </div>
-
-          <div class="info-row">
-            <span class="info-label">Tipo</span>
-            <span class="info-value">{{ maquina.tipo }}</span>
-          </div>
-
-          <div class="info-row">
-            <span class="info-label">Modelo</span>
-            <span class="info-value">{{ maquina.modelo }}</span>
-          </div>
-
-          <div class="info-row">
-            <span class="info-label">Fecha Compra</span>
-            <span class="info-value">{{ maquina.fechaCompra }}</span>
-          </div>
-
-          <div class="info-row">
-            <span class="info-label">Estado</span>
-            <span class="info-value">
-              <span class="badge"
-                    [class.bg-success]="maquina.estado === 'activa'"
-                    [class.bg-danger]="maquina.estado === 'inactiva'"
-                    [class.bg-warning]="maquina.estado === 'mantenimiento'">
-                {{ maquina.estado }}
-              </span>
-            </span>
-          </div>
-
-          <div class="info-row">
-            <span class="info-label">Ubicación</span>
-            <span class="info-value">{{ maquina.ubicacion || 'No especificada' }}</span>
-          </div>
-
-          @if (maquina.descripcion) {
-            <div class="info-row">
-              <span class="info-label">Descripción</span>
-              <span class="info-value">{{ maquina.descripcion }}</span>
+          <div class="card-body p-4">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="info-item">
+                  <small class="text-muted d-block mb-1">
+                    <i class="bi bi-hash text-primary"></i> Número de Serie
+                  </small>
+                  <strong class="fs-6">{{ maquina.numSerie }}</strong>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-item">
+                  <small class="text-muted d-block mb-1">
+                    <i class="bi bi-tag text-primary"></i> Tipo
+                  </small>
+                  <strong class="fs-6">{{ maquina.tipo }}</strong>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-item">
+                  <small class="text-muted d-block mb-1">
+                    <i class="bi bi-box-seam text-primary"></i> Modelo
+                  </small>
+                  <strong class="fs-6">{{ maquina.modelo }}</strong>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-item">
+                  <small class="text-muted d-block mb-1">
+                    <i class="bi bi-calendar-check text-primary"></i> Fecha de Compra
+                  </small>
+                  <strong class="fs-6">{{ maquina.fechaCompra | date:'dd/MM/yyyy' }}</strong>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="info-item">
+                  <small class="text-muted d-block mb-1">
+                    <i class="bi bi-geo-alt text-primary"></i> Ubicación
+                  </small>
+                  <strong class="fs-6">{{ maquina.ubicacion || 'No especificada' }}</strong>
+                </div>
+              </div>
+              @if (maquina.descripcion) {
+                <div class="col-12">
+                  <div class="info-item">
+                    <small class="text-muted d-block mb-1">
+                      <i class="bi bi-file-text text-primary"></i> Descripción
+                    </small>
+                    <p class="mb-0 text-secondary">{{ maquina.descripcion }}</p>
+                  </div>
+                </div>
+              }
             </div>
-          }
-        </div>
-      </div>
-
-      <!-- Botones de Acción -->
-      <div class="d-flex gap-3 mb-4">
-        <button class="btn btn-success flex-fill" (click)="abrirModalEditar()">
-          <i class="bi bi-pencil-square me-2"></i>Editar
-        </button>
-        <button class="btn btn-danger flex-fill" (click)="eliminarMaquina()">
-          <i class="bi bi-trash me-2"></i>Eliminar
-        </button>
-      </div>
-
-    </div>
-
-    <!-- Columna Derecha -->
-    <div class="col-12 col-lg-6">
-
-      <!-- Card ESTADO Y ACCIONES -->
-      <div class="card shadow-sm mb-4">
-        <div class="card-body">
-          <h5 class="card-title fw-bold mb-3">CAMBIAR ESTADO</h5>
-
-          <div class="d-flex flex-column gap-2">
-            <button 
-              class="btn btn-outline-success w-100" 
-              (click)="cambiarEstado('activa')"
-              [disabled]="maquina.estado === 'activa'">
-              <i class="bi bi-check-circle me-2"></i>Marcar como Activa
-            </button>
-            <button 
-              class="btn btn-outline-danger w-100" 
-              (click)="cambiarEstado('inactiva')"
-              [disabled]="maquina.estado === 'inactiva'">
-              <i class="bi bi-x-circle me-2"></i>Marcar como Inactiva
-            </button>
-            <button 
-              class="btn btn-outline-warning w-100" 
-              (click)="cambiarEstado('mantenimiento')"
-              [disabled]="maquina.estado === 'mantenimiento'">
-              <i class="bi bi-wrench me-2"></i>Poner en Mantenimiento
-            </button>
           </div>
         </div>
+
+        <!-- Botones de Acción -->
+        <div class="d-flex gap-3">
+          <button class="btn btn-success flex-fill py-2 shadow-sm" (click)="abrirModalEditar()">
+            <i class="bi bi-pencil-square me-2"></i>Editar Información
+          </button>
+          <button class="btn btn-danger flex-fill py-2 shadow-sm" (click)="eliminarMaquina()">
+            <i class="bi bi-trash me-2"></i>Eliminar Máquina
+          </button>
+        </div>
+
+      </div>
+
+      <div class="col-12 col-lg-5">
+
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white border-bottom py-3">
+            <h5 class="mb-0 fw-bold">
+              <i class="bi bi-arrow-repeat text-primary me-2"></i>Cambiar Estado
+            </h5>
+          </div>
+          <div class="card-body p-4">
+            <p class="text-muted small mb-3">Actualiza el estado de la máquina según su disponibilidad</p>
+            
+            <div class="d-grid gap-3">
+              <button 
+                class="btn btn-lg shadow-sm"
+                [class.btn-success]="maquina.estado !== 'activa'"
+                [class.btn-outline-success]="maquina.estado === 'activa'"
+                (click)="cambiarEstado('activa')"
+                [disabled]="maquina.estado === 'activa'">
+                <i class="bi bi-check-circle me-2"></i>
+                @if (maquina.estado === 'activa') {
+                  <span>✓ Estado Actual</span>
+                } @else {
+                  <span>Marcar como Activa</span>
+                }
+              </button>
+              
+              <button 
+                class="btn btn-lg shadow-sm"
+                [class.btn-danger]="maquina.estado !== 'inactiva'"
+                [class.btn-outline-danger]="maquina.estado === 'inactiva'"
+                (click)="cambiarEstado('inactiva')"
+                [disabled]="maquina.estado === 'inactiva'">
+                <i class="bi bi-x-circle me-2"></i>
+                @if (maquina.estado === 'inactiva') {
+                  <span>✓ Estado Actual</span>
+                } @else {
+                  <span>Marcar como Inactiva</span>
+                }
+              </button>
+              
+              <button 
+                class="btn btn-lg shadow-sm"
+                [class.btn-warning]="maquina.estado !== 'mantenimiento'"
+                [class.btn-outline-warning]="maquina.estado === 'mantenimiento'"
+                (click)="cambiarEstado('mantenimiento')"
+                [disabled]="maquina.estado === 'mantenimiento'">
+                <i class="bi bi-wrench me-2"></i>
+                @if (maquina.estado === 'mantenimiento') {
+                  <span>✓ Estado Actual</span>
+                } @else {
+                  <span>Poner en Mantenimiento</span>
+                }
+              </button>
+            </div>
+
+            <div class="alert alert-light border mt-4 mb-0">
+              <small class="text-muted">
+                <i class="bi bi-info-circle me-1"></i>
+                Los cambios de estado se aplican inmediatamente
+              </small>
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </div>
-
-  </div>
+  }
 
 </div>
 
-<!-- ========== MODAL EDITAR MÁQUINA ========== -->
 @if (modalEditarAbierto) {
   <div class="modal-overlay" (click)="cerrarModalEditar()">
     <div class="modal-content" (click)="$event.stopPropagation()">
 
-      <!-- Header del modal -->
       <div class="modal-header-custom">
         <h4 class="modal-title">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 10px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" class="svg-icon-large">
             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
           </svg>
@@ -140,11 +207,9 @@
         <button class="btn-close-custom" (click)="cerrarModalEditar()">✕</button>
       </div>
 
-      <!-- Body del modal -->
       <form [formGroup]="editarMaquinaForm" (ngSubmit)="guardarCambios()" novalidate>
         <div class="modal-body-custom">
 
-          <!-- Nombre * -->
           <div class="form-group-custom">
             <label class="form-label-custom">
               Nombre <span class="text-danger">*</span>
@@ -167,7 +232,6 @@
             }
           </div>
 
-          <!-- Número de Serie * -->
           <div class="form-group-custom">
             <label class="form-label-custom">
               Número de Serie <span class="text-danger">*</span>
@@ -190,7 +254,6 @@
             }
           </div>
 
-          <!-- Tipo * -->
           <div class="form-group-custom">
             <label class="form-label-custom">
               Tipo <span class="text-danger">*</span>
@@ -215,7 +278,6 @@
             }
           </div>
 
-          <!-- Modelo * -->
           <div class="form-group-custom">
             <label class="form-label-custom">
               Modelo <span class="text-danger">*</span>
@@ -235,7 +297,6 @@
             }
           </div>
 
-          <!-- Fecha Compra * -->
           <div class="form-group-custom">
             <label class="form-label-custom">
               Fecha Compra <span class="text-danger">*</span>
@@ -252,7 +313,6 @@
             }
           </div>
 
-          <!-- Ubicación (Opcional) -->
           <div class="form-group-custom">
             <label class="form-label-custom">
               Ubicación <span class="text-muted">(Opcional)</span>
@@ -264,7 +324,6 @@
               placeholder="Ej: Finca 1 - Almacén Norte">
           </div>
 
-          <!-- Descripción (Opcional) -->
           <div class="form-group-custom">
             <label class="form-label-custom">
               Descripción <span class="text-muted">(Opcional)</span>
@@ -278,7 +337,6 @@
 
         </div>
 
-        <!-- Footer del modal -->
         <div class="modal-footer-custom">
           <button type="button" class="btn-secondary-custom" (click)="cerrarModalEditar()">
             Cancelar
@@ -287,7 +345,7 @@
             type="submit"
             class="btn-primary-custom"
             [disabled]="editarMaquinaForm.invalid">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="svg-icon-small">
               <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
             </svg>
             Guardar Cambios

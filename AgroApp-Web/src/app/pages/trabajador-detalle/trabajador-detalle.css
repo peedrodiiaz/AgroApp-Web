@@ -1,18 +1,21 @@
 .avatar-big {
-  width: 70px;
-  height: 70px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  background: #e9ecef;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 2.5rem;
-  border: 2.5px solid #d4edda;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .card {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
 }
 
 .card-title {
@@ -30,6 +33,15 @@
 .info-label {
   font-weight: 600;
   color: #666;
+}
+
+.info-item {
+  transition: background-color 0.3s;
+}
+
+.info-item:hover {
+  background-color: #e7f3ff !important;
+  cursor: default;
 }
 
 .btn {
@@ -53,6 +65,39 @@
 
 .btn-danger:hover {
   background-color: #c82333;
+}
+
+.btn-outline-success,
+.btn-outline-danger {
+  min-width: 120px;
+  transition: all 0.3s;
+}
+
+.btn-outline-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+}
+
+.btn-outline-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.breadcrumb-item a {
+  cursor: pointer;
+}
+
+.breadcrumb-item a:hover {
+  color: #0056b3;
+}
+
+.page-title {
+  color: #2c3e50;
+}
+
+.spinner-large {
+  width: 3rem;
+  height: 3rem;
 }
 
 .badge {

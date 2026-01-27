@@ -1,82 +1,139 @@
 <div class="container-fluid py-4">
   @if (isLoading) {
     <div class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
+      <div class="spinner-border text-primary spinner-large" role="status">
         <span class="visually-hidden">Cargando...</span>
       </div>
+      <p class="text-muted mt-3">Cargando información del trabajador...</p>
     </div>
   } @else if (trabajador) {
-    <nav aria-label="breadcrumb" class="mb-3">
-      <ol class="breadcrumb">
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb bg-light rounded-3 p-3">
         <li class="breadcrumb-item">
-          <a (click)="volverListado()" style="cursor: pointer;">
-            <i class="bi bi-house-door"></i>
+          <a (click)="volverListado()" class="text-decoration-none">
+            <i class="bi bi-house-door-fill me-1"></i> Inicio
           </a>
         </li>
         <li class="breadcrumb-item">
-          <a (click)="volverListado()" style="cursor: pointer;">Trabajadores</a>
+          <a (click)="volverListado()" class="text-decoration-none">
+            <i class="bi bi-people-fill me-1"></i> Trabajadores
+          </a>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">Información</li>
+        <li class="breadcrumb-item active" aria-current="page">
+          <i class="bi bi-person-badge me-1"></i> {{ trabajador.nombre }}
+        </li>
       </ol>
     </nav>
 
-    <div class="d-flex align-items-center mb-4 gap-3">
-      <div class="avatar-big">{{ getInitials(trabajador.nombre) }}</div>
-      <div>
-        <h2 class="fw-bold mb-1">{{ trabajador.nombre }}</h2>
-        <div class="text-muted">{{ trabajador.puesto || 'Sin puesto asignado' }}</div>
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="d-flex align-items-center gap-4">
+          <div class="avatar-big bg-primary text-white d-flex align-items-center justify-content-center rounded-circle">
+            {{ getInitials(trabajador.nombre) }}
+          </div>
+          <div class="flex-grow-1">
+            <h2 class="fw-bold mb-2 page-title">
+              <i class="bi bi-person-fill text-primary me-2"></i>{{ trabajador.nombre }} {{ trabajador.apellido }}
+            </h2>
+            <div class="d-flex gap-3 flex-wrap">
+              <span class="badge bg-primary fs-6 px-3 py-2">
+                <i class="bi bi-person-badge-fill me-1"></i>
+                {{ trabajador.rol || 'Trabajador' }}
+              </span>
+              @if (trabajador.fechaAlta) {
+                <span class="badge bg-info fs-6 px-3 py-2">
+                  <i class="bi bi-calendar-check me-1"></i>
+                  Desde {{ trabajador.fechaAlta | date:'dd/MM/yyyy' }}
+                </span>
+              }
+            </div>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-success btn-lg" (click)="editarTrabajador()">
+              <i class="bi bi-pencil-square me-2"></i>Editar
+            </button>
+            <button class="btn btn-outline-danger btn-lg" (click)="eliminarTrabajador()">
+              <i class="bi bi-trash me-2"></i>Eliminar
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="row g-4">
       <div class="col-12 col-lg-6">
-        <div class="card shadow-sm mb-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+              <i class="bi bi-person-vcard me-2"></i>Datos de Contacto
+            </h5>
+          </div>
           <div class="card-body">
-            <h5 class="card-title fw-bold mb-3">Datos personales</h5>
-            <div class="info-row">
-              <span class="info-label">Email</span>
-              <span>{{ trabajador.email || 'N/A' }}</span>
+            <div class="info-item mb-3 p-3 bg-light rounded-3">
+              <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-envelope-fill text-primary fs-4"></i>
+                <div class="flex-grow-1">
+                  <small class="text-muted d-block">Email</small>
+                  <strong>{{ trabajador.email || 'N/A' }}</strong>
+                </div>
+              </div>
             </div>
-            <div class="info-row">
-              <span class="info-label">Teléfono</span>
-              <span>{{ trabajador.telefono || 'N/A' }}</span>
+            <div class="info-item mb-3 p-3 bg-light rounded-3">
+              <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-telephone-fill text-success fs-4"></i>
+                <div class="flex-grow-1">
+                  <small class="text-muted d-block">Teléfono</small>
+                  <strong>{{ trabajador.telefono || 'N/A' }}</strong>
+                </div>
+              </div>
             </div>
-            <div class="info-row">
-              <span class="info-label">Fecha alta</span>
-              <span>{{ trabajador.fechaAlta || trabajador.created_at || 'N/A' }}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Puesto</span>
-              <span>{{ trabajador.puesto || 'N/A' }}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">DNI</span>
-              <span>{{ trabajador.dni || 'N/A' }}</span>
+            <div class="info-item mb-3 p-3 bg-light rounded-3">
+              <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-card-text text-info fs-4"></i>
+                <div class="flex-grow-1">
+                  <small class="text-muted d-block">DNI</small>
+                  <strong>{{ trabajador.dni || 'N/A' }}</strong>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="d-flex gap-3 mb-4">
-          <button class="btn btn-success flex-fill" (click)="editarTrabajador()">
-            <i class="bi bi-pencil-square me-2"></i>Editar
-          </button>
-          <button class="btn btn-danger flex-fill" (click)="eliminarTrabajador()">
-            <i class="bi bi-trash me-2"></i>Eliminar
-          </button>
         </div>
       </div>
 
       <div class="col-12 col-lg-6">
-        <div class="card shadow-sm mb-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+              <i class="bi bi-briefcase-fill me-2"></i>Información Laboral
+            </h5>
+          </div>
           <div class="card-body">
-            <h5 class="card-title fw-bold mb-3">Información Adicional</h5>
-            <div class="mb-2">
-              Dirección: <strong>{{ trabajador.direccion || 'N/A' }}</strong>
+            <div class="info-item mb-3 p-3 bg-light rounded-3">
+              <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-person-badge-fill text-success fs-4"></i>
+                <div class="flex-grow-1">
+                  <small class="text-muted d-block">Rol</small>
+                  <strong>{{ trabajador.rol || 'Trabajador' }}</strong>
+                </div>
+              </div>
             </div>
-            <div class="mb-2">
-              Ciudad: <strong>{{ trabajador.ciudad || 'N/A' }}</strong>
+            <div class="info-item mb-3 p-3 bg-light rounded-3">
+              <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-calendar-check-fill text-primary fs-4"></i>
+                <div class="flex-grow-1">
+                  <small class="text-muted d-block">Fecha de Alta</small>
+                  <strong>{{ trabajador.fechaAlta ? (trabajador.fechaAlta | date:'dd/MM/yyyy') : 'N/A' }}</strong>
+                </div>
+              </div>
             </div>
-            <div class="mb-2">
-              Código Postal: <strong>{{ trabajador.codigo_postal || 'N/A' }}</strong>
+            <div class="info-item p-3 bg-light rounded-3">
+              <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-hash text-warning fs-4"></i>
+                <div class="flex-grow-1">
+                  <small class="text-muted d-block">ID</small>
+                  <strong>#{{ trabajador.id }}</strong>
+                </div>
+              </div>
             </div>
           </div>
         </div>

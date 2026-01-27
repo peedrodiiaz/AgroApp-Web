@@ -1,3 +1,84 @@
+/* ========== ESTILOS MEJORADOS ========== */
+.loading-container {
+  min-height: 400px;
+}
+
+.breadcrumb-link {
+  cursor: pointer;
+  color: #0d6efd;
+}
+
+.breadcrumb-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.svg-icon-large {
+  margin-right: 10px;
+}
+
+.svg-icon-small {
+  margin-right: 6px;
+}
+
+.info-item {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.breadcrumb {
+  background: transparent;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: "›";
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+.btn {
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+}
+
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.alert {
+  border-radius: 8px;
+}
+
 /* ========== MODAL EDITAR ========== */
 .modal-overlay {
   position: fixed;

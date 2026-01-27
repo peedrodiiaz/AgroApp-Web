@@ -28,44 +28,18 @@ export class MaquinaDetalleComponent implements OnInit {
 
   maquina: any = null;
 
-  // FormGroup para editar
   editarMaquinaForm = new FormGroup({
-    nombre: new FormControl('', {
-      validators: [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
-      nonNullable: true
-    }),
-    numSerie: new FormControl('', {
-      validators: [Validators.required, Validators.pattern(/^[A-Z0-9]{6,20}$/i)],
-      nonNullable: true
-    }),
-    modelo: new FormControl('', {
-      validators: [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
-      nonNullable: true
-    }),
-    tipo: new FormControl('', {
-      validators: [Validators.required],
-      nonNullable: true
-    }),
-    fechaCompra: new FormControl('', {
-      validators: [Validators.required],
-      nonNullable: true
-    }),
-    localizacion: new FormControl('', {
-      validators: [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
-      nonNullable: true
-    }),
-    ubicacion: new FormControl('', {
-      validators: [Validators.minLength(3), Validators.maxLength(100)],
-      nonNullable: true
-    }),
-    descripcion: new FormControl('', {
-      nonNullable: true
-    }),
+    nombre: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    numSerie: new FormControl('', [Validators.required]),
+    modelo: new FormControl('', [Validators.required]),
+    tipo: new FormControl('', [Validators.required]),
+    fechaCompra: new FormControl('', [Validators.required]),
+    ubicacion: new FormControl(''),
+    descripcion: new FormControl(''),
   });
 
   get f() { return this.editarMaquinaForm.controls; }
 
-  // Configuración del calendario
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
@@ -95,8 +69,12 @@ export class MaquinaDetalleComponent implements OnInit {
   cargarMaquina() {
     this.isLoading = true;
     this.maquinaService.getById(this.maquinaId).subscribe({
-      next: (maquina: any) => {
-        this.maquina = maquina;
+      next: (response: any) => {
+        if (response && response.data) {
+          this.maquina = response.data;
+        } else {
+          this.maquina = response;
+        }
         this.isLoading = false;
       },
       error: (error: any) => {
@@ -108,13 +86,22 @@ export class MaquinaDetalleComponent implements OnInit {
   }
 
   abrirModalEditar() {
-    // Cargar datos actuales en el formulario
+    let fechaFormateada = this.maquina.fechaCompra;
+    if (fechaFormateada && fechaFormateada.includes('T')) {
+      fechaFormateada = fechaFormateada.split('T')[0];
+    } else if (fechaFormateada && fechaFormateada.includes('/')) {
+      const partes = fechaFormateada.split('/');
+      if (partes.length === 3) {
+        fechaFormateada = `${partes[2]}-${partes[1]}-${partes[0]}`;
+      }
+    }
+
     this.editarMaquinaForm.patchValue({
       nombre: this.maquina.nombre,
       numSerie: this.maquina.numSerie,
       modelo: this.maquina.modelo,
       tipo: this.maquina.tipo,
-      fechaCompra: this.maquina.fechaCompra,
+      fechaCompra: fechaFormateada,
       ubicacion: this.maquina.ubicacion,
       descripcion: this.maquina.descripcion
     });
@@ -134,11 +121,16 @@ export class MaquinaDetalleComponent implements OnInit {
 
     const maquinaData = this.editarMaquinaForm.value;
 
-    this.maquinaService.update(this.maquinaId, maquinaData).subscribe({
-      next: (maquina: any) => {
-        this.maquina = maquina;
+    this.maquinaService.update(this.maquinaId, maquinaData as any).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+          this.maquina = response.data;
+        } else {
+          this.maquina = response;
+        }
         this.cerrarModalEditar();
         alert('Máquina actualizada exitosamente');
+        this.cargarMaquina(); 
       },
       error: (error: any) => {
         console.error('Error al actualizar máquina:', error);

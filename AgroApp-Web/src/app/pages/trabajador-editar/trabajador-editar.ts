@@ -38,7 +38,8 @@ export class TrabajadorEditarComponent implements OnInit {
   cargarTrabajador() {
     this.isLoading = true;
     this.trabajadorService.getById(this.trabajadorId).subscribe({
-      next: (trabajador: any) => {
+      next: (response: any) => {
+        const trabajador = response && response.data ? response.data : response;
         this.trabajadorForm.patchValue({
           nombre: trabajador.nombre,
           apellido: trabajador.apellido,

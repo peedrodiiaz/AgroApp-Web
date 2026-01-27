@@ -1,5 +1,4 @@
 import { TrabajadorService } from './../../services/trabajador.service';
-import { Trabajador } from './../../interfaces/trabajador.interface';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -13,38 +12,42 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './trabajadores.css',
 })
 export class TrabajadoresComponent implements OnInit {
+  router = inject(Router);
+  trabajadorService = inject(TrabajadorService);
+
   menuAbierto: number | null = null;
-  busqueda: string = '';
-  trabajadores: Trabajador[] = [];
-  isLoading: boolean = false;
-  
-  constructor(private router: Router, private trabajadorService: TrabajadorService) {}
+  busqueda = '';
+  trabajadores: any[] = [];
+  isLoading = false;
 
   ngOnInit() {
-    this.cargarTrabajadores(); 
+    this.cargarTrabajadores();
   }
 
   cargarTrabajadores() {
     this.isLoading = true;
     this.trabajadorService.getAll().subscribe({
       next: (response: any) => {
-        this.trabajadores = response || [];
+        if (response && response.data && Array.isArray(response.data)) {
+          this.trabajadores = response.data;
+        } else if (Array.isArray(response)) {
+          this.trabajadores = response;
+        } else {
+          this.trabajadores = [];
+        }
         this.isLoading = false;
       },
-      error: (error: any) => {
-        console.error('Error al cargar trabajadores:', error);
+      error: () => {
+        this.trabajadores = [];
         this.isLoading = false;
       }
     });
   }
 
   get trabajadoresFiltrados() {
-    if (!this.busqueda.trim()) {
-      return this.trabajadores;
-    }
     const term = this.busqueda.toLowerCase();
-    return this.trabajadores.filter(t => 
-      t.nombre?.toLowerCase().includes(term) ||
+    return this.trabajadores.filter(t =>
+      !this.busqueda || t.nombre?.toLowerCase().includes(term) ||
       t.apellido?.toLowerCase().includes(term) ||
       t.dni?.toLowerCase().includes(term) ||
       t.email?.toLowerCase().includes(term)
@@ -55,27 +58,36 @@ export class TrabajadoresComponent implements OnInit {
     this.menuAbierto = this.menuAbierto === id ? null : id;
   }
 
-  verInfo(trabajador: Trabajador) {
+  verInfo(trabajador: any) {
     this.router.navigate(['/trabajadores', trabajador.id]);
     this.menuAbierto = null;
   }
 
-  editarTrabajador(trabajador: Trabajador) {
+  editar(id: number) {
+    this.router.navigate(['/trabajadores', id, 'editar']);
+    this.menuAbierto = null;
+  }
+
+  editarTrabajador(trabajador: any) {
     this.router.navigate(['/trabajadores', trabajador.id, 'editar']);
     this.menuAbierto = null;
   }
 
-  eliminarTrabajador(trabajador: Trabajador) {
-    if (confirm(`¿Estás seguro de eliminar a ${trabajador.nombre}?`)) {
+  eliminar(id: number, nombre: string) {
+    if (confirm(`¿Eliminar "${nombre}"?`)) {
+      this.trabajadorService.delete(id).subscribe({
+        next: () => this.cargarTrabajadores(),
+        error: () => alert('Error al eliminar')
+      });
+    }
+    this.menuAbierto = null;
+  }
+
+  eliminarTrabajador(trabajador: any) {
+    if (confirm(`¿Eliminar "${trabajador.nombre}"?`)) {
       this.trabajadorService.delete(trabajador.id).subscribe({
-        next: () => {
-          console.log('Trabajador eliminado');
-          this.cargarTrabajadores();
-        },
-        error: (error) => {
-          console.error('Error al eliminar trabajador:', error);
-          alert('Error al eliminar el trabajador');
-        }
+        next: () => this.cargarTrabajadores(),
+        error: () => alert('Error al eliminar')
       });
     }
     this.menuAbierto = null;

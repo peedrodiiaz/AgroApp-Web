@@ -1,63 +1,40 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Maquina, MaquinasResponse, MaquinasApiResponse } from '../interfaces/maquina.interface';
+import { Maquina } from '../interfaces/maquina.interface';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class MaquinaService {
-
-  URL_BASE = 'http://127.0.0.1:8000/api';
+  private apiUrl = 'http://localhost:8000/api/maquinas';
 
   constructor(private http: HttpClient) {}
 
-  getMaquinas(): Observable<MaquinasResponse> {
-    return this.http.get<MaquinasApiResponse>(`${this.URL_BASE}/maquinas`).pipe(
-      map(response => response.data.data)
-    );
+  getAll(): Observable<any> {
+    return this.http.get(this.apiUrl);
   }
 
-  // Alias para compatibilidad
-  getAll(): Observable<MaquinasResponse> {
-    return this.getMaquinas();
+  getById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
   }
 
-  // Obtener una máquina por ID
-  getById(id: number): Observable<Maquina> {
-    return this.http.get<Maquina>(`${this.URL_BASE}/maquinas/${id}`);
-  }
-
-  removeMaquina(id: number): Observable<MaquinasResponse> {
-    return this.http.delete<MaquinasResponse>(`${this.URL_BASE}/maquinas/${id}`);
-  }
-
-  // Alias para compatibilidad
-  delete(id: number): Observable<MaquinasResponse> {
-    return this.removeMaquina(id);
-  }
   
-  crearMaquina(maquina: Maquina): Observable<MaquinasResponse> {
-    return this.http.post<MaquinasResponse>(`${this.URL_BASE}/maquinas`, maquina);
+  create(data: Maquina): Observable<any> {
+    return this.http.post(this.apiUrl, data);
   }
 
-  // Alias para compatibilidad
-  create(maquina: any): Observable<MaquinasResponse> {
-    return this.crearMaquina(maquina);
+  update(id: number, data: Partial<Maquina>): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, data);
   }
 
-  actualizarMaquina(id: number, maquina: Maquina): Observable<Maquina> {
-    return this.http.put<Maquina>(`${this.URL_BASE}/maquinas/${id}`, maquina);
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  // Alias para compatibilidad
-  update(id: number, maquina: any): Observable<Maquina> {
-    return this.actualizarMaquina(id, maquina);
+  cambiarEstado(id: number, estado: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, { estado });
   }
 
-  // Método para cambiar estado (para compatibilidad)
-  cambiarEstado(id: number, estado: string): Observable<Maquina> {
-    return this.http.put<Maquina>(`${this.URL_BASE}/maquinas/${id}`, { estado });
+  getStats(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/stats`);
   }
 }

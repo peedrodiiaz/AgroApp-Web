@@ -27,8 +27,12 @@ export class IncidenciaDetalleComponent implements OnInit {
   cargarIncidencia() {
     this.isLoading = true;
     this.incidenciaService.getById(this.incidenciaId).subscribe({
-      next: (data: any) => {
-        this.incidencia = data;
+      next: (response: any) => {
+        if (response && response.data) {
+          this.incidencia = response.data;
+        } else {
+          this.incidencia = response;
+        }
         this.isLoading = false;
       },
       error: (error: any) => {

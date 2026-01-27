@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { IncidenciaService } from '../../services/incidencia.service';
 import { TrabajadorService } from '../../services/trabajador.service';
 import { MaquinaService } from '../../services/maquina.service';
-import { Incidencia } from '../../interfaces/incidencia.interface';
 
 @Component({
   selector: 'app-incidencias',
@@ -16,25 +15,25 @@ import { Incidencia } from '../../interfaces/incidencia.interface';
   styleUrl: './incidencias.css',
 })
 export class IncidenciasComponent implements OnInit {
-  private router = inject(Router);
-  private incidenciaService = inject(IncidenciaService);
-  private trabajadorService = inject(TrabajadorService);
-  private maquinaService = inject(MaquinaService);
+  router = inject(Router);
+  incidenciaService = inject(IncidenciaService);
+  trabajadorService = inject(TrabajadorService);
+  maquinaService = inject(MaquinaService);
 
-  incidencias: Incidencia[] = [];
+  incidencias: any[] = [];
   trabajadores: any[] = [];
   maquinas: any[] = [];
   searchTerm = '';
   isLoading = false;
   estadoActivo = 'todas';
+  modalAbierto = false;
 
-  nuevoReporteForm = new FormGroup({
+  form = new FormGroup({
     titulo: new FormControl('', [Validators.required, Validators.minLength(3)]),
     descripcion: new FormControl('', [Validators.required, Validators.maxLength(500)]),
     estado: new FormControl('abierta', [Validators.required]),
     prioridad: new FormControl('media', [Validators.required]),
     fechaApertura: new FormControl('', [Validators.required]),
-    fechaCierre: new FormControl(''),
     trabajador_id: new FormControl<number | null>(null, [Validators.required]),
     maquina_id: new FormControl<number | null>(null, [Validators.required])
   });
@@ -45,21 +44,22 @@ export class IncidenciasComponent implements OnInit {
     this.cargarMaquinas();
   }
 
-  aplicarFiltros() {
-    // Los filtros se aplican automáticamente a través del getter incidenciasFiltradas
-  }
-
   cargarIncidencias() {
     this.isLoading = true;
     this.incidenciaService.getAll().subscribe({
       next: (response: any) => {
-        this.incidencias = response || [];
+        if (response && response.data && Array.isArray(response.data)) {
+          this.incidencias = response.data;
+        } else if (Array.isArray(response)) {
+          this.incidencias = response;
+        } else {
+          this.incidencias = [];
+        }
         this.isLoading = false;
       },
-      error: (error: any) => {
-        console.error('Error al cargar incidencias:', error);
+      error: () => {
+        this.incidencias = [];
         this.isLoading = false;
-        alert('Error al cargar las incidencias');
       }
     });
   }
@@ -67,10 +67,16 @@ export class IncidenciasComponent implements OnInit {
   cargarTrabajadores() {
     this.trabajadorService.getAll().subscribe({
       next: (response: any) => {
-        this.trabajadores = response || [];
+        if (response && response.data && Array.isArray(response.data)) {
+          this.trabajadores = response.data;
+        } else if (Array.isArray(response)) {
+          this.trabajadores = response;
+        } else {
+          this.trabajadores = [];
+        }
       },
-      error: (error: any) => {
-        console.error('Error al cargar trabajadores:', error);
+      error: () => {
+        this.trabajadores = [];
       }
     });
   }
@@ -78,127 +84,58 @@ export class IncidenciasComponent implements OnInit {
   cargarMaquinas() {
     this.maquinaService.getAll().subscribe({
       next: (response: any) => {
-        this.maquinas = response || [];
+        if (response && response.data && Array.isArray(response.data)) {
+          this.maquinas = response.data;
+        } else if (Array.isArray(response)) {
+          this.maquinas = response;
+        } else {
+          this.maquinas = [];
+        }
       },
-      error: (error: any) => {
-        console.error('Error al cargar máquinas:', error);
+      error: () => {
+        this.maquinas = [];
       }
     });
   }
 
   get incidenciasFiltradas() {
-    let resultado = [...this.incidencias];
+    const term = this.searchTerm.toLowerCase();
+    return this.incidencias.filter((i: any) =>
+      (this.estadoActivo === 'todas' || i.estado === this.estadoActivo) &&
+      (!this.searchTerm || i.titulo?.toLowerCase().includes(term) || i.descripcion?.toLowerCase().includes(term))
+    );
+  }
 
-    // Filtrar por estado
-    if (this.estadoActivo !== 'todas') {
-      resultado = resultado.filter(i => i.estado.toLowerCase() === this.estadoActivo);
-    }
+  verIncidencia(id: number) {
+    this.router.navigate(['/incidencias', id]);
+  }
 
-    // Filtrar por búsqueda
-    if (this.searchTerm.trim()) {
-      const term = this.searchTerm.toLowerCase();
-      resultado = resultado.filter(i => {
-        // Búsqueda en campos básicos
-        const basicMatch = 
-          i.titulo?.toLowerCase().includes(term) ||
-          i.descripcion?.toLowerCase().includes(term) ||
-          i.prioridad?.toLowerCase().includes(term);
-        
-        // Búsqueda en trabajador
-        const trabajadorMatch = i.trabajador ? 
-          (i.trabajador.nombre?.toLowerCase().includes(term) ||
-           i.trabajador.apellido?.toLowerCase().includes(term)) : false;
-        
-        // Búsqueda en máquina
-        const maquinaMatch = i.maquina ?
-          (i.maquina.nombre?.toLowerCase().includes(term) ||
-           i.maquina.modelo?.toLowerCase().includes(term)) : false;
-        
-        return basicMatch || trabajadorMatch || maquinaMatch;
+  eliminar(id: number) {
+    if (confirm('¿Eliminar incidencia?')) {
+      this.incidenciaService.delete(id).subscribe({
+        next: () => this.cargarIncidencias(),
+        error: () => alert('Error al eliminar')
       });
     }
-
-    return resultado;
   }
 
-  cambiarEstado(estado: string) {
-    this.estadoActivo = estado;
+  abrirModal() {
+    this.modalAbierto = true;
+    this.form.reset();
   }
 
-  get abiertas() {
-    return this.incidencias.filter(i => i.estado === 'abierta').length;
+  cerrarModal() {
+    this.modalAbierto = false;
   }
 
-  get enProgreso() {
-    return this.incidencias.filter(i => i.estado === 'en_progreso').length;
-  }
-
-  get resueltas() {
-    return this.incidencias.filter(i => i.estado === 'resuelta').length;
-  }
-
-  get total() {
-    return this.incidencias.length;
-  }
-
-  verIncidencia(incidencia: Incidencia) {
-    this.router.navigate(['/incidencias', incidencia.id]);
-  }
-
-  eliminarIncidencia(id: number, event: Event) {
-    event.stopPropagation();
-    if (!confirm('¿Estás seguro de eliminar esta incidencia?')) {
-      return;
-    }
-
-    this.incidenciaService.delete(id).subscribe({
+  guardar() {
+    if (this.form.invalid) return;
+    this.incidenciaService.create(this.form.value as any).subscribe({
       next: () => {
-        alert('Incidencia eliminada exitosamente');
         this.cargarIncidencias();
+        this.cerrarModal();
       },
-      error: (error) => {
-        console.error('Error al eliminar incidencia:', error);
-        alert('Error al eliminar la incidencia');
-      }
-    });
-  }
-
-  get f() {
-    return this.nuevoReporteForm.controls;
-  }
-
-  registrarIncidencia() {
-    if (this.nuevoReporteForm.invalid) {
-      this.nuevoReporteForm.markAllAsTouched();
-      return;
-    }
-
-    this.isLoading = true;
-    const incidenciaData: any = this.nuevoReporteForm.value;
-
-    this.incidenciaService.create(incidenciaData).subscribe({
-      next: (incidencia) => {
-        this.isLoading = false;
-        alert('Incidencia registrada exitosamente');
-        this.nuevoReporteForm.reset({ estado: 'abierta', prioridad: 'media' });
-        this.cargarIncidencias();
-        // Cerrar modal si existe
-        const modal = document.getElementById('modalNuevoReporte');
-        if (modal) {
-          const bsModal = (window as any).bootstrap.Modal.getInstance(modal);
-          if (bsModal) bsModal.hide();
-        }
-      },
-      error: (error) => {
-        console.error('Error al registrar incidencia:', error);
-        this.isLoading = false;
-        if (error.error?.errors) {
-          const errors = Object.values(error.error.errors).flat();
-          alert('Errores de validación:\n' + errors.join('\n'));
-        } else {
-          alert('Error al registrar la incidencia');
-        }
-      }
+      error: () => alert('Error al guardar')
     });
   }
 }

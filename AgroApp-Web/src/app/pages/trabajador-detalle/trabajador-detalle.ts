@@ -31,7 +31,11 @@ export class TrabajadorDetalleComponent implements OnInit {
     this.isLoading = true;
     this.trabajadorService.getById(this.trabajadorId).subscribe({
       next: (response: any) => {
-        this.trabajador = response;
+        if (response && response.data) {
+          this.trabajador = response.data;
+        } else {
+          this.trabajador = response;
+        }
         this.isLoading = false;
         console.log('Trabajador cargado:', this.trabajador);
       },

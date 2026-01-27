@@ -38,11 +38,27 @@ export class DashboardComponent implements OnInit {
       maquinas: this.maquinaService.getAll()
     }).subscribe({
       next: (result) => {
-        const trabajadores = result.trabajadores as Trabajador[];
+        // Procesar respuesta de API
+        let trabajadores = result.trabajadores as any;
+        let maquinas = result.maquinas as any;
+
+        // Si viene en formato {success, data}, extraer data
+        if (trabajadores && trabajadores.data && Array.isArray(trabajadores.data)) {
+          trabajadores = trabajadores.data;
+        } else if (!Array.isArray(trabajadores)) {
+          trabajadores = [];
+        }
+
+        if (maquinas && maquinas.data && Array.isArray(maquinas.data)) {
+          maquinas = maquinas.data;
+        } else if (!Array.isArray(maquinas)) {
+          maquinas = [];
+        }
+
+        // Calcular estadísticas
         this.totalTrabajadores = trabajadores.length;
         this.trabajadoresPorRol = this.contarPorPropiedad(trabajadores, 'rol');
 
-        const maquinas = result.maquinas as Maquina[];
         this.totalMaquinas = maquinas.length;
         this.maquinasPorEstado = this.contarPorPropiedad(maquinas, 'estado');
         this.maquinasPorTipo = this.contarPorPropiedad(maquinas, 'tipo');
@@ -52,7 +68,6 @@ export class DashboardComponent implements OnInit {
       error: (error: any) => {
         console.error('Error al cargar estadísticas:', error);
         this.isLoading = false;
-        alert('Error al cargar las estadísticas del dashboard');
       }
     });
   }

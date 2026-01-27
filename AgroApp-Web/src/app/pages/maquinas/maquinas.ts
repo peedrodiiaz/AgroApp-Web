@@ -3,7 +3,6 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormsModule } 
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MaquinaService } from '../../services/maquina.service';
-import { Maquina } from '../../interfaces/maquina.interface';
 
 @Component({
   selector: 'app-maquinas',
@@ -13,48 +12,28 @@ import { Maquina } from '../../interfaces/maquina.interface';
   styleUrl: './maquinas.css',
 })
 export class MaquinasComponent implements OnInit {
-  private router = inject(Router);
-  private maquinaService = inject(MaquinaService);
+  router = inject(Router);
+  maquinaService = inject(MaquinaService);
 
-  tabActivo: 'activas' | 'inactivas' | 'mantenimiento' = 'activas';
+  tabActivo = 'activas';
   menuAbierto: number | null = null;
-  modalAbierto: boolean = false;
-  isLoading: boolean = false;
-  searchTerm: string = '';
-
+  modalAbierto = false;
+  isLoading = false;
+  searchTerm = '';
   maquinas: any[] = [];
 
-  nuevaMaquinaForm = new FormGroup({
-    nombre: new FormControl('', {
-      validators: [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
-      nonNullable: true
-    }),
-    numSerie: new FormControl('', {
-      validators: [Validators.required, Validators.pattern(/^[A-Z0-9]{6,20}$/i)],
-      nonNullable: true
-    }),
-    modelo: new FormControl('', {
-      validators: [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
-      nonNullable: true
-    }),
-    tipo: new FormControl('', {
-      validators: [Validators.required],
-      nonNullable: true
-    }),
-    fechaCompra: new FormControl('', {
-      validators: [Validators.required],
-      nonNullable: true
-    }),
-    ubicacion: new FormControl('', {
-      validators: [Validators.minLength(3), Validators.maxLength(100)],
-      nonNullable: true
-    }),
-    descripcion: new FormControl('', {
-      nonNullable: true
-    }),
+  form = new FormGroup({
+    nombre: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    numSerie: new FormControl('', [Validators.required]),
+    modelo: new FormControl('', [Validators.required]),
+    tipo: new FormControl('', [Validators.required]),
+    fechaCompra: new FormControl('', [Validators.required]),
+    ubicacion: new FormControl(''),
+    descripcion: new FormControl(''),
   });
 
-  get f() { return this.nuevaMaquinaForm.controls; }
+  get nuevaMaquinaForm() { return this.form; }
+  get f() { return this.form.controls; }
 
   ngOnInit() {
     this.cargarMaquinas();
@@ -64,112 +43,81 @@ export class MaquinasComponent implements OnInit {
     this.isLoading = true;
     this.maquinaService.getAll().subscribe({
       next: (response: any) => {
-        this.maquinas = response || [];
+        if (response && response.data && Array.isArray(response.data)) {
+          this.maquinas = response.data;
+        } else if (Array.isArray(response)) {
+          this.maquinas = response;
+        } else {
+          this.maquinas = [];
+        }
         this.isLoading = false;
       },
-      error: (error: any) => {
-        console.error('Error al cargar máquinas:', error);
+      error: () => {
+        this.maquinas = [];
         this.isLoading = false;
       }
     });
   }
 
   get maquinasMostradas() {
-    let filtered = this.maquinas.filter(m => {
-      if (this.tabActivo === 'activas') return m.estado === 'activa';
-      if (this.tabActivo === 'inactivas') return m.estado === 'inactiva';
-      if (this.tabActivo === 'mantenimiento') return m.estado === 'mantenimiento';
-      return true;
-    });
-
-    if (this.searchTerm) {
-      const term = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(m => 
-        m.nombre.toLowerCase().includes(term) ||
-        m.numSerie.toLowerCase().includes(term) ||
-        m.modelo.toLowerCase().includes(term) ||
-        m.tipo.toLowerCase().includes(term) ||
-        (m.ubicacion && m.ubicacion.toLowerCase().includes(term))
-      );
-    }
-
-    return filtered;
+    return this.maquinas
+      .filter((m: any) => this.tabActivo === 'activas' ? m.estado === 'activa' : m.estado === this.tabActivo)
+      .filter((m: any) => !this.searchTerm || m.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()));
   }
 
-  cambiarTab(tab: 'activas' | 'inactivas' | 'mantenimiento') {
+  cambiarTab(tab: string) {
     this.tabActivo = tab;
-    this.menuAbierto = null;
   }
 
   toggleMenu(id: number) {
     this.menuAbierto = this.menuAbierto === id ? null : id;
   }
 
-  verInfo(maquina: Maquina) {
+  verInfo(maquina: any) {
     this.router.navigate(['/maquinas', maquina.id]);
     this.menuAbierto = null;
   }
 
-  cambiarEstado(maquina: Maquina, nuevoEstado: 'activa' | 'inactiva' | 'mantenimiento') {
-    this.maquinaService.cambiarEstado(maquina.id, nuevoEstado).subscribe({
+  cambiarEstado(maquina: any, estado: string) {
+    this.maquinaService.cambiarEstado(maquina.id, estado).subscribe({
       next: () => {
         this.cargarMaquinas();
         this.menuAbierto = null;
       },
-      error: (error) => {
-        console.error('Error al cambiar estado:', error);
-        alert('Error al cambiar el estado de la máquina');
-      }
+      error: () => alert('Error al cambiar estado')
     });
   }
 
-  eliminarMaquina(maquina: Maquina) {
-    if (confirm(`¿Estás seguro de que deseas eliminar la máquina "${maquina.nombre}"?`)) {
+  eliminarMaquina(maquina: any) {
+    if (confirm(`¿Eliminar "${maquina.nombre}"?`)) {
       this.maquinaService.delete(maquina.id).subscribe({
         next: () => {
           this.cargarMaquinas();
           this.menuAbierto = null;
         },
-        error: (error) => {
-          console.error('Error al eliminar máquina:', error);
-          alert('Error al eliminar la máquina');
-        }
+        error: () => alert('Error al eliminar')
       });
     }
-    this.menuAbierto = null;
   }
 
   abrirModal() {
     this.modalAbierto = true;
-    this.nuevaMaquinaForm.reset();
+    this.form.reset();
   }
 
   cerrarModal() {
     this.modalAbierto = false;
-    this.nuevaMaquinaForm.reset();
+    this.form.reset();
   }
 
   guardarMaquina() {
-    if (this.nuevaMaquinaForm.invalid) {
-      this.nuevaMaquinaForm.markAllAsTouched();
-      return;
-    }
-
-    const maquinaData: any = {
-      ...this.nuevaMaquinaForm.value,
-      estado: 'activa'
-    };
-
-    this.maquinaService.create(maquinaData).subscribe({
+    if (this.form.invalid) return;
+    this.maquinaService.create({ ...this.form.value, estado: 'activa' } as any).subscribe({
       next: () => {
         this.cargarMaquinas();
         this.cerrarModal();
-        alert('Máquina creada exitosamente');
       },
-      error: (error) => {
-        console.error('Error al crear máquina:', error);
-        alert('Error al crear la máquina');
-      }
+      error: () => alert('Error al crear máquina')
     });
   }
 }
