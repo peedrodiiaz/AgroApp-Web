@@ -34,34 +34,18 @@ export class DashboardComponent implements OnInit {
     this.isLoading = true;
     
     forkJoin({
-      trabajadores: this.trabajadorService.getAll(),
-      maquinas: this.maquinaService.getAll()
+      trabajadores: this.trabajadorService.getAll(0, 100),
+      maquinas: this.maquinaService.getAll(0, 100)
     }).subscribe({
       next: (result) => {
-        // Procesar respuesta de API
-        let trabajadores = result.trabajadores as any;
-        let maquinas = result.maquinas as any;
+        const trabajadores = result.trabajadores.content || [];
+        const maquinas = result.maquinas.content || [];
 
-        // Si viene en formato {success, data}, extraer data
-        if (trabajadores && trabajadores.data && Array.isArray(trabajadores.data)) {
-          trabajadores = trabajadores.data;
-        } else if (!Array.isArray(trabajadores)) {
-          trabajadores = [];
-        }
-
-        if (maquinas && maquinas.data && Array.isArray(maquinas.data)) {
-          maquinas = maquinas.data;
-        } else if (!Array.isArray(maquinas)) {
-          maquinas = [];
-        }
-
-        // Calcular estadísticas
         this.totalTrabajadores = trabajadores.length;
         this.trabajadoresPorRol = this.contarPorPropiedad(trabajadores, 'rol');
 
         this.totalMaquinas = maquinas.length;
         this.maquinasPorEstado = this.contarPorPropiedad(maquinas, 'estado');
-        this.maquinasPorTipo = this.contarPorPropiedad(maquinas, 'tipo');
 
         this.isLoading = false;
       },

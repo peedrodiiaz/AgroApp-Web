@@ -1,26 +1,40 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { LoginResponse, Usuario } from '../interfaces/auth.interface';
+import { ApiConfig } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api';
+  private currentUser: Usuario | null = null;
 
-  register(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, data);
+  login(credentials: { email: string; password: string }): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(ApiConfig.AUTH.LOGIN, credentials).pipe(
+      tap(response => {
+        this.saveToken(response.token);
+        this.currentUser = response.user;
+        this.saveUser(response.user);
+      })
+    );
   }
 
-  login(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials);
+  logout(): void {
+    this.removeToken();
+    this.removeUser();
+    this.currentUser = null;
   }
 
-  logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/logout`, {});
-  }
-
-  getUser(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user`);
+  getUser(): Usuario | null {
+    if (this.currentUser) {
+      return this.currentUser;
+    }
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      this.currentUser = JSON.parse(userStr);
+    }
+    return this.currentUser;
   }
 
   isAuthenticated(): boolean {
@@ -37,5 +51,13 @@ export class AuthService {
 
   removeToken(): void {
     localStorage.removeItem('token');
+  }
+
+  saveUser(user: Usuario): void {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  removeUser(): void {
+    localStorage.removeItem('user');
   }
 }

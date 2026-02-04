@@ -5,8 +5,9 @@ export class Trabajador {
     dni: string;
     email: string;
     telefono: string;
-    rol: string;
+    rol: 'ADMIN' | 'TRABAJADOR';
     fechaAlta: string;
+    enabled?: boolean;
 
     constructor(
         id: number,
@@ -15,8 +16,9 @@ export class Trabajador {
         dni: string,
         email: string,
         telefono: string,
-        rol: string,
-        fechaAlta: string
+        rol: 'ADMIN' | 'TRABAJADOR',
+        fechaAlta: string,
+        enabled?: boolean
     ) {
         this.id = id;
         this.nombre = nombre;
@@ -26,5 +28,6 @@ export class Trabajador {
         this.telefono = telefono;
         this.rol = rol;
         this.fechaAlta = fechaAlta;
+        this.enabled = enabled;
     }
 }

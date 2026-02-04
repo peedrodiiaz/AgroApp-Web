@@ -23,9 +23,9 @@ export class TrabajadorNuevoComponent {
     apellido: new FormControl('', [Validators.required, Validators.minLength(2)]),
     dni: new FormControl('', [Validators.required, Validators.pattern(/^\d{8}[A-Za-z]$/)]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    telefono: new FormControl('', [Validators.pattern(/^\d{9}$/)]),
-    rol: new FormControl('trabajador', [Validators.required]),
-    fechaAlta: new FormControl(new Date().toISOString().split('T')[0], [Validators.required])
+    telefono: new FormControl('', [Validators.required, Validators.pattern(/^\d{9}$/)]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    rol: new FormControl<'ADMIN' | 'TRABAJADOR'>('TRABAJADOR', [Validators.required])
   });
 
   get f() {

@@ -42,22 +42,6 @@
 
           <div class="row g-3 mt-1">
             <div class="col-md-6">
-              <label class="form-label fw-semibold">DNI *</label>
-              <input type="text" formControlName="dni" class="form-control" placeholder="Ej: 12345678A"
-                maxlength="9"
-                [class.is-invalid]="f.dni.touched && f.dni.invalid">
-              @if (f.dni.touched && f.dni.invalid) {
-                <div class="invalid-feedback">
-                  @if (f.dni.hasError('required')) {
-                    <span>DNI requerido</span>
-                  }
-                  @if (f.dni.hasError('pattern')) {
-                    <span>Formato: 8 dígitos + letra (Ej: 12345678A)</span>
-                  }
-                </div>
-              }
-            </div>
-            <div class="col-md-6">
               <label class="form-label fw-semibold">Email *</label>
               <input type="email" formControlName="email" class="form-control" placeholder="ejemplo@correo.com"
                 [class.is-invalid]="f.email.touched && f.email.invalid">
@@ -89,32 +73,6 @@
                     <span>Debe tener 9 dígitos</span>
                   }
                 </div>
-              }
-            </div>
-            <div class="col-md-6">
-              <label class="form-label fw-semibold">Rol *</label>
-              <select formControlName="rol" class="form-select"
-                [class.is-invalid]="f.rol.touched && f.rol.invalid">
-                <option value="">Seleccionar rol...</option>
-                <option value="Agricultor">Agricultor</option>
-                <option value="Operador de Maquinaria">Operador de Maquinaria</option>
-                <option value="Supervisor">Supervisor</option>
-                <option value="Técnico">Técnico</option>
-                <option value="Administrador">Administrador</option>
-              </select>
-              @if (f.rol.touched && f.rol.invalid) {
-                <div class="invalid-feedback">Rol requerido</div>
-              }
-            </div>
-          </div>
-
-          <div class="row g-3 mt-1">
-            <div class="col-md-6">
-              <label class="form-label fw-semibold">Fecha de Alta *</label>
-              <input type="date" formControlName="fechaAlta" class="form-control"
-                [class.is-invalid]="f.fechaAlta.touched && f.fechaAlta.invalid">
-              @if (f.fechaAlta.touched && f.fechaAlta.invalid) {
-                <div class="invalid-feedback">La fecha es obligatoria</div>
               }
             </div>
           </div>

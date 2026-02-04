@@ -13,7 +13,6 @@ export class SidebarComponent {
     { icon: '🏠', label: 'Home', route: '/dashboard', active: false },
     { icon: '⚙️', label: 'Maquinas', route: '/maquinas', active: false, hasSubmenu: true },
     { icon: '👥', label: 'Trabajadores', route: '/trabajadores', active: false, hasSubmenu: true },
-    { icon: '📅', label: 'Reservas', route: '/cronogramas', active: false, hasSubmenu: false },
     { icon: '⚠️', label: 'Incidencias', route: '/incidencias', active: false, hasSubmenu: true },
   ];
 }

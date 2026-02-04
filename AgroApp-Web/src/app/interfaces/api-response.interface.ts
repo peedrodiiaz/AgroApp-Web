@@ -1,4 +1,32 @@
-// Interfaz genérica para respuestas paginadas de Laravel
+export interface SpringPage<T> {
+  content: T[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    sort: {
+      empty: boolean;
+      sorted: boolean;
+      unsorted: boolean;
+    };
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+  sort: {
+    empty: boolean;
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   current_page: number;
@@ -19,12 +47,10 @@ export interface PaginatedResponse<T> {
   total: number;
 }
 
-// Interfaz para respuestas de estadísticas
 export interface StatsResponse {
   [key: string]: number | string | object;
 }
 
-// Interfaz para respuestas simples de éxito
 export interface SuccessResponse {
   message: string;
   data?: any;
