@@ -1,40 +1,49 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Maquina } from '../interfaces/maquina.interface';
+import { 
+  Maquina, 
+  CreateMaquinaRequest, 
+  UpdateMaquinaDto, 
+  CambiarEstadoMaquinaDto,
+  MaquinaStatsDto 
+} from '../interfaces/maquina.interface';
+import { SpringPage } from '../interfaces/api-response.interface';
+import { ApiConfig } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class MaquinaService {
-  private apiUrl = 'http://localhost:8000/api/maquinas';
-
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<any> {
-    return this.http.get(this.apiUrl);
+  getAll(page: number = 0, size: number = 10): Observable<SpringPage<Maquina>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<SpringPage<Maquina>>(ApiConfig.MAQUINAS, { params });
   }
 
-  getById(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+  getById(id: number): Observable<Maquina> {
+    return this.http.get<Maquina>(`${ApiConfig.MAQUINAS}/${id}`);
   }
 
-  
-  create(data: Maquina): Observable<any> {
-    return this.http.post(this.apiUrl, data);
+  create(data: CreateMaquinaRequest): Observable<Maquina> {
+    return this.http.post<Maquina>(ApiConfig.MAQUINAS, data);
   }
 
-  update(id: number, data: Partial<Maquina>): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, data);
+  update(id: number, data: UpdateMaquinaDto): Observable<Maquina> {
+    return this.http.put<Maquina>(`${ApiConfig.MAQUINAS}/${id}/estado`, data);
   }
 
-  delete(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+  cambiarEstado(id: number, estado: 'ACTIVA' | 'MANTENIMIENTO' | 'INACTIVA'): Observable<Maquina> {
+    const dto: CambiarEstadoMaquinaDto = { estado };
+    return this.http.patch<Maquina>(`${ApiConfig.MAQUINAS}/${id}/estado`, dto);
   }
 
-  cambiarEstado(id: number, estado: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, { estado });
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${ApiConfig.MAQUINAS}/${id}`);
   }
 
-  getStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/stats`);
+  getStats(): Observable<MaquinaStatsDto> {
+    return this.http.get<MaquinaStatsDto>(`${ApiConfig.MAQUINAS}/stats`);
   }
 }

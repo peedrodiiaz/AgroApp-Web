@@ -1,3 +1,35 @@
+<<<<<<< HEAD
+=======
+export interface SpringPage<T> {
+  content: T[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    sort: {
+      empty: boolean;
+      sorted: boolean;
+      unsorted: boolean;
+    };
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+  sort: {
+    empty: boolean;
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
+}
+
+>>>>>>> 02805ad1e0b8530d36a8d33d28cf588cdbab0dfc
 export interface PaginatedResponse<T> {
   data: T[];
   current_page: number;

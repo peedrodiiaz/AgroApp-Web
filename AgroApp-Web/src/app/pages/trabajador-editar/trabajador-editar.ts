@@ -21,11 +21,8 @@ export class TrabajadorEditarComponent implements OnInit {
   trabajadorForm = new FormGroup({
     nombre: new FormControl('', [Validators.required, Validators.minLength(2)]),
     apellido: new FormControl('', [Validators.required, Validators.minLength(2)]),
-    dni: new FormControl('', [Validators.required, Validators.pattern(/^\d{8}[A-Z]$/)]),
-    email: new FormControl('', [Validators.required, Validators.email]),
     telefono: new FormControl('', [Validators.required, Validators.pattern(/^\d{9}$/)]),
-    rol: new FormControl('', [Validators.required]),
-    fechaAlta: new FormControl('', [Validators.required])
+    email: new FormControl('', [Validators.required, Validators.email])
   });
 
   get f() { return this.trabajadorForm.controls; }
@@ -37,18 +34,18 @@ export class TrabajadorEditarComponent implements OnInit {
 
   cargarTrabajador() {
     this.isLoading = true;
-    this.trabajadorService.getById(this.trabajadorId).subscribe({
-      next: (response: any) => {
-        const trabajador = response && response.data ? response.data : response;
-        this.trabajadorForm.patchValue({
-          nombre: trabajador.nombre,
-          apellido: trabajador.apellido,
-          dni: trabajador.dni,
-          email: trabajador.email,
-          telefono: trabajador.telefono,
-          rol: trabajador.rol,
-          fechaAlta: trabajador.fechaAlta
-        });
+    this.trabajadorService.getAll(0, 1000).subscribe({
+      next: (response) => {
+        const trabajadores = response.content || [];
+        const trabajador = trabajadores.find(t => t.id === this.trabajadorId);
+        if (trabajador) {
+          this.trabajadorForm.patchValue({
+            nombre: trabajador.nombre,
+            apellido: trabajador.apellido,
+            email: trabajador.email,
+            telefono: trabajador.telefono
+          });
+        }
         this.isLoading = false;
       },
       error: (error: any) => {
@@ -81,12 +78,7 @@ export class TrabajadorEditarComponent implements OnInit {
       error: (error) => {
         console.error('Error al actualizar trabajador:', error);
         this.isLoading = false;
-        if (error.error?.errors) {
-          const errors = Object.values(error.error.errors).flat();
-          alert('Errores de validación:\n' + errors.join('\n'));
-        } else {
-          alert('Error al actualizar el trabajador');
-        }
+        alert('Error al actualizar el trabajador');
       }
     });
   }

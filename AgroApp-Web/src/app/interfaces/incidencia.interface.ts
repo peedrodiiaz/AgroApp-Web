@@ -1,42 +1,32 @@
+import { Maquina } from './maquina.interface';
+import { Trabajador } from './trabajador.interface';
+
 export interface Incidencia {
   id: number;
   titulo: string;
   descripcion: string;
-  estado: string;
-  prioridad: string;
+  estado: 'ABIERTA' | 'EN_PROGRESO' | 'RESUELTA';
+  prioridad: 'BAJA' | 'MEDIA' | 'ALTA';
   fechaApertura: string;
   fechaCierre?: string;
-  maquina_id: number;
-  trabajador_id: number;
-  maquina?: {
-    id: number;
-    nombre: string;
-    modelo: string;
-  };
-  trabajador?: {
-    id: number;
-    nombre: string;
-    apellido: string;
-  };
+  maquina: Maquina;
+  trabajador: Trabajador;
 }
 
-export interface IncidenciasApiResponse {
-  success: boolean;
-  data: {
-    current_page: number;
-    data: Incidencia[];
-    first_page_url: string;
-    from: number;
-    last_page: number;
-    last_page_url: string;
-    links: any[];
-    next_page_url: string | null;
-    path: string;
-    per_page: number;
-    prev_page_url: string | null;
-    to: number;
-    total: number;
-  };
+export interface CreateIncidenciaRequest {
+  titulo: string;
+  descripcion: string;
+  estadoIncidencia?: 'ABIERTA' | 'EN_PROGRESO' | 'RESUELTA';
+  maquinaId: number;
+  trabajadorId: number;
+  prioridad: 'BAJA' | 'MEDIA' | 'ALTA';
+}
+
+export interface UpdateIncidenciaRequest {
+  titulo?: string;
+  descripcion?: string;
+  estadoIncidencia?: 'ABIERTA' | 'EN_PROGRESO' | 'RESUELTA';
+  prioridad?: 'BAJA' | 'MEDIA' | 'ALTA';
 }
 
 export type IncidenciasResponse = Incidencia[];

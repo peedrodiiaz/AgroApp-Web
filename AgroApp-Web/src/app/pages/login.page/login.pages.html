@@ -16,27 +16,24 @@
 
                     <div class="form-group">
                         <label class="form-label">
-                            Usuario <span class="required">*</span>
+                            Email <span class="required">*</span>
                         </label>
                         <div class="input-wrapper">
                             <input
-                                type="text"
+                                type="email"
                                 class="form-input"
-                                placeholder="Ingrese su usuario"
-                                formControlName="usuario"
+                                placeholder="Ingrese su email"
+                                formControlName="email"
                             >
                             
                         </div>
-                        @if (f.usuario.touched && f.usuario.invalid){
+                        @if (f.email.touched && f.email.invalid){
                             <div class="error-message">
-								@if (f.usuario.hasError('required')) {
-									<span>El usuario es obligatorio.</span>
+								@if (f.email.hasError('required')) {
+									<span>El email es obligatorio.</span>
 								}
-								@if (f.usuario.hasError('minLength')) {
-									<span>Mínimo 2 caracteres.</span>
-								}
-								@if (f.usuario.hasError('maxlength')) {
-									<span>Máximo 50 caracteres.</span>
+								@if (f.email.hasError('email')) {
+									<span>Email no válido.</span>
 								}
 							</div>
                         }
@@ -64,11 +61,8 @@
 								@if (f.password.hasError('required')) {
 									<span>La contraseña es obligatoria.</span>
 								}
-								@if (f.password.hasError('minLength')) {
-									<span>Mínimo 8 caracteres.</span>
-								}
-								@if (f.password.hasError('maxlength')) {
-									<span>Máximo 50 caracteres.</span>
+								@if (f.password.hasError('minlength')) {
+									<span>Mínimo 6 caracteres.</span>
 								}
 						</div>
                         }

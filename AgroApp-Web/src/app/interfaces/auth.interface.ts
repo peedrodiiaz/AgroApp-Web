@@ -1,14 +1,15 @@
 export interface Usuario {
   id: number;
-  name: string;
-  usuario?: string;
+  nombre: string;
+  apellido: string;
   email: string;
-  role?: string;
+  dni: string;
+  telefono: string;
+  fechaAlta: string;
+  rol: string;
 }
 
 export interface LoginResponse {
-  success: boolean;
-  message?: string;
   token: string;
   user: Usuario;
 }

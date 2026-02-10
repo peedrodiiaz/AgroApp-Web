@@ -29,12 +29,13 @@ export class TrabajadorDetalleComponent implements OnInit {
 
   cargarTrabajador() {
     this.isLoading = true;
-    this.trabajadorService.getById(this.trabajadorId).subscribe({
-      next: (response: any) => {
-        if (response && response.data) {
-          this.trabajador = response.data;
-        } else {
-          this.trabajador = response;
+    this.trabajadorService.getAll(0, 1000).subscribe({
+      next: (response) => {
+        const trabajadores = response.content || [];
+        this.trabajador = trabajadores.find(t => t.id === this.trabajadorId);
+        if (!this.trabajador) {
+          alert('Trabajador no encontrado');
+          this.volverListado();
         }
         this.isLoading = false;
         console.log('Trabajador cargado:', this.trabajador);
@@ -57,15 +58,15 @@ export class TrabajadorDetalleComponent implements OnInit {
   }
 
   eliminarTrabajador() {
-    if (confirm(`¿Seguro que quieres eliminar a ${this.trabajador?.nombre}?`)) {
-      this.trabajadorService.delete(this.trabajadorId).subscribe({
+    if (confirm(`¿Seguro que quieres desactivar a ${this.trabajador?.nombre}?`)) {
+      this.trabajadorService.toggleActivacion(this.trabajadorId).subscribe({
         next: () => {
-          console.log('Trabajador eliminado');
+          console.log('Trabajador desactivado');
           this.router.navigate(['/trabajadores']);
         },
         error: (error) => {
-          console.error('Error al eliminar trabajador:', error);
-          alert('Error al eliminar el trabajador');
+          console.error('Error al desactivar trabajador:', error);
+          alert('Error al desactivar el trabajador');
         }
       });
     }

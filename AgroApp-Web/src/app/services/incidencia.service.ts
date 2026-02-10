@@ -1,35 +1,34 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Incidencia } from '../interfaces/incidencia.interface';
+import { Incidencia, CreateIncidenciaRequest, UpdateIncidenciaRequest } from '../interfaces/incidencia.interface';
+import { SpringPage } from '../interfaces/api-response.interface';
+import { ApiConfig } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class IncidenciaService {
-  private apiUrl = 'http://localhost:8000/api/incidencias';
-
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<any> {
-    return this.http.get(this.apiUrl);
+  getAll(page: number = 0, size: number = 10): Observable<SpringPage<Incidencia>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<SpringPage<Incidencia>>(ApiConfig.INCIDENCIAS, { params });
   }
 
-  getById(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+  getById(id: number): Observable<Incidencia> {
+    return this.http.get<Incidencia>(`${ApiConfig.INCIDENCIAS}/${id}`);
   }
 
-  create(data: Incidencia): Observable<any> {
-    return this.http.post(this.apiUrl, data);
+  create(data: CreateIncidenciaRequest): Observable<Incidencia> {
+    return this.http.post<Incidencia>(ApiConfig.INCIDENCIAS, data);
   }
 
-  update(id: number, data: Partial<Incidencia>): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, data);
+  update(id: number, data: UpdateIncidenciaRequest): Observable<Incidencia> {
+    return this.http.put<Incidencia>(`${ApiConfig.INCIDENCIAS}/${id}`, data);
   }
 
-  delete(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
-  }
-
-  getStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/stats`);
+  cerrar(id: number): Observable<Incidencia> {
+    return this.http.patch<Incidencia>(`${ApiConfig.INCIDENCIAS}/${id}/cerrar`, {});
   }
 }

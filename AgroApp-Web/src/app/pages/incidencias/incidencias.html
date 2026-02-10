@@ -33,26 +33,26 @@
 
             <div class="mb-2">
               <label class="form-label">Trabajador *</label>
-              <select formControlName="trabajador_id" class="form-select" [class.is-invalid]="f.trabajador_id.touched && f.trabajador_id.invalid">
+              <select formControlName="trabajadorId" class="form-select" [class.is-invalid]="f.trabajadorId.touched && f.trabajadorId.invalid">
                 <option value="">Seleccionar trabajador...</option>
                 @for (trabajador of trabajadores; track trabajador.id) {
                   <option [value]="trabajador.id">{{ trabajador.nombre }} {{ trabajador.apellido }}</option>
                 }
               </select>
-              @if (f.trabajador_id.touched && f.trabajador_id.invalid) {
+              @if (f.trabajadorId.touched && f.trabajadorId.invalid) {
                 <div class="invalid-feedback">Campo obligatorio.</div>
               }
             </div>
 
             <div class="mb-2">
               <label class="form-label">Máquina afectada *</label>
-              <select formControlName="maquina_id" class="form-select" [class.is-invalid]="f.maquina_id.touched && f.maquina_id.invalid">
+              <select formControlName="maquinaId" class="form-select" [class.is-invalid]="f.maquinaId.touched && f.maquinaId.invalid">
                 <option value="">Seleccionar máquina...</option>
                 @for (maquina of maquinas; track maquina.id) {
                   <option [value]="maquina.id">{{ maquina.nombre }} - {{ maquina.modelo }}</option>
                 }
               </select>
-              @if (f.maquina_id.touched && f.maquina_id.invalid) {
+              @if (f.maquinaId.touched && f.maquinaId.invalid) {
                 <div class="invalid-feedback">Campo obligatorio.</div>
               }
             </div>

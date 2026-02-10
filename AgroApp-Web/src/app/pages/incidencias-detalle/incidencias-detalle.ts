@@ -27,12 +27,8 @@ export class IncidenciaDetalleComponent implements OnInit {
   cargarIncidencia() {
     this.isLoading = true;
     this.incidenciaService.getById(this.incidenciaId).subscribe({
-      next: (response: any) => {
-        if (response && response.data) {
-          this.incidencia = response.data;
-        } else {
-          this.incidencia = response;
-        }
+      next: (response) => {
+        this.incidencia = response;
         this.isLoading = false;
       },
       error: (error: any) => {
@@ -52,19 +48,19 @@ export class IncidenciaDetalleComponent implements OnInit {
     this.router.navigate(['/incidencias', this.incidencia.id, 'editar']); 
   }
 
-  eliminarIncidencia() {
-    if (!confirm('¿Estás seguro de eliminar esta incidencia?')) {
+  cerrarIncidencia() {
+    if (!confirm('¿Estás seguro de cerrar esta incidencia?')) {
       return;
     }
 
-    this.incidenciaService.delete(this.incidenciaId).subscribe({
+    this.incidenciaService.cerrar(this.incidenciaId).subscribe({
       next: () => {
-        alert('Incidencia eliminada exitosamente');
-        this.volverListado();
+        alert('Incidencia cerrada exitosamente');
+        this.cargarIncidencia();
       },
       error: (error) => {
-        console.error('Error al eliminar incidencia:', error);
-        alert('Error al eliminar la incidencia');
+        console.error('Error al cerrar incidencia:', error);
+        alert('Error al cerrar la incidencia');
       }
     });
   }

@@ -122,12 +122,12 @@ export class IncidenciaEditarComponent implements OnInit {
     const incidenciaData: any = this.editarForm.value;
 
     this.incidenciaService.update(this.incidenciaId, incidenciaData).subscribe({
-      next: (incidencia) => {
+      next: (incidencia: any) => {
         this.isLoading = false;
         alert('Incidencia actualizada exitosamente');
         this.router.navigate(['/incidencias', this.incidenciaId]);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al actualizar incidencia:', error);
         this.isLoading = false;
         if (error.error?.errors) {

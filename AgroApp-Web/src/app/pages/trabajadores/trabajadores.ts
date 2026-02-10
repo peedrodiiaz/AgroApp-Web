@@ -26,18 +26,13 @@ export class TrabajadoresComponent implements OnInit {
 
   cargarTrabajadores() {
     this.isLoading = true;
-    this.trabajadorService.getAll().subscribe({
-      next: (response: any) => {
-        if (response && response.data && Array.isArray(response.data)) {
-          this.trabajadores = response.data;
-        } else if (Array.isArray(response)) {
-          this.trabajadores = response;
-        } else {
-          this.trabajadores = [];
-        }
+    this.trabajadorService.getAll(0, 100).subscribe({
+      next: (response) => {
+        this.trabajadores = response.content || [];
         this.isLoading = false;
       },
-      error: () => {
+      error: (error) => {
+        console.error('Error al cargar trabajadores:', error);
         this.trabajadores = [];
         this.isLoading = false;
       }
@@ -74,27 +69,31 @@ export class TrabajadoresComponent implements OnInit {
   }
 
   eliminar(id: number, nombre: string) {
-    if (confirm(`¿Eliminar "${nombre}"?`)) {
-      this.trabajadorService.delete(id).subscribe({
+    if (confirm(`¿Desactivar "${nombre}"?`)) {
+      this.trabajadorService.toggleActivacion(id).subscribe({
         next: () => this.cargarTrabajadores(),
-        error: () => alert('Error al eliminar')
+        error: () => alert('Error al desactivar')
       });
     }
     this.menuAbierto = null;
   }
 
   eliminarTrabajador(trabajador: any) {
-    if (confirm(`¿Eliminar "${trabajador.nombre}"?`)) {
-      this.trabajadorService.delete(trabajador.id).subscribe({
+    if (confirm(`¿Desactivar "${trabajador.nombre}"?`)) {
+      this.trabajadorService.toggleActivacion(trabajador.id).subscribe({
         next: () => this.cargarTrabajadores(),
-        error: () => alert('Error al eliminar')
+        error: () => alert('Error al desactivar')
       });
     }
     this.menuAbierto = null;
   }
 
   abrirModalNuevo() {
-    this.router.navigate(['/trabajadores/nuevo']);
+    console.log('Botón clickeado - Navegando a /trabajadores/nuevo');
+    this.router.navigate(['/trabajadores/nuevo']).then(
+      success => console.log('Navegación exitosa:', success),
+      error => console.error('Error en navegación:', error)
+    );
   }
 
   getInitials(nombre: string): string {

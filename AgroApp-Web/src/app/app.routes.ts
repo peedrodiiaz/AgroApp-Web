@@ -10,7 +10,6 @@ import { TrabajadorEditarComponent } from './pages/trabajador-editar/trabajador-
 import { IncidenciasComponent } from './pages/incidencias/incidencias';
 import { IncidenciaDetalleComponent } from './pages/incidencias-detalle/incidencias-detalle';
 import { IncidenciaEditarComponent } from './pages/incidencias-editar/incidencias-editar';
-import { CronogramasComponent } from './pages/cronogramas/cronogramas';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout/admin-layout';
 
 export const routes: Routes = [
@@ -48,28 +47,24 @@ export const routes: Routes = [
         component: TrabajadorNuevoComponent
       },
       {
-        path: 'trabajadores/:id',
-        component: TrabajadorDetalleComponent
-      },
-      {
         path: 'trabajadores/:id/editar',
         component: TrabajadorEditarComponent
       },
       {
-        path: 'cronogramas',
-        component: CronogramasComponent
+        path: 'trabajadores/:id',
+        component: TrabajadorDetalleComponent
       },
       {
         path: 'incidencias',
         component: IncidenciasComponent
       },
       {
-        path: 'incidencias/:id',
-        component: IncidenciaDetalleComponent
-      },
-      {
         path: 'incidencias/:id/editar',
         component: IncidenciaEditarComponent
+      },
+      {
+        path: 'incidencias/:id',
+        component: IncidenciaDetalleComponent
       }
     ]
   }

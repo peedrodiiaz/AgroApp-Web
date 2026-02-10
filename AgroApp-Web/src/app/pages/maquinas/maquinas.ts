@@ -41,18 +41,13 @@ export class MaquinasComponent implements OnInit {
 
   cargarMaquinas() {
     this.isLoading = true;
-    this.maquinaService.getAll().subscribe({
-      next: (response: any) => {
-        if (response && response.data && Array.isArray(response.data)) {
-          this.maquinas = response.data;
-        } else if (Array.isArray(response)) {
-          this.maquinas = response;
-        } else {
-          this.maquinas = [];
-        }
+    this.maquinaService.getAll(0, 100).subscribe({
+      next: (response) => {
+        this.maquinas = response.content || [];
         this.isLoading = false;
       },
-      error: () => {
+      error: (error) => {
+        console.error('Error al cargar máquinas:', error);
         this.maquinas = [];
         this.isLoading = false;
       }
@@ -61,7 +56,12 @@ export class MaquinasComponent implements OnInit {
 
   get maquinasMostradas() {
     return this.maquinas
-      .filter((m: any) => this.tabActivo === 'activas' ? m.estado === 'activa' : m.estado === this.tabActivo)
+      .filter((m: any) => {
+        if (this.tabActivo === 'activas') return m.estado === 'ACTIVA';
+        if (this.tabActivo === 'mantenimiento') return m.estado === 'MANTENIMIENTO';
+        if (this.tabActivo === 'inactivas') return m.estado === 'INACTIVA';
+        return true;
+      })
       .filter((m: any) => !this.searchTerm || m.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()));
   }
 
@@ -79,7 +79,8 @@ export class MaquinasComponent implements OnInit {
   }
 
   cambiarEstado(maquina: any, estado: string) {
-    this.maquinaService.cambiarEstado(maquina.id, estado).subscribe({
+    const estadoValido = estado.toUpperCase() as 'ACTIVA' | 'MANTENIMIENTO' | 'INACTIVA';
+    this.maquinaService.cambiarEstado(maquina.id, estadoValido).subscribe({
       next: () => {
         this.cargarMaquinas();
         this.menuAbierto = null;

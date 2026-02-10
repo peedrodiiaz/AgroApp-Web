@@ -28,15 +28,44 @@ export class IncidenciasComponent implements OnInit {
   estadoActivo = 'todas';
   modalAbierto = false;
 
+  nuevoReporteForm = new FormGroup({
+    titulo: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    descripcion: new FormControl('', [Validators.required, Validators.maxLength(500)]),
+    estadoIncidencia: new FormControl<'ABIERTA' | 'EN_PROGRESO' | 'RESUELTA'>('ABIERTA', [Validators.required]),
+    prioridad: new FormControl<'BAJA' | 'MEDIA' | 'ALTA'>('MEDIA', [Validators.required]),
+    trabajadorId: new FormControl<number | null>(null, [Validators.required]),
+    maquinaId: new FormControl<number | null>(null, [Validators.required]),
+    fechaApertura: new FormControl('', [Validators.required])
+  });
+
   form = new FormGroup({
     titulo: new FormControl('', [Validators.required, Validators.minLength(3)]),
     descripcion: new FormControl('', [Validators.required, Validators.maxLength(500)]),
-    estado: new FormControl('abierta', [Validators.required]),
-    prioridad: new FormControl('media', [Validators.required]),
-    fechaApertura: new FormControl('', [Validators.required]),
-    trabajador_id: new FormControl<number | null>(null, [Validators.required]),
-    maquina_id: new FormControl<number | null>(null, [Validators.required])
+    estadoIncidencia: new FormControl<'ABIERTA' | 'EN_PROGRESO' | 'RESUELTA'>('ABIERTA', [Validators.required]),
+    prioridad: new FormControl<'BAJA' | 'MEDIA' | 'ALTA'>('MEDIA', [Validators.required]),
+    trabajadorId: new FormControl<number | null>(null, [Validators.required]),
+    maquinaId: new FormControl<number | null>(null, [Validators.required])
   });
+
+  get f() {
+    return this.nuevoReporteForm.controls;
+  }
+
+  get abiertas() {
+    return this.incidencias.filter((i: any) => i.estadoIncidencia === 'ABIERTA').length;
+  }
+
+  get enProgreso() {
+    return this.incidencias.filter((i: any) => i.estadoIncidencia === 'EN_PROGRESO').length;
+  }
+
+  get resueltas() {
+    return this.incidencias.filter((i: any) => i.estadoIncidencia === 'RESUELTA').length;
+  }
+
+  get total() {
+    return this.incidencias.length;
+  }
 
   ngOnInit() {
     this.cargarIncidencias();
@@ -46,18 +75,13 @@ export class IncidenciasComponent implements OnInit {
 
   cargarIncidencias() {
     this.isLoading = true;
-    this.incidenciaService.getAll().subscribe({
-      next: (response: any) => {
-        if (response && response.data && Array.isArray(response.data)) {
-          this.incidencias = response.data;
-        } else if (Array.isArray(response)) {
-          this.incidencias = response;
-        } else {
-          this.incidencias = [];
-        }
+    this.incidenciaService.getAll(0, 100).subscribe({
+      next: (response) => {
+        this.incidencias = response.content || [];
         this.isLoading = false;
       },
-      error: () => {
+      error: (error) => {
+        console.error('Error al cargar incidencias:', error);
         this.incidencias = [];
         this.isLoading = false;
       }
@@ -65,34 +89,24 @@ export class IncidenciasComponent implements OnInit {
   }
 
   cargarTrabajadores() {
-    this.trabajadorService.getAll().subscribe({
-      next: (response: any) => {
-        if (response && response.data && Array.isArray(response.data)) {
-          this.trabajadores = response.data;
-        } else if (Array.isArray(response)) {
-          this.trabajadores = response;
-        } else {
-          this.trabajadores = [];
-        }
+    this.trabajadorService.getAll(0, 100).subscribe({
+      next: (response) => {
+        this.trabajadores = response.content || [];
       },
-      error: () => {
+      error: (error) => {
+        console.error('Error al cargar trabajadores:', error);
         this.trabajadores = [];
       }
     });
   }
 
   cargarMaquinas() {
-    this.maquinaService.getAll().subscribe({
-      next: (response: any) => {
-        if (response && response.data && Array.isArray(response.data)) {
-          this.maquinas = response.data;
-        } else if (Array.isArray(response)) {
-          this.maquinas = response;
-        } else {
-          this.maquinas = [];
-        }
+    this.maquinaService.getAll(0, 100).subscribe({
+      next: (response) => {
+        this.maquinas = response.content || [];
       },
-      error: () => {
+      error: (error) => {
+        console.error('Error al cargar máquinas:', error);
         this.maquinas = [];
       }
     });
@@ -101,41 +115,99 @@ export class IncidenciasComponent implements OnInit {
   get incidenciasFiltradas() {
     const term = this.searchTerm.toLowerCase();
     return this.incidencias.filter((i: any) =>
-      (this.estadoActivo === 'todas' || i.estado === this.estadoActivo) &&
+      (this.estadoActivo === 'todas' || i.estadoIncidencia === this.estadoActivo.toUpperCase()) &&
       (!this.searchTerm || i.titulo?.toLowerCase().includes(term) || i.descripcion?.toLowerCase().includes(term))
     );
+  }
+
+  cambiarEstado(estado: string) {
+    this.estadoActivo = estado;
   }
 
   verIncidencia(id: number) {
     this.router.navigate(['/incidencias', id]);
   }
 
-  eliminar(id: number) {
-    if (confirm('¿Eliminar incidencia?')) {
-      this.incidenciaService.delete(id).subscribe({
+  eliminarIncidencia(id: number, event: Event) {
+    event.stopPropagation();
+    if (confirm('¿Cerrar incidencia?')) {
+      this.incidenciaService.cerrar(id).subscribe({
         next: () => this.cargarIncidencias(),
-        error: () => alert('Error al eliminar')
+        error: () => alert('Error al cerrar incidencia')
+      });
+    }
+  }
+
+  eliminar(id: number) {
+    if (confirm('¿Cerrar incidencia?')) {
+      this.incidenciaService.cerrar(id).subscribe({
+        next: () => this.cargarIncidencias(),
+        error: () => alert('Error al cerrar incidencia')
       });
     }
   }
 
   abrirModal() {
     this.modalAbierto = true;
-    this.form.reset();
+    this.nuevoReporteForm.reset({
+      estadoIncidencia: 'ABIERTA',
+      prioridad: 'MEDIA',
+      fechaApertura: new Date().toISOString().split('T')[0]
+    });
   }
 
   cerrarModal() {
     this.modalAbierto = false;
   }
 
+  registrarIncidencia() {
+    if (this.nuevoReporteForm.invalid) return;
+    
+    const formValue = this.nuevoReporteForm.value;
+    const incidenciaData = {
+      titulo: formValue.titulo || '',
+      descripcion: formValue.descripcion || '',
+      estadoIncidencia: formValue.estadoIncidencia || 'ABIERTA',
+      prioridad: formValue.prioridad || 'MEDIA',
+      trabajadorId: formValue.trabajadorId || 0,
+      maquinaId: formValue.maquinaId || 0
+    };
+    
+    this.incidenciaService.create(incidenciaData).subscribe({
+      next: () => {
+        this.cargarIncidencias();
+        this.cerrarModal();
+        alert('Incidencia registrada exitosamente');
+      },
+      error: (error) => {
+        console.error('Error al guardar:', error);
+        alert('Error al guardar incidencia');
+      }
+    });
+  }
+
   guardar() {
     if (this.form.invalid) return;
-    this.incidenciaService.create(this.form.value as any).subscribe({
+    
+    const formValue = this.form.value;
+    const incidenciaData = {
+      titulo: formValue.titulo || '',
+      descripcion: formValue.descripcion || '',
+      estadoIncidencia: formValue.estadoIncidencia || 'ABIERTA',
+      prioridad: formValue.prioridad || 'MEDIA',
+      trabajadorId: formValue.trabajadorId || 0,
+      maquinaId: formValue.maquinaId || 0
+    };
+    
+    this.incidenciaService.create(incidenciaData).subscribe({
       next: () => {
         this.cargarIncidencias();
         this.cerrarModal();
       },
-      error: () => alert('Error al guardar')
+      error: (error) => {
+        console.error('Error al guardar:', error);
+        alert('Error al guardar incidencia');
+      }
     });
   }
 }

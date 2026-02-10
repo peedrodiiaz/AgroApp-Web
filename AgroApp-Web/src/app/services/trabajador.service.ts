@@ -1,35 +1,38 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Trabajador } from '../interfaces/trabajador.interface';
+import { Trabajador, CreateTrabajadorRequest, UpdateTrabajadorRequest } from '../interfaces/trabajador.interface';
+import { SpringPage } from '../interfaces/api-response.interface';
+import { ApiConfig } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class TrabajadorService {
-  private apiUrl = 'http://localhost:8000/api/trabajadores';
-
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<any> {
-    return this.http.get(this.apiUrl);
+  getAll(page: number = 0, size: number = 10): Observable<SpringPage<Trabajador>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<SpringPage<Trabajador>>(ApiConfig.TRABAJADORES, { params });
   }
 
-  getById(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+  getMe(): Observable<Trabajador> {
+    return this.http.get<Trabajador>(`${ApiConfig.TRABAJADORES}/me`);
   }
 
-  create(data: Trabajador): Observable<any> {
-    return this.http.post(this.apiUrl, data);
+  updateMe(data: UpdateTrabajadorRequest): Observable<Trabajador> {
+    return this.http.put<Trabajador>(`${ApiConfig.TRABAJADORES}/me`, data);
   }
 
-  update(id: number, data: Partial<Trabajador>): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, data);
+  update(id: number, data: UpdateTrabajadorRequest): Observable<Trabajador> {
+    return this.http.put<Trabajador>(`${ApiConfig.TRABAJADORES}/${id}`, data);
   }
 
-  delete(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+  create(data: CreateTrabajadorRequest): Observable<Trabajador> {
+    return this.http.post<Trabajador>(ApiConfig.TRABAJADORES, data);
   }
 
-  getStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/stats`);
+  toggleActivacion(id: number): Observable<Trabajador> {
+    return this.http.patch<Trabajador>(`${ApiConfig.TRABAJADORES}/${id}/activacion`, {});
   }
 }

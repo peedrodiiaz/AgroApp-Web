@@ -69,12 +69,8 @@ export class MaquinaDetalleComponent implements OnInit {
   cargarMaquina() {
     this.isLoading = true;
     this.maquinaService.getById(this.maquinaId).subscribe({
-      next: (response: any) => {
-        if (response && response.data) {
-          this.maquina = response.data;
-        } else {
-          this.maquina = response;
-        }
+      next: (response) => {
+        this.maquina = response;
         this.isLoading = false;
       },
       error: (error: any) => {
@@ -155,7 +151,8 @@ export class MaquinaDetalleComponent implements OnInit {
   }
 
   cambiarEstado(nuevoEstado: string) {
-    this.maquinaService.cambiarEstado(this.maquinaId, nuevoEstado).subscribe({
+    const estadoValido = nuevoEstado.toUpperCase() as 'ACTIVA' | 'MANTENIMIENTO' | 'INACTIVA';
+    this.maquinaService.cambiarEstado(this.maquinaId, estadoValido).subscribe({
       next: () => {
         this.cargarMaquina();
         alert(`Estado cambiado a ${nuevoEstado}`);
