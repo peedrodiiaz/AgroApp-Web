@@ -34,9 +34,9 @@
             <div class="mb-2">
               <label class="form-label">Trabajador *</label>
               <select formControlName="trabajadorId" class="form-select" [class.is-invalid]="f.trabajadorId.touched && f.trabajadorId.invalid">
-                <option value="">Seleccionar trabajador...</option>
+                <option [ngValue]="null">Seleccionar trabajador...</option>
                 @for (trabajador of trabajadores; track trabajador.id) {
-                  <option [value]="trabajador.id">{{ trabajador.nombre }} {{ trabajador.apellido }}</option>
+                  <option [ngValue]="trabajador.id">{{ trabajador.nombre }} {{ trabajador.apellido }}</option>
                 }
               </select>
               @if (f.trabajadorId.touched && f.trabajadorId.invalid) {
@@ -47,9 +47,9 @@
             <div class="mb-2">
               <label class="form-label">Máquina afectada *</label>
               <select formControlName="maquinaId" class="form-select" [class.is-invalid]="f.maquinaId.touched && f.maquinaId.invalid">
-                <option value="">Seleccionar máquina...</option>
+                <option [ngValue]="null">Seleccionar máquina...</option>
                 @for (maquina of maquinas; track maquina.id) {
-                  <option [value]="maquina.id">{{ maquina.nombre }} - {{ maquina.modelo }}</option>
+                  <option [ngValue]="maquina.id">{{ maquina.nombre }} - {{ maquina.modelo }}</option>
                 }
               </select>
               @if (f.maquinaId.touched && f.maquinaId.invalid) {
@@ -59,19 +59,19 @@
 
             <div class="mb-2">
               <label class="form-label">Estado *</label>
-              <select formControlName="estado" class="form-select">
-                <option value="abierta">Abierta</option>
-                <option value="en_progreso">En progreso</option>
-                <option value="resuelta">Resuelta</option>
+              <select formControlName="estadoIncidencia" class="form-select">
+                <option value="ABIERTA">Abierta</option>
+                <option value="EN_PROGRESO">En progreso</option>
+                <option value="RESUELTA">Resuelta</option>
               </select>
             </div>
 
             <div class="mb-2">
               <label class="form-label">Prioridad *</label>
               <select formControlName="prioridad" class="form-select">
-                <option value="baja">Baja</option>
-                <option value="media">Media</option>
-                <option value="alta">Alta</option>
+                <option value="BAJA">Baja</option>
+                <option value="MEDIA">Media</option>
+                <option value="ALTA">Alta</option>
               </select>
             </div>
 
@@ -127,17 +127,17 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" [class.active]="estadoActivo === 'abierta'" (click)="cambiarEstado('abierta')" style="cursor: pointer;">
+              <a class="nav-link" [class.active]="estadoActivo === 'ABIERTA'" (click)="cambiarEstado('ABIERTA')" style="cursor: pointer;">
                 Abiertas ({{ abiertas }})
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" [class.active]="estadoActivo === 'en_progreso'" (click)="cambiarEstado('en_progreso')" style="cursor: pointer;">
+              <a class="nav-link" [class.active]="estadoActivo === 'EN_PROGRESO'" (click)="cambiarEstado('EN_PROGRESO')" style="cursor: pointer;">
                 En Progreso ({{ enProgreso }})
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" [class.active]="estadoActivo === 'resuelta'" (click)="cambiarEstado('resuelta')" style="cursor: pointer;">
+              <a class="nav-link" [class.active]="estadoActivo === 'RESUELTA'" (click)="cambiarEstado('RESUELTA')" style="cursor: pointer;">
                 Resueltas ({{ resueltas }})
               </a>
             </li>
@@ -203,13 +203,13 @@
                         }
                       </td>
                       <td>
-                        @if(i.estado==='abierta') {
+                        @if(i.estado==='ABIERTA') {
                           <span class="badge bg-danger bg-opacity-10 text-danger fw-semibold">Abierta</span>
                         }
-                        @if(i.estado==='en_progreso') {
+                        @if(i.estado==='EN_PROGRESO') {
                           <span class="badge bg-warning bg-opacity-10 text-warning fw-semibold">En progreso</span>
                         }
-                        @if(i.estado==='resuelta') {
+                        @if(i.estado==='RESUELTA') {
                           <span class="badge bg-success bg-opacity-10 text-success fw-semibold">Resuelta</span>
                         }
                       </td>

@@ -35,18 +35,16 @@
 }
 
 .dropdown-menu-custom {
-  position: absolute;
-  right: 0;
-  top: 100%;
-  margin-top: 0.25rem;
+  position: fixed;
   background: white;
   border: 1px solid #dee2e6;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   padding: 0.25rem 0;
   z-index: 1050;
-  min-width: 180px;
+  min-width: 200px;
   white-space: nowrap;
+  overflow: visible;
 }
 
 .dropdown-item-custom {
@@ -70,6 +68,16 @@
 .dropdown-item-custom i {
   font-size: 1rem;
 }
+
+td.position-relative {
+  overflow: visible !important;
+  z-index: 10;
+}
+
+td.text-end.position-relative {
+  padding-right: 1rem;
+}
+
 .card-body {
   overflow: visible !important;
 }
@@ -83,14 +91,18 @@
 .position-relative {
   position: relative;
   overflow: visible;
+  z-index: auto;
 }
 
 table {
   position: relative;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 tbody tr {
   position: relative;
+  overflow: visible;
 }
 
 @media (max-width: 768px) {
@@ -127,7 +139,7 @@ tbody tr {
   background: white;
   border-radius: 16px;
   width: 90%;
-  max-width: 550px;
+  max-width: 700px;
   max-height: 90vh;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -327,3 +339,26 @@ tbody tr {
     justify-content: center;
   }
 }
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #dc3545;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #fff5f5;
+  border-radius: 6px;
+  border-left: 3px solid #dc3545;
+}
+
+.error-message svg {
+  flex-shrink: 0;
+}
+
+.is-invalid {
+  border-color: #dc3545 !important;
+  background-color: #fff5f5 !important;
+}
+

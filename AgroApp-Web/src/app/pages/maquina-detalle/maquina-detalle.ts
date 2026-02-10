@@ -32,10 +32,7 @@ export class MaquinaDetalleComponent implements OnInit {
     nombre: new FormControl('', [Validators.required, Validators.minLength(3)]),
     numSerie: new FormControl('', [Validators.required]),
     modelo: new FormControl('', [Validators.required]),
-    tipo: new FormControl('', [Validators.required]),
     fechaCompra: new FormControl('', [Validators.required]),
-    ubicacion: new FormControl(''),
-    descripcion: new FormControl(''),
   });
 
   get f() { return this.editarMaquinaForm.controls; }
@@ -96,10 +93,7 @@ export class MaquinaDetalleComponent implements OnInit {
       nombre: this.maquina.nombre,
       numSerie: this.maquina.numSerie,
       modelo: this.maquina.modelo,
-      tipo: this.maquina.tipo,
-      fechaCompra: fechaFormateada,
-      ubicacion: this.maquina.ubicacion,
-      descripcion: this.maquina.descripcion
+      fechaCompra: fechaFormateada
     });
     this.modalEditarAbierto = true;
   }

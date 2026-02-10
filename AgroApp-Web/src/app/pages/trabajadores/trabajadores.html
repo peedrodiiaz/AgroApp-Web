@@ -69,13 +69,15 @@
                   <td class="text-end position-relative">
                     <button
                       class="btn btn-link text-dark p-0"
-                      (click)="toggleMenu(trabajador.id)"
+                      (click)="toggleMenu(trabajador.id, $event)"
                       style="font-size: 1.5rem; line-height: 1;">
                       ⋮
                     </button>
 
-                    @if (menuAbierto === trabajador.id) {
-                      <div class="dropdown-menu-custom">
+                    @if (menuAbierto === trabajador.id && menuPosition) {
+                      <div class="dropdown-menu-custom"
+                           [style.top]="menuPosition.top"
+                           [style.right]="menuPosition.right">
                         <button class="dropdown-item-custom" (click)="verInfo(trabajador); $event.stopPropagation()">
                           <i class="bi bi-eye text-info"></i> Ver Detalle
                         </button>

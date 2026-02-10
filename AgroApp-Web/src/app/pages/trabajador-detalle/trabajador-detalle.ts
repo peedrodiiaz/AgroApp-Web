@@ -20,7 +20,7 @@ export class TrabajadorDetalleComponent implements OnInit {
   trabajador: any = null;
   isLoading: boolean = false;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
     this.trabajadorId = Number(this.route.snapshot.paramMap.get('id'));
@@ -32,7 +32,7 @@ export class TrabajadorDetalleComponent implements OnInit {
     this.trabajadorService.getAll(0, 1000).subscribe({
       next: (response) => {
         const trabajadores = response.content || [];
-        this.trabajador = trabajadores.find(t => t.id === this.trabajadorId);
+        this.trabajador = trabajadores.find((t: any) => t.id === this.trabajadorId);
         if (!this.trabajador) {
           alert('Trabajador no encontrado');
           this.volverListado();

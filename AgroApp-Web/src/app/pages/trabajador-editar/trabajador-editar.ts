@@ -37,7 +37,7 @@ export class TrabajadorEditarComponent implements OnInit {
     this.trabajadorService.getAll(0, 1000).subscribe({
       next: (response) => {
         const trabajadores = response.content || [];
-        const trabajador = trabajadores.find(t => t.id === this.trabajadorId);
+        const trabajador = trabajadores.find((t: any) => t.id === this.trabajadorId);
         if (trabajador) {
           this.trabajadorForm.patchValue({
             nombre: trabajador.nombre,

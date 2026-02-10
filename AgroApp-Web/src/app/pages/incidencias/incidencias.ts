@@ -35,7 +35,8 @@ export class IncidenciasComponent implements OnInit {
     prioridad: new FormControl<'BAJA' | 'MEDIA' | 'ALTA'>('MEDIA', [Validators.required]),
     trabajadorId: new FormControl<number | null>(null, [Validators.required]),
     maquinaId: new FormControl<number | null>(null, [Validators.required]),
-    fechaApertura: new FormControl('', [Validators.required])
+    fechaApertura: new FormControl('', [Validators.required]),
+    fechaCierre: new FormControl('')
   });
 
   form = new FormGroup({
@@ -44,7 +45,9 @@ export class IncidenciasComponent implements OnInit {
     estadoIncidencia: new FormControl<'ABIERTA' | 'EN_PROGRESO' | 'RESUELTA'>('ABIERTA', [Validators.required]),
     prioridad: new FormControl<'BAJA' | 'MEDIA' | 'ALTA'>('MEDIA', [Validators.required]),
     trabajadorId: new FormControl<number | null>(null, [Validators.required]),
-    maquinaId: new FormControl<number | null>(null, [Validators.required])
+    maquinaId: new FormControl<number | null>(null, [Validators.required]),
+    fechaApertura: new FormControl('', [Validators.required]),
+    fechaCierre: new FormControl('')
   });
 
   get f() {
@@ -161,27 +164,53 @@ export class IncidenciasComponent implements OnInit {
   }
 
   registrarIncidencia() {
-    if (this.nuevoReporteForm.invalid) return;
+    if (this.nuevoReporteForm.invalid) {
+      console.warn('Formulario inválido:', this.nuevoReporteForm.errors);
+      return;
+    }
     
     const formValue = this.nuevoReporteForm.value;
+    
+    console.log('Valores del formulario:', formValue);
+    
+    // Validar que los campos requeridos no sean null
+    if (!formValue.titulo || !formValue.descripcion || !formValue.trabajadorId || !formValue.maquinaId) {
+      console.error('Campos requeridos faltantes');
+      alert('Por favor completa todos los campos requeridos');
+      return;
+    }
+    
     const incidenciaData = {
-      titulo: formValue.titulo || '',
-      descripcion: formValue.descripcion || '',
+      titulo: formValue.titulo,
+      descripcion: formValue.descripcion,
       estadoIncidencia: formValue.estadoIncidencia || 'ABIERTA',
       prioridad: formValue.prioridad || 'MEDIA',
-      trabajadorId: formValue.trabajadorId || 0,
-      maquinaId: formValue.maquinaId || 0
+      trabajadorId: formValue.trabajadorId,
+      maquinaId: formValue.maquinaId
     };
+    
+    console.log('Datos a enviar (JSON):', JSON.stringify(incidenciaData));
+    console.log('Tipos:', {
+      titulo: typeof incidenciaData.titulo,
+      descripcion: typeof incidenciaData.descripcion,
+      estadoIncidencia: typeof incidenciaData.estadoIncidencia,
+      prioridad: typeof incidenciaData.prioridad,
+      trabajadorId: typeof incidenciaData.trabajadorId,
+      maquinaId: typeof incidenciaData.maquinaId
+    });
     
     this.incidenciaService.create(incidenciaData).subscribe({
       next: () => {
+        console.log('Incidencia creada exitosamente');
         this.cargarIncidencias();
         this.cerrarModal();
         alert('Incidencia registrada exitosamente');
       },
       error: (error) => {
-        console.error('Error al guardar:', error);
-        alert('Error al guardar incidencia');
+        console.error('Error completo:', error);
+        console.error('Status:', error.status);
+        console.error('Body:', error.error);
+        alert('Error al guardar incidencia: ' + (error.error?.detail || error.message));
       }
     });
   }
@@ -190,13 +219,14 @@ export class IncidenciasComponent implements OnInit {
     if (this.form.invalid) return;
     
     const formValue = this.form.value;
-    const incidenciaData = {
-      titulo: formValue.titulo || '',
-      descripcion: formValue.descripcion || '',
-      estadoIncidencia: formValue.estadoIncidencia || 'ABIERTA',
-      prioridad: formValue.prioridad || 'MEDIA',
-      trabajadorId: formValue.trabajadorId || 0,
-      maquinaId: formValue.maquinaId || 0
+    
+    const incidenciaData: any = {
+      titulo: formValue.titulo,
+      descripcion: formValue.descripcion,
+      estadoIncidencia: formValue.estadoIncidencia,
+      prioridad: formValue.prioridad,
+      trabajadorId: formValue.trabajadorId,
+      maquinaId: formValue.maquinaId
     };
     
     this.incidenciaService.create(incidenciaData).subscribe({

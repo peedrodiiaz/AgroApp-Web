@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 export interface SpringPage<T> {
   content: T[];
   pageable: {
@@ -29,7 +27,6 @@ export interface SpringPage<T> {
   empty: boolean;
 }
 
->>>>>>> 02805ad1e0b8530d36a8d33d28cf588cdbab0dfc
 export interface PaginatedResponse<T> {
   data: T[];
   current_page: number;

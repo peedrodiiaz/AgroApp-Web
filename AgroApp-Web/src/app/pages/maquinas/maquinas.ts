@@ -17,6 +17,7 @@ export class MaquinasComponent implements OnInit {
 
   tabActivo = 'activas';
   menuAbierto: number | null = null;
+  menuPosition: { top: string; right: string } | null = null;
   modalAbierto = false;
   isLoading = false;
   searchTerm = '';
@@ -24,12 +25,9 @@ export class MaquinasComponent implements OnInit {
 
   form = new FormGroup({
     nombre: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    numSerie: new FormControl('', [Validators.required]),
+    numeroSerie: new FormControl('', [Validators.required]),
     modelo: new FormControl('', [Validators.required]),
-    tipo: new FormControl('', [Validators.required]),
     fechaCompra: new FormControl('', [Validators.required]),
-    ubicacion: new FormControl(''),
-    descripcion: new FormControl(''),
   });
 
   get nuevaMaquinaForm() { return this.form; }
@@ -69,7 +67,15 @@ export class MaquinasComponent implements OnInit {
     this.tabActivo = tab;
   }
 
-  toggleMenu(id: number) {
+  toggleMenu(id: number, event?: Event) {
+    if (event) {
+      const button = event.currentTarget as HTMLButtonElement;
+      const rect = button.getBoundingClientRect();
+      this.menuPosition = {
+        top: (rect.bottom + 5) + 'px',
+        right: (window.innerWidth - rect.right) + 'px'
+      };
+    }
     this.menuAbierto = this.menuAbierto === id ? null : id;
   }
 
@@ -113,7 +119,7 @@ export class MaquinasComponent implements OnInit {
 
   guardarMaquina() {
     if (this.form.invalid) return;
-    this.maquinaService.create({ ...this.form.value, estado: 'activa' } as any).subscribe({
+    this.maquinaService.create(this.form.value as any).subscribe({
       next: () => {
         this.cargarMaquinas();
         this.cerrarModal();

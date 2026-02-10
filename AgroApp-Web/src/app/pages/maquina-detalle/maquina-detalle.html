@@ -26,7 +26,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <h2 class="fw-bold mb-1">{{ maquina.nombre }}</h2>
-        <p class="text-muted mb-0">{{ maquina.modelo }} - {{ maquina.tipo }}</p>
+        <p class="text-muted mb-0">{{ maquina.modelo }}</p>
       </div>
       <span class="badge fs-6 px-3 py-2"
             [class.bg-success]="maquina.estado === 'activa'"
@@ -66,14 +66,6 @@
               <div class="col-md-6">
                 <div class="info-item">
                   <small class="text-muted d-block mb-1">
-                    <i class="bi bi-tag text-primary"></i> Tipo
-                  </small>
-                  <strong class="fs-6">{{ maquina.tipo }}</strong>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="info-item">
-                  <small class="text-muted d-block mb-1">
                     <i class="bi bi-box-seam text-primary"></i> Modelo
                   </small>
                   <strong class="fs-6">{{ maquina.modelo }}</strong>
@@ -87,24 +79,6 @@
                   <strong class="fs-6">{{ maquina.fechaCompra | date:'dd/MM/yyyy' }}</strong>
                 </div>
               </div>
-              <div class="col-12">
-                <div class="info-item">
-                  <small class="text-muted d-block mb-1">
-                    <i class="bi bi-geo-alt text-primary"></i> Ubicación
-                  </small>
-                  <strong class="fs-6">{{ maquina.ubicacion || 'No especificada' }}</strong>
-                </div>
-              </div>
-              @if (maquina.descripcion) {
-                <div class="col-12">
-                  <div class="info-item">
-                    <small class="text-muted d-block mb-1">
-                      <i class="bi bi-file-text text-primary"></i> Descripción
-                    </small>
-                    <p class="mb-0 text-secondary">{{ maquina.descripcion }}</p>
-                  </div>
-                </div>
-              }
             </div>
           </div>
         </div>
@@ -256,30 +230,6 @@
 
           <div class="form-group-custom">
             <label class="form-label-custom">
-              Tipo <span class="text-danger">*</span>
-            </label>
-            <select
-              class="form-control-custom"
-              formControlName="tipo"
-              [class.is-invalid]="f.tipo.touched && f.tipo.invalid">
-              <option value="">Seleccionar tipo...</option>
-              <option value="Tractor">Tractor</option>
-              <option value="Cosechadora">Cosechadora</option>
-              <option value="Empacadora">Empacadora</option>
-              <option value="Fumigadora">Fumigadora</option>
-              <option value="Arado">Arado</option>
-              <option value="Sembradora">Sembradora</option>
-              <option value="Otro">Otro</option>
-            </select>
-            @if (f.tipo.touched && f.tipo.invalid) {
-              <div class="error-message">
-                <span>El tipo es obligatorio.</span>
-              </div>
-            }
-          </div>
-
-          <div class="form-group-custom">
-            <label class="form-label-custom">
               Modelo <span class="text-danger">*</span>
             </label>
             <input
@@ -311,28 +261,6 @@
                 <span>La fecha es obligatoria.</span>
               </div>
             }
-          </div>
-
-          <div class="form-group-custom">
-            <label class="form-label-custom">
-              Ubicación <span class="text-muted">(Opcional)</span>
-            </label>
-            <input
-              type="text"
-              class="form-control-custom"
-              formControlName="ubicacion"
-              placeholder="Ej: Finca 1 - Almacén Norte">
-          </div>
-
-          <div class="form-group-custom">
-            <label class="form-label-custom">
-              Descripción <span class="text-muted">(Opcional)</span>
-            </label>
-            <textarea
-              class="form-control-custom"
-              formControlName="descripcion"
-              placeholder="Detalles adicionales sobre la máquina"
-              rows="3"></textarea>
           </div>
 
         </div>

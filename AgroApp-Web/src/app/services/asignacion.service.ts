@@ -9,30 +9,6 @@ import { ApiConfig } from '../config/api.config';
 export class AsignacionService {
   private http = inject(HttpClient);
 
-<<<<<<< HEAD
-  getAll(): Observable<any> {
-    return this.http.get(this.apiUrl);
-  }
-
-  getById(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
-  }
-
-  create(data: AsignacionCrear): Observable<any> {
-    return this.http.post(this.apiUrl, data);
-  }
-
-  update(id: number, data: Partial<Asignacion>): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, data);
-  }
-
-  delete(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
-  }
-
-  getStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/stats`);
-=======
   getAll(page: number = 0, size: number = 10): Observable<SpringPage<Asignacion>> {
     const params = new HttpParams()
       .set('page', page.toString())
@@ -54,6 +30,5 @@ export class AsignacionService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${ApiConfig.ASIGNACIONES}/${id}`);
->>>>>>> 02805ad1e0b8530d36a8d33d28cf588cdbab0dfc
   }
 }

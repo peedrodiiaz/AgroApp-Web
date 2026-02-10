@@ -16,6 +16,7 @@ export class TrabajadoresComponent implements OnInit {
   trabajadorService = inject(TrabajadorService);
 
   menuAbierto: number | null = null;
+  menuPosition: { top: string; right: string } | null = null;
   busqueda = '';
   trabajadores: any[] = [];
   isLoading = false;
@@ -40,16 +41,27 @@ export class TrabajadoresComponent implements OnInit {
   }
 
   get trabajadoresFiltrados() {
-    const term = this.busqueda.toLowerCase();
+    if (!this.busqueda || this.busqueda.trim() === '') {
+      return this.trabajadores;
+    }
+    const term = this.busqueda.toLowerCase().trim();
     return this.trabajadores.filter(t =>
-      !this.busqueda || t.nombre?.toLowerCase().includes(term) ||
-      t.apellido?.toLowerCase().includes(term) ||
-      t.dni?.toLowerCase().includes(term) ||
-      t.email?.toLowerCase().includes(term)
+      (t.nombre?.toLowerCase().includes(term)) ||
+      (t.apellido?.toLowerCase().includes(term)) ||
+      (t.dni?.toLowerCase().includes(term)) ||
+      (t.email?.toLowerCase().includes(term))
     );
   }
 
-  toggleMenu(id: number) {
+  toggleMenu(id: number, event?: Event) {
+    if (event) {
+      const button = event.currentTarget as HTMLButtonElement;
+      const rect = button.getBoundingClientRect();
+      this.menuPosition = {
+        top: (rect.bottom + 5) + 'px',
+        right: (window.innerWidth - rect.right) + 'px'
+      };
+    }
     this.menuAbierto = this.menuAbierto === id ? null : id;
   }
 
