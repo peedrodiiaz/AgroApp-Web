@@ -116,12 +116,25 @@ export class IncidenciasComponent implements OnInit {
   }
 
   get incidenciasFiltradas() {
-    const term = this.searchTerm.toLowerCase();
-    return this.incidencias.filter((i: any) =>
-      (this.estadoActivo === 'todas' || i.estadoIncidencia === this.estadoActivo.toUpperCase()) &&
-      (!this.searchTerm || i.titulo?.toLowerCase().includes(term) || i.descripcion?.toLowerCase().includes(term))
-    );
-  }
+  const term = this.searchTerm.toLowerCase();
+  
+  const estadoMap: { [key: string]: string } = {
+    'todas': 'todas',
+    'abiertas': 'ABIERTA',
+    'en_progreso': 'EN_PROGRESO',
+    'resueltas': 'RESUELTA'  
+  };
+  
+  const estadoBuscado = estadoMap[this.estadoActivo] || this.estadoActivo.toUpperCase();
+  
+  return this.incidencias.filter((i: any) =>
+    (this.estadoActivo === 'todas' || i.estadoIncidencia === estadoBuscado) &&
+    (!this.searchTerm || 
+      i.titulo?.toLowerCase().includes(term) || 
+      i.descripcion?.toLowerCase().includes(term))
+  );
+}
+
 
   cambiarEstado(estado: string) {
     this.estadoActivo = estado;
@@ -132,14 +145,19 @@ export class IncidenciasComponent implements OnInit {
   }
 
   eliminarIncidencia(id: number, event: Event) {
-    event.stopPropagation();
-    if (confirm('¿Cerrar incidencia?')) {
-      this.incidenciaService.cerrar(id).subscribe({
-        next: () => this.cargarIncidencias(),
-        error: () => alert('Error al cerrar incidencia')
-      });
-    }
+  event.stopPropagation();
+  if (confirm('¿Cerrar incidencia?')) {
+    this.incidenciaService.cerrar(id).subscribe({
+      next: () => {
+        this.cargarIncidencias();
+        // Automáticamente cambia a la pestaña resueltas
+        this.estadoActivo = 'resueltas';
+      },
+      error: () => alert('Error al cerrar incidencia')
+    });
   }
+}
+
 
   eliminar(id: number) {
     if (confirm('¿Cerrar incidencia?')) {

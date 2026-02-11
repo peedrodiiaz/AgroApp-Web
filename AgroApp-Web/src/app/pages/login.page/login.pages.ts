@@ -50,7 +50,14 @@ export class LoginComponent {
         password: password || '' 
       }).subscribe({
         next: (response) => {
-            
+          // Validar que el usuario sea ADMIN
+          if (response.user.rol !== 'ADMIN') {
+            this.isLoading = false;
+            this.errorMessage = 'Acceso denegado. Solo administradores pueden entrar en esta aplicación.';
+            this.authService.logout();
+            return;
+          }
+          
           this.isLoading = false;
           this.router.navigate(['/dashboard']);
         },
