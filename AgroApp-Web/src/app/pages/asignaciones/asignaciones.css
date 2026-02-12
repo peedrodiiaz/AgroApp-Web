@@ -1,0 +1,139 @@
+.summary-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.2rem 1rem 1rem 1rem;
+  border: 1.2px solid #eee;
+  min-width: 160px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  text-align: center;
+}
+
+.summary-card .count {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 0.35rem;
+}
+
+.summary-card.success {
+  border-left: 6px solid #198754;
+}
+
+.summary-card.info {
+  border-left: 6px solid #0dcaf0;
+}
+
+.summary-card.neutral {
+  border-left: 6px solid #dbe4ee;
+}
+
+.card {
+  border-radius: 12px;
+  border: 1px solid #eee;
+  min-height: 480px;
+}
+
+.card-body {
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #222;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+
+.btn-success {
+  background: #198754;
+  border: none;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.65rem 1.25rem;
+}
+
+.btn-success:hover {
+  background: #157347;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+}
+
+.btn-outline-secondary {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0.65rem 1.25rem;
+}
+
+.table > :not(caption) > * > * {
+  background: transparent;
+  border: none;
+  padding: 1rem 0.75rem;
+}
+
+.table thead {
+  background-color: #f8fbfd;
+  color: #555;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.badge {
+  font-size: 0.85rem;
+  border-radius: 1em;
+  padding: 0.4em 0.95em;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+}
+
+.btn-sm {
+  padding: 0.4rem 0.65rem;
+  font-size: 0.875rem;
+  border-radius: 6px;
+}
+
+.btn-outline-primary:hover {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+@media (max-width: 991px) {
+  .card-body {
+    padding: 1.2rem;
+  }
+
+  .summary-card {
+    min-width: 110px;
+    padding: 1rem;
+  }
+
+  .table {
+    font-size: 0.85rem;
+  }
+}

@@ -44,24 +44,5 @@ export class IncidenciaDetalleComponent implements OnInit {
     this.router.navigate(['/incidencias']);
   }
 
-  editarIncidencia() {
-    this.router.navigate(['/incidencias', this.incidencia.id, 'editar']); 
-  }
 
-  cerrarIncidencia() {
-    if (!confirm('¿Estás seguro de cerrar esta incidencia?')) {
-      return;
-    }
-
-    this.incidenciaService.cerrar(this.incidenciaId).subscribe({
-      next: () => {
-        alert('Incidencia cerrada exitosamente');
-        this.cargarIncidencia();
-      },
-      error: (error) => {
-        console.error('Error al cerrar incidencia:', error);
-        alert('Error al cerrar la incidencia');
-      }
-    });
-  }
 }

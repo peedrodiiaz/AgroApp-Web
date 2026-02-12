@@ -7,7 +7,7 @@ import { ApiConfig } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class IncidenciaService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(page: number = 0, size: number = 10): Observable<SpringPage<Incidencia>> {
     const params = new HttpParams()
@@ -24,11 +24,12 @@ export class IncidenciaService {
     return this.http.post<Incidencia>(ApiConfig.INCIDENCIAS, data);
   }
 
-  update(id: number, data: UpdateIncidenciaRequest): Observable<Incidencia> {
-    return this.http.put<Incidencia>(`${ApiConfig.INCIDENCIAS}/${id}`, data);
-  }
+  
+  cambiarEstado(id: number, nuevoEstado: string): Observable<Incidencia> {
+  return this.http.patch<Incidencia>(
+    `${ApiConfig.INCIDENCIAS}/${id}/estado`,
+    { estadoIncidencia: nuevoEstado }
+  );
+}
 
-  cerrar(id: number): Observable<Incidencia> {
-    return this.http.patch<Incidencia>(`${ApiConfig.INCIDENCIAS}/${id}/cerrar`, {});
-  }
 }

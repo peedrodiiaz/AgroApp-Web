@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { IncidenciaService } from '../../services/incidencia.service';
 import { TrabajadorService } from '../../services/trabajador.service';
 import { MaquinaService } from '../../services/maquina.service';
+import { Incidencia } from '../../dto/incidencia.dto';
 
 @Component({
   selector: 'app-incidencias',
@@ -114,8 +115,7 @@ export class IncidenciasComponent implements OnInit {
     this.maquinaService.getAll(0, 100).subscribe({
       next: (response) => {
         this.maquinas = response.content || [];
-        console.log('=== PRIMERA INCIDENCIA ===');
-        console.log(JSON.stringify(this.incidencias[0], null, 2));
+
       },
       error: (error) => {
         console.error('Error al cargar máquinas:', error);
@@ -139,29 +139,27 @@ export class IncidenciasComponent implements OnInit {
     const incidenciaActual = this.incidencias.find(i => i.id === id);
 
     if (!incidenciaActual) return;
-
     if (incidenciaActual.estadoIncidencia === nuevoEstado) return;
 
     if (nuevoEstado === 'RESUELTA') {
-      if (confirm('¿Cerrar esta incidencia como resuelta?')) {
-        this.incidenciaService.cerrar(id).subscribe({
-          next: () => {
-            alert('Incidencia cerrada exitosamente');
-            this.cargarIncidencias();
-          },
-          error: (err) => {
-            alert(err.error?.detail || 'Error al cerrar incidencia');
-            this.cargarIncidencias();
-          }
-        });
-      } else {
+      if (!confirm('¿Cerrar esta incidencia como resuelta?')) {
+        this.cargarIncidencias();
+        return;
+      }
+    }
+
+    this.incidenciaService.cambiarEstado(id, nuevoEstado).subscribe({
+      next: () => {
+        alert('Estado actualizado exitosamente');
+        this.cargarIncidencias();
+      },
+      error: (err) => {
+        alert(err.error?.detail || 'Error al cambiar estado');
         this.cargarIncidencias();
       }
-    } else {
-      alert('Funcionalidad en desarrollo. Por ahora solo puedes cambiar a RESUELTA.');
-      this.cargarIncidencias();
-    }
+    });
   }
+
 
 
 
@@ -174,29 +172,8 @@ export class IncidenciasComponent implements OnInit {
     this.router.navigate(['/incidencias', id]);
   }
 
-  eliminarIncidencia(id: number, event: Event) {
-    event.stopPropagation();
-    if (confirm('¿Cerrar incidencia?')) {
-      this.incidenciaService.cerrar(id).subscribe({
-        next: () => {
-          this.cargarIncidencias();
-          // Automáticamente cambia a la pestaña resueltas
-          this.estadoActivo = 'resueltas';
-        },
-        error: () => alert('Error al cerrar incidencia')
-      });
-    }
-  }
 
 
-  eliminar(id: number) {
-    if (confirm('¿Cerrar incidencia?')) {
-      this.incidenciaService.cerrar(id).subscribe({
-        next: () => this.cargarIncidencias(),
-        error: () => alert('Error al cerrar incidencia')
-      });
-    }
-  }
 
   abrirModal() {
     this.modalAbierto = true;
@@ -221,7 +198,6 @@ export class IncidenciasComponent implements OnInit {
 
     console.log('Valores del formulario:', formValue);
 
-    // Validar que los campos requeridos no sean null
     if (!formValue.titulo || !formValue.descripcion || !formValue.trabajadorId || !formValue.maquinaId) {
       console.error('Campos requeridos faltantes');
       alert('Por favor completa todos los campos requeridos');
@@ -288,4 +264,7 @@ export class IncidenciasComponent implements OnInit {
       }
     });
   }
+
+
+
 }

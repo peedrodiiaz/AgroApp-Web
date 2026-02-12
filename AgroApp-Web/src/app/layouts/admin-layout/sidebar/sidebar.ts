@@ -1,18 +1,47 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, HostBinding, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.html',
-  styleUrl: './sidebar.css',
+  styleUrls: ['./sidebar.css']
 })
 export class SidebarComponent {
+  @HostBinding('class.show') @Output() sidebarVisible = false;
+
   menuItems = [
-    { icon: '🏠', label: 'Home', route: '/dashboard', active: false },
-    { icon: '⚙️', label: 'Maquinas', route: '/maquinas', active: false, hasSubmenu: true },
-    { icon: '👥', label: 'Trabajadores', route: '/trabajadores', active: false, hasSubmenu: true },
-    { icon: '⚠️', label: 'Incidencias', route: '/incidencias', active: false, hasSubmenu: true },
+    {
+      icon: '📊',
+      label: 'Dashboard',
+      route: '/dashboard',
+      hasSubmenu: false
+    },
+    {
+      icon: '🚜',
+      label: 'Máquinas',
+      route: '/maquinas',
+      hasSubmenu: false
+    },
+    {
+      icon: '👷',
+      label: 'Trabajadores',
+      route: '/trabajadores',
+      hasSubmenu: false
+    },
+    {
+      icon: '⚠️',
+      label: 'Incidencias',
+      route: '/incidencias',
+      hasSubmenu: false
+    },
+    {
+      icon: '📅',                        
+      label: 'Asignaciones',
+      route: '/asignaciones',
+      hasSubmenu: false
+    }
   ];
 }

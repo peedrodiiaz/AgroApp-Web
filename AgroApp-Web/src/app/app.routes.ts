@@ -9,7 +9,7 @@ import { TrabajadorNuevoComponent } from './pages/trabajador-nuevo/trabajador-nu
 import { TrabajadorEditarComponent } from './pages/trabajador-editar/trabajador-editar';
 import { IncidenciasComponent } from './pages/incidencias/incidencias';
 import { IncidenciaDetalleComponent } from './pages/incidencias-detalle/incidencias-detalle';
-import { IncidenciaEditarComponent } from './pages/incidencias-editar/incidencias-editar';
+import { AsignacionesComponent } from './pages/asignaciones/asignaciones';  
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout/admin-layout';
 
 export const routes: Routes = [
@@ -59,12 +59,12 @@ export const routes: Routes = [
         component: IncidenciasComponent
       },
       {
-        path: 'incidencias/:id/editar',
-        component: IncidenciaEditarComponent
-      },
-      {
         path: 'incidencias/:id',
         component: IncidenciaDetalleComponent
+      },
+      {
+        path: 'asignaciones',           
+        component: AsignacionesComponent
       }
     ]
   }

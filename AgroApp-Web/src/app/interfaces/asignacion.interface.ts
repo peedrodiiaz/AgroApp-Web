@@ -1,19 +1,26 @@
-import { Maquina } from './maquina.interface';
-import { Trabajador } from './trabajador.interface';
-
 export interface Asignacion {
   id: number;
   fechaInicio: string;
-  fechaFin?: string;
+  fechaFin: string;
   descripcion: string;
-  trabajador: Trabajador;
-  maquina: Maquina;
+  maquina: {
+    id: number;
+    nombre: string;
+    modelo: string;
+    estado: string;
+  };
+  trabajador: {
+    id: number;
+    nombre: string;
+    apellido: string;
+    email: string;
+  };
 }
 
-export interface AsignacionCrear {
+export interface CreateAsignacionRequest {
   fechaInicio: string;
-  fechaFin?: string;
+  fechaFin: string;
   descripcion: string;
-  trabajadorId: number;
   maquinaId: number;
+  trabajadorId?: number;  
 }

@@ -1,0 +1,233 @@
+<div class="container-fluid">
+  <div class="mb-2"><span class="text-secondary fw-semibold">Asignaciones</span></div>
+  <h2 class="fw-bold mb-4">Gestión de Asignaciones</h2>
+
+  <!-- Cards de resumen -->
+  <div class="row g-3 mb-4">
+    <div class="col">
+      <div class="summary-card success">
+        <div>ACTIVAS</div>
+        <div class="count">{{ asignacionesActivas }}</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="summary-card info">
+        <div>FUTURAS</div>
+        <div class="count">{{ asignacionesFuturas }}</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="summary-card neutral">
+        <div>TOTAL</div>
+        <div class="count">{{ total }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-12 col-lg-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="fw-semibold mb-2">{{ esEdicion ? 'Editar Asignación' : 'Nueva Asignación' }}</div>
+          <small class="text-muted mb-3 d-block">
+            Reserva una máquina para un período específico.
+          </small>
+          <form [formGroup]="nuevaAsignacionForm" (ngSubmit)="guardarAsignacion()">
+            
+            <div class="mb-2">
+              <label class="form-label">Máquina *</label>
+              <select
+                formControlName="maquinaId"
+                class="form-select"
+                [class.is-invalid]="f.maquinaId.touched && f.maquinaId.invalid"
+              >
+                <option [ngValue]="null">Seleccionar máquina...</option>
+                @for (maquina of maquinas; track maquina.id) {
+                  <option [ngValue]="maquina.id">
+                    {{ maquina.nombre }} - {{ maquina.modelo }}
+                  </option>
+                }
+              </select>
+              @if (f.maquinaId.touched && f.maquinaId.invalid) {
+                <div class="invalid-feedback">Campo obligatorio.</div>
+              }
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Fecha Inicio *</label>
+              <input
+                type="date"
+                formControlName="fechaInicio"
+                class="form-control"
+                [class.is-invalid]="f.fechaInicio.touched && f.fechaInicio.invalid"
+              />
+              @if (f.fechaInicio.touched && f.fechaInicio.invalid) {
+                <div class="invalid-feedback">Campo obligatorio.</div>
+              }
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Fecha Fin *</label>
+              <input
+                type="date"
+                formControlName="fechaFin"
+                class="form-control"
+                [class.is-invalid]="f.fechaFin.touched && f.fechaFin.invalid"
+              />
+              @if (f.fechaFin.touched && f.fechaFin.invalid) {
+                <div class="invalid-feedback">Campo obligatorio.</div>
+              }
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Trabajador (opcional, solo ADMIN)</label>
+              <select
+                formControlName="trabajadorId"
+                class="form-select"
+              >
+                <option [ngValue]="null">Yo mismo</option>
+                @for (trabajador of trabajadores; track trabajador.id) {
+                  <option [ngValue]="trabajador.id">
+                    {{ trabajador.nombre }} {{ trabajador.apellido }}
+                  </option>
+                }
+              </select>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Descripción *</label>
+              <textarea
+                formControlName="descripcion"
+                class="form-control"
+                rows="3"
+                placeholder="Describe el propósito de la asignación..."
+                [class.is-invalid]="f.descripcion.touched && f.descripcion.invalid"
+              ></textarea>
+              @if (f.descripcion.touched && f.descripcion.invalid) {
+                <div class="invalid-feedback">
+                  @if (f.descripcion.hasError('required')) {
+                    <span>Campo obligatorio.</span>
+                  }
+                  @if (f.descripcion.hasError('maxlength')) {
+                    <span>Máximo 500 caracteres.</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="d-flex gap-2 mt-3">
+              @if (esEdicion) {
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary flex-fill"
+                  (click)="cerrarModal()"
+                >
+                  CANCELAR
+                </button>
+              }
+              <button
+                class="btn btn-success flex-fill"
+                type="submit"
+                [disabled]="nuevaAsignacionForm.invalid || isLoading"
+              >
+                @if (isLoading) {
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                }
+                {{ esEdicion ? 'ACTUALIZAR' : 'CREAR ASIGNACIÓN' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-8">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="fw-semibold mb-3">Listado de Asignaciones</div>
+
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por máquina, trabajador o descripción..."
+              [(ngModel)]="searchTerm"
+            />
+          </div>
+
+          @if (isLoading) {
+            <div class="text-center my-5">
+              <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+            </div>
+          }
+
+          @if (!isLoading) {
+            <div class="table-responsive">
+              <table class="table align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Máquina</th>
+                    <th>Trabajador</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if (asignacionesFiltradas.length === 0) {
+                    <tr>
+                      <td colspan="6" class="text-center text-muted py-4">
+                        No hay asignaciones para mostrar
+                      </td>
+                    </tr>
+                  }
+                  @for (a of asignacionesFiltradas; track a.id) {
+                    <tr>
+                      <td>
+                        <div class="fw-semibold">{{ a.maquina.nombre }}</div>
+                        <div class="text-secondary small">{{ a.maquina.modelo }}</div>
+                      </td>
+                      <td>{{ a.trabajador.nombre }} {{ a.trabajador.apellido }}</td>
+                      <td>{{ a.fechaInicio | date: 'dd/MM/yyyy' }}</td>
+                      <td>{{ a.fechaFin | date: 'dd/MM/yyyy' }}</td>
+                      <td>
+                        @if (esActiva(a)) {
+                          <span class="badge bg-success">Activa</span>
+                        } @else if (esFutura(a)) {
+                          <span class="badge bg-info">Futura</span>
+                        } @else {
+                          <span class="badge bg-secondary">Finalizada</span>
+                        }
+                      </td>
+                      <td>
+                        <div class="d-flex gap-2">
+                          <button
+                            class="btn btn-sm btn-outline-primary"
+                            (click)="editarAsignacion(a, $event)"
+                            title="Editar"
+                          >
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                          <button
+                            class="btn btn-sm btn-outline-danger"
+                            (click)="eliminarAsignacion(a.id, $event)"
+                            title="Eliminar"
+                          >
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
