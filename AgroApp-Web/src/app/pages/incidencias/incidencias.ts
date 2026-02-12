@@ -82,6 +82,13 @@ export class IncidenciasComponent implements OnInit {
       next: (response) => {
         this.incidencias = response.content || [];
         this.isLoading = false;
+        console.log('=== TODAS LAS INCIDENCIAS ===');
+        this.incidencias.forEach(i => {
+          console.log(`ID: ${i.id}, Título: ${i.titulo}, Estado: ${i.estadoIncidencia}`);
+        });
+        console.log('Total resueltas:', this.resueltas);
+
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error al cargar incidencias:', error);
@@ -107,6 +114,8 @@ export class IncidenciasComponent implements OnInit {
     this.maquinaService.getAll(0, 100).subscribe({
       next: (response) => {
         this.maquinas = response.content || [];
+        console.log('=== PRIMERA INCIDENCIA ===');
+        console.log(JSON.stringify(this.incidencias[0], null, 2));
       },
       error: (error) => {
         console.error('Error al cargar máquinas:', error);
@@ -116,24 +125,45 @@ export class IncidenciasComponent implements OnInit {
   }
 
   get incidenciasFiltradas() {
-  const term = this.searchTerm.toLowerCase();
-  
-  const estadoMap: { [key: string]: string } = {
-    'todas': 'todas',
-    'abiertas': 'ABIERTA',
-    'en_progreso': 'EN_PROGRESO',
-    'resueltas': 'RESUELTA'  
-  };
-  
-  const estadoBuscado = estadoMap[this.estadoActivo] || this.estadoActivo.toUpperCase();
-  
-  return this.incidencias.filter((i: any) =>
-    (this.estadoActivo === 'todas' || i.estadoIncidencia === estadoBuscado) &&
-    (!this.searchTerm || 
-      i.titulo?.toLowerCase().includes(term) || 
-      i.descripcion?.toLowerCase().includes(term))
-  );
-}
+    const term = this.searchTerm.toLowerCase();
+    return this.incidencias.filter((i: any) =>
+      (this.estadoActivo === 'todas' || i.estadoIncidencia === this.estadoActivo) &&
+      (!this.searchTerm ||
+        i.titulo?.toLowerCase().includes(term) ||
+        i.descripcion?.toLowerCase().includes(term))
+    );
+  }
+
+
+  cambiarEstadoIncidencia(id: number, nuevoEstado: string) {
+    const incidenciaActual = this.incidencias.find(i => i.id === id);
+
+    if (!incidenciaActual) return;
+
+    if (incidenciaActual.estadoIncidencia === nuevoEstado) return;
+
+    if (nuevoEstado === 'RESUELTA') {
+      if (confirm('¿Cerrar esta incidencia como resuelta?')) {
+        this.incidenciaService.cerrar(id).subscribe({
+          next: () => {
+            alert('Incidencia cerrada exitosamente');
+            this.cargarIncidencias();
+          },
+          error: (err) => {
+            alert(err.error?.detail || 'Error al cerrar incidencia');
+            this.cargarIncidencias();
+          }
+        });
+      } else {
+        this.cargarIncidencias();
+      }
+    } else {
+      alert('Funcionalidad en desarrollo. Por ahora solo puedes cambiar a RESUELTA.');
+      this.cargarIncidencias();
+    }
+  }
+
+
 
 
   cambiarEstado(estado: string) {
@@ -145,18 +175,18 @@ export class IncidenciasComponent implements OnInit {
   }
 
   eliminarIncidencia(id: number, event: Event) {
-  event.stopPropagation();
-  if (confirm('¿Cerrar incidencia?')) {
-    this.incidenciaService.cerrar(id).subscribe({
-      next: () => {
-        this.cargarIncidencias();
-        // Automáticamente cambia a la pestaña resueltas
-        this.estadoActivo = 'resueltas';
-      },
-      error: () => alert('Error al cerrar incidencia')
-    });
+    event.stopPropagation();
+    if (confirm('¿Cerrar incidencia?')) {
+      this.incidenciaService.cerrar(id).subscribe({
+        next: () => {
+          this.cargarIncidencias();
+          // Automáticamente cambia a la pestaña resueltas
+          this.estadoActivo = 'resueltas';
+        },
+        error: () => alert('Error al cerrar incidencia')
+      });
+    }
   }
-}
 
 
   eliminar(id: number) {
@@ -186,18 +216,18 @@ export class IncidenciasComponent implements OnInit {
       console.warn('Formulario inválido:', this.nuevoReporteForm.errors);
       return;
     }
-    
+
     const formValue = this.nuevoReporteForm.value;
-    
+
     console.log('Valores del formulario:', formValue);
-    
+
     // Validar que los campos requeridos no sean null
     if (!formValue.titulo || !formValue.descripcion || !formValue.trabajadorId || !formValue.maquinaId) {
       console.error('Campos requeridos faltantes');
       alert('Por favor completa todos los campos requeridos');
       return;
     }
-    
+
     const incidenciaData = {
       titulo: formValue.titulo,
       descripcion: formValue.descripcion,
@@ -206,7 +236,7 @@ export class IncidenciasComponent implements OnInit {
       trabajadorId: formValue.trabajadorId,
       maquinaId: formValue.maquinaId
     };
-    
+
     console.log('Datos a enviar (JSON):', JSON.stringify(incidenciaData));
     console.log('Tipos:', {
       titulo: typeof incidenciaData.titulo,
@@ -216,7 +246,7 @@ export class IncidenciasComponent implements OnInit {
       trabajadorId: typeof incidenciaData.trabajadorId,
       maquinaId: typeof incidenciaData.maquinaId
     });
-    
+
     this.incidenciaService.create(incidenciaData).subscribe({
       next: () => {
         console.log('Incidencia creada exitosamente');
@@ -235,9 +265,9 @@ export class IncidenciasComponent implements OnInit {
 
   guardar() {
     if (this.form.invalid) return;
-    
+
     const formValue = this.form.value;
-    
+
     const incidenciaData: any = {
       titulo: formValue.titulo,
       descripcion: formValue.descripcion,
@@ -246,7 +276,7 @@ export class IncidenciasComponent implements OnInit {
       trabajadorId: formValue.trabajadorId,
       maquinaId: formValue.maquinaId
     };
-    
+
     this.incidenciaService.create(incidenciaData).subscribe({
       next: () => {
         this.cargarIncidencias();

@@ -3,10 +3,30 @@
   <h2 class="fw-bold mb-4">Incidencias</h2>
 
   <div class="row g-3 mb-4">
-    <div class="col"><div class="summary-card danger"><div>ABIERTAS</div><div class="count">{{ abiertas }}</div></div></div>
-    <div class="col"><div class="summary-card warning"><div>EN PROGRESO</div><div class="count">{{ enProgreso }}</div></div></div>
-    <div class="col"><div class="summary-card success"><div>RESUELTAS</div><div class="count">{{ resueltas }}</div></div></div>
-    <div class="col"><div class="summary-card neutral"><div>TOTAL REGISTROS</div><div class="count">{{ total }}</div></div></div>
+    <div class="col">
+      <div class="summary-card danger">
+        <div>ABIERTAS</div>
+        <div class="count">{{ abiertas }}</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="summary-card warning">
+        <div>EN PROGRESO</div>
+        <div class="count">{{ enProgreso }}</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="summary-card success">
+        <div>RESUELTAS</div>
+        <div class="count">{{ resueltas }}</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="summary-card neutral">
+        <div>TOTAL REGISTROS</div>
+        <div class="count">{{ total }}</div>
+      </div>
+    </div>
   </div>
 
   <div class="row g-4">
@@ -14,11 +34,19 @@
       <div class="card h-100">
         <div class="card-body">
           <div class="fw-semibold mb-2">Nuevo reporte</div>
-          <small class="text-muted mb-3 d-block">Completa la información para registrar una nueva incidencia.</small>
+          <small class="text-muted mb-3 d-block"
+            >Completa la información para registrar una nueva incidencia.</small
+          >
           <form [formGroup]="nuevoReporteForm" (ngSubmit)="registrarIncidencia()">
             <div class="mb-2">
               <label class="form-label">Título *</label>
-              <input type="text" formControlName="titulo" class="form-control" placeholder="Ej: Falla en el motor" [class.is-invalid]="f.titulo.touched && f.titulo.invalid">
+              <input
+                type="text"
+                formControlName="titulo"
+                class="form-control"
+                placeholder="Ej: Falla en el motor"
+                [class.is-invalid]="f.titulo.touched && f.titulo.invalid"
+              />
               @if (f.titulo.touched && f.titulo.invalid) {
                 <div class="invalid-feedback">
                   @if (f.titulo.hasError('required')) {
@@ -33,10 +61,16 @@
 
             <div class="mb-2">
               <label class="form-label">Trabajador *</label>
-              <select formControlName="trabajadorId" class="form-select" [class.is-invalid]="f.trabajadorId.touched && f.trabajadorId.invalid">
+              <select
+                formControlName="trabajadorId"
+                class="form-select"
+                [class.is-invalid]="f.trabajadorId.touched && f.trabajadorId.invalid"
+              >
                 <option [ngValue]="null">Seleccionar trabajador...</option>
                 @for (trabajador of trabajadores; track trabajador.id) {
-                  <option [ngValue]="trabajador.id">{{ trabajador.nombre }} {{ trabajador.apellido }}</option>
+                  <option [ngValue]="trabajador.id">
+                    {{ trabajador.nombre }} {{ trabajador.apellido }}
+                  </option>
                 }
               </select>
               @if (f.trabajadorId.touched && f.trabajadorId.invalid) {
@@ -46,10 +80,16 @@
 
             <div class="mb-2">
               <label class="form-label">Máquina afectada *</label>
-              <select formControlName="maquinaId" class="form-select" [class.is-invalid]="f.maquinaId.touched && f.maquinaId.invalid">
+              <select
+                formControlName="maquinaId"
+                class="form-select"
+                [class.is-invalid]="f.maquinaId.touched && f.maquinaId.invalid"
+              >
                 <option [ngValue]="null">Seleccionar máquina...</option>
                 @for (maquina of maquinas; track maquina.id) {
-                  <option [ngValue]="maquina.id">{{ maquina.nombre }} - {{ maquina.modelo }}</option>
+                  <option [ngValue]="maquina.id">
+                    {{ maquina.nombre }} - {{ maquina.modelo }}
+                  </option>
                 }
               </select>
               @if (f.maquinaId.touched && f.maquinaId.invalid) {
@@ -77,7 +117,12 @@
 
             <div class="mb-2">
               <label class="form-label">Fecha de apertura *</label>
-              <input type="date" formControlName="fechaApertura" class="form-control" [class.is-invalid]="f.fechaApertura.touched && f.fechaApertura.invalid">
+              <input
+                type="date"
+                formControlName="fechaApertura"
+                class="form-control"
+                [class.is-invalid]="f.fechaApertura.touched && f.fechaApertura.invalid"
+              />
               @if (f.fechaApertura.touched && f.fechaApertura.invalid) {
                 <div class="invalid-feedback">Campo obligatorio.</div>
               }
@@ -85,12 +130,18 @@
 
             <div class="mb-2">
               <label class="form-label">Fecha de cierre (opcional)</label>
-              <input type="date" formControlName="fechaCierre" class="form-control">
+              <input type="date" formControlName="fechaCierre" class="form-control" />
             </div>
 
             <div class="mb-2">
               <label class="form-label">Descripción *</label>
-              <textarea formControlName="descripcion" class="form-control" rows="3" placeholder="Describe el problema..." [class.is-invalid]="f.descripcion.touched && f.descripcion.invalid"></textarea>
+              <textarea
+                formControlName="descripcion"
+                class="form-control"
+                rows="3"
+                placeholder="Describe el problema..."
+                [class.is-invalid]="f.descripcion.touched && f.descripcion.invalid"
+              ></textarea>
               @if (f.descripcion.touched && f.descripcion.invalid) {
                 <div class="invalid-feedback">
                   @if (f.descripcion.hasError('required')) {
@@ -103,7 +154,11 @@
               }
             </div>
 
-            <button class="btn btn-info w-100 mt-3" type="submit" [disabled]="nuevoReporteForm.invalid || isLoading">
+            <button
+              class="btn btn-info w-100 mt-3"
+              type="submit"
+              [disabled]="nuevoReporteForm.invalid || isLoading"
+            >
               @if (isLoading) {
                 <span class="spinner-border spinner-border-sm me-2"></span>
               }
@@ -122,22 +177,42 @@
           <!-- Filtros por pestañas -->
           <ul class="nav nav-tabs mb-3">
             <li class="nav-item">
-              <a class="nav-link" [class.active]="estadoActivo === 'todas'" (click)="cambiarEstado('todas')" style="cursor: pointer;">
+              <a
+                class="nav-link"
+                [class.active]="estadoActivo === 'todas'"
+                (click)="cambiarEstado('todas')"
+                style="cursor: pointer"
+              >
                 Todas ({{ total }})
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" [class.active]="estadoActivo === 'ABIERTA'" (click)="cambiarEstado('ABIERTA')" style="cursor: pointer;">
+              <a
+                class="nav-link"
+                [class.active]="estadoActivo === 'ABIERTA'"
+                (click)="cambiarEstado('ABIERTA')"
+                style="cursor: pointer"
+              >
                 Abiertas ({{ abiertas }})
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" [class.active]="estadoActivo === 'EN_PROGRESO'" (click)="cambiarEstado('EN_PROGRESO')" style="cursor: pointer;">
+              <a
+                class="nav-link"
+                [class.active]="estadoActivo === 'EN_PROGRESO'"
+                (click)="cambiarEstado('EN_PROGRESO')"
+                style="cursor: pointer"
+              >
                 En Progreso ({{ enProgreso }})
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" [class.active]="estadoActivo === 'RESUELTA'" (click)="cambiarEstado('RESUELTA')" style="cursor: pointer;">
+              <a
+                class="nav-link"
+                [class.active]="estadoActivo === 'RESUELTA'"
+                (click)="cambiarEstado('RESUELTA')"
+                style="cursor: pointer"
+              >
                 Resueltas ({{ resueltas }})
               </a>
             </li>
@@ -145,11 +220,12 @@
 
           <!-- Búsqueda -->
           <div class="mb-3">
-            <input 
-              type="text" 
-              class="form-control" 
-              placeholder="Buscar por título, descripción, prioridad, trabajador o máquina..." 
-              [(ngModel)]="searchTerm">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por título, descripción, prioridad, trabajador o máquina..."
+              [(ngModel)]="searchTerm"
+            />
           </div>
 
           @if (isLoading) {
@@ -183,10 +259,12 @@
                     </tr>
                   }
                   @for (i of incidenciasFiltradas; track i.id) {
-                    <tr style="cursor: pointer;" (click)="verIncidencia(i)">
+                    <tr style="cursor: pointer" (click)="verIncidencia(i)">
                       <td>
                         <div class="fw-semibold">{{ i.titulo }}</div>
-                        <div class="text-secondary small">{{ i.descripcion | slice:0:50 }}...</div>
+                        <div class="text-secondary small">
+                          {{ i.descripcion | slice: 0 : 50 }}...
+                        </div>
                       </td>
                       <td>
                         @if (i.trabajador) {
@@ -203,32 +281,46 @@
                         }
                       </td>
                       <td>
-                        @if(i.estado==='ABIERTA') {
-                          <span class="badge bg-danger bg-opacity-10 text-danger fw-semibold">Abierta</span>
+                        @if (i.estadoIncidencia === 'ABIERTA') {
+                          <span class="badge bg-danger bg-opacity-10 text-danger fw-semibold"
+                            >Abierta</span
+                          >
                         }
-                        @if(i.estado==='EN_PROGRESO') {
-                          <span class="badge bg-warning bg-opacity-10 text-warning fw-semibold">En progreso</span>
+                        @if (i.estadoIncidencia === 'EN_PROGRESO') {
+                          <span class="badge bg-warning bg-opacity-10 text-warning fw-semibold"
+                            >En progreso</span
+                          >
                         }
-                        @if(i.estado==='RESUELTA') {
-                          <span class="badge bg-success bg-opacity-10 text-success fw-semibold">Resuelta</span>
+                        @if (i.estadoIncidencia === 'RESUELTA') {
+                          <span class="badge bg-success bg-opacity-10 text-success fw-semibold"
+                            >Resuelta</span
+                          >
                         }
                       </td>
                       <td>
-                        @if(i.prioridad==='baja') {
+                        @if (i.prioridad === 'BAJA') {
                           <span class="badge bg-info">Baja</span>
                         }
-                        @if(i.prioridad==='media') {
+                        @if (i.prioridad === 'MEDIA') {
                           <span class="badge bg-warning">Media</span>
                         }
-                        @if(i.prioridad==='alta') {
+                        @if (i.prioridad === 'ALTA') {
                           <span class="badge bg-danger">Alta</span>
                         }
                       </td>
-                      <td>{{ i.fechaApertura | date:'dd/MM/yyyy' }}</td>
-                      <td>
-                        <button class="btn btn-sm btn-outline-danger" (click)="eliminarIncidencia(i.id, $event)">
-                          <i class="bi bi-trash"></i>
-                        </button>
+                      <td>{{ i.fechaApertura | date: 'dd/MM/yyyy' }}</td>
+                      <td (click)="$event.stopPropagation()">
+                        <select
+                          class="form-select form-select-sm"
+                          [value]="i.estadoIncidencia"
+                          (change)="cambiarEstadoIncidencia(i.id, $any($event.target).value)"
+                          [disabled]="i.estadoIncidencia === 'RESUELTA'"
+                          style="min-width: 130px"
+                        >
+                          <option value="ABIERTA">Abierta</option>
+                          <option value="EN_PROGRESO">En progreso</option>
+                          <option value="RESUELTA">Resuelta</option>
+                        </select>
                       </td>
                     </tr>
                   }
