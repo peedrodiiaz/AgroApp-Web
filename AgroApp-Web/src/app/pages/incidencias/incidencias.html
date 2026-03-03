@@ -314,9 +314,11 @@
                           class="form-select form-select-sm"
                           [value]="i.estadoIncidencia"
                           (change)="cambiarEstadoIncidencia(i.id, $any($event.target).value)"
-                          [disabled]="i.estadoIncidencia === 'RESUELTA'"
                           style="min-width: 130px"
-                        >
+
+                        
+                        ><
+                        
                           <option value="ABIERTA">Abierta</option>
                           <option value="EN_PROGRESO">En progreso</option>
                           <option value="RESUELTA">Resuelta</option>
