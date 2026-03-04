@@ -154,7 +154,7 @@ export class IncidenciasComponent implements OnInit {
         this.cargarIncidencias();
       },
       error: (err) => {
-        alert(err.error?.detail || 'Error al cambiar estado');
+        alert("No se puede volver a abrir una incidencia resuelta ");
         this.cargarIncidencias();
       }
     });

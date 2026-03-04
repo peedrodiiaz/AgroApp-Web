@@ -85,7 +85,6 @@
                 formControlName="trabajadorId"
                 class="form-select"
               >
-                <option [ngValue]="null">Yo mismo</option>
                 @for (trabajador of trabajadores; track trabajador.id) {
                   <option [ngValue]="trabajador.id">
                     {{ trabajador.nombre }} {{ trabajador.apellido }}

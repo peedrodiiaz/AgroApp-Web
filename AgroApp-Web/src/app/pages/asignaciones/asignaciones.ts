@@ -169,7 +169,7 @@ export class AsignacionesComponent implements OnInit {
           this.cargarAsignaciones();
         },
         error: (err) => {
-          alert(err.error?.detail || 'Error al eliminar asignación');
+          alert('Error al eliminar asignación');
         }
       });
     }
@@ -202,7 +202,7 @@ export class AsignacionesComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error:', error);
-        alert(error.error?.message || 'Error al guardar asignación');
+        alert("No se puedo crear la asignación porque ya esta reservada en esas fechas");
       }
     });
   }
