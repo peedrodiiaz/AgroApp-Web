@@ -60,6 +60,13 @@ export class AsignacionesComponent implements OnInit {
     return this.asignaciones.length;
   }
 
+  get hoy(): string {
+    const today = new Date();
+    return today.getFullYear() + '-' +
+      String(today.getMonth() + 1).padStart(2, '0') + '-' +
+      String(today.getDate()).padStart(2, '0');
+  }
+
   ngOnInit() {
     this.cargarAsignaciones();
     this.cargarTrabajadores();
@@ -121,7 +128,7 @@ export class AsignacionesComponent implements OnInit {
     this.esEdicion = false;
     this.asignacionEditando = null;
     this.nuevaAsignacionForm.reset({
-      fechaInicio: new Date().toISOString().split('T')[0]
+      fechaInicio: this.hoy
     });
   }
 
@@ -136,6 +143,12 @@ export class AsignacionesComponent implements OnInit {
     const hoy = new Date();
     const inicio = new Date(asignacion.fechaInicio);
     return inicio > hoy;
+  }
+
+  esFinalizada(asignacion: any): boolean {
+    const hoy = new Date();
+    const fin = new Date(asignacion.fechaFin);
+    return fin < hoy;
   }
 
 
@@ -202,7 +215,8 @@ export class AsignacionesComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error:', error);
-        alert("No se puedo crear la asignación porque ya esta reservada en esas fechas");
+        const mensaje = error?.error?.detail || 'Error al guardar la asignación. Revisa las fechas e inténtalo de nuevo.';
+        alert(mensaje);
       }
     });
   }
