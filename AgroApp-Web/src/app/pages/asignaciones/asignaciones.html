@@ -59,7 +59,7 @@
                 type="date"
                 formControlName="fechaInicio"
                 class="form-control"
-                [min]="hoy"
+                [min]="esEdicion ? '' : hoy"
                 [class.is-invalid]="f.fechaInicio.touched && f.fechaInicio.invalid"
               />
               @if (f.fechaInicio.touched && f.fechaInicio.invalid) {
@@ -73,7 +73,7 @@
                 type="date"
                 formControlName="fechaFin"
                 class="form-control"
-                [min]="hoy"
+                [min]="esEdicion ? '' : hoy"
                 [class.is-invalid]="f.fechaFin.touched && f.fechaFin.invalid"
               />
               @if (f.fechaFin.touched && f.fechaFin.invalid) {
@@ -209,8 +209,6 @@
                             class="btn btn-sm btn-outline-primary"
                             (click)="editarAsignacion(a, $event)"
                             title="Editar"
-                            [disabled]="esFinalizada(a)"
-                            [class.disabled]="esFinalizada(a)"
                           >
                             <i class="bi bi-pencil"></i>
                           </button>

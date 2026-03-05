@@ -34,13 +34,14 @@
               <th>Nombre</th>
               <th>Email</th>
               <th>Teléfono</th>
+              <th>Estado</th>
               <th style="width: 100px;">Acciones</th>
             </tr>
           </thead>
           <tbody>
             @if (isLoading) {
               <tr>
-                <td colspan="5" class="text-center py-4">
+                <td colspan="6" class="text-center py-4">
                   <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Cargando...</span>
                   </div>
@@ -48,7 +49,7 @@
               </tr>
             } @else if (trabajadoresFiltrados.length === 0) {
               <tr>
-                <td colspan="5" class="text-center py-4 text-muted">
+                <td colspan="6" class="text-center py-4 text-muted">
                   No se encontraron trabajadores
                 </td>
               </tr>
@@ -66,6 +67,13 @@
                   </td>
                   <td>{{ trabajador.email || 'N/A' }}</td>
                   <td>{{ trabajador.telefono || 'N/A' }}</td>
+                  <td>
+                    @if (trabajador.enabled) {
+                      <span class="badge bg-success">Activo</span>
+                    } @else {
+                      <span class="badge bg-secondary">Inactivo</span>
+                    }
+                  </td>
                   <td class="text-end position-relative">
                     <button
                       class="btn btn-link text-dark p-0"
@@ -84,8 +92,9 @@
                         <button class="dropdown-item-custom" (click)="editarTrabajador(trabajador); $event.stopPropagation()">
                           <i class="bi bi-pencil text-primary"></i> Editar
                         </button>
-                        <button class="dropdown-item-custom text-danger" (click)="eliminarTrabajador(trabajador); $event.stopPropagation()">
-                          <i class="bi bi-trash text-danger"></i> Eliminar
+                        <button class="dropdown-item-custom" [class.text-warning]="trabajador.enabled" [class.text-success]="!trabajador.enabled" (click)="eliminarTrabajador(trabajador); $event.stopPropagation()">
+                          <i class="bi" [class.bi-person-slash]="trabajador.enabled" [class.bi-person-check]="!trabajador.enabled"></i>
+                          {{ trabajador.enabled ? 'Desactivar' : 'Activar' }}
                         </button>
                       </div>
                     }

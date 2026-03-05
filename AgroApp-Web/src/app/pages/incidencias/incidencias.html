@@ -259,7 +259,7 @@
                     </tr>
                   }
                   @for (i of incidenciasFiltradas; track i.id) {
-                    <tr style="cursor: pointer" (click)="verIncidencia(i)">
+                    <tr style="cursor: pointer" (click)="verIncidencia(i.id)">
                       <td>
                         <div class="fw-semibold">{{ i.titulo }}</div>
                         <div class="text-secondary small">

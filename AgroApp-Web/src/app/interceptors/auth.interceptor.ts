@@ -14,7 +14,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     
     return next(reqHeader).pipe(
       catchError(error => {
-        // Si el error es 401, limpiar token y redirigir al login
         if (error.status === 401) {
           localStorage.removeItem('token');
           localStorage.removeItem('user');

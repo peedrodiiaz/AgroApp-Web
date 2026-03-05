@@ -160,6 +160,12 @@
             <form [formGroup]="nuevaMaquinaForm" (ngSubmit)="guardarMaquina()" novalidate>
               <div class="modal-body-custom">
 
+                @if (errorMessage) {
+                  <div class="alert alert-danger" role="alert">
+                    {{ errorMessage }}
+                  </div>
+                }
+
                 <!-- Nombre * -->
                 <div class="form-group-custom">
                   <label class="form-label-custom">

@@ -29,15 +29,15 @@
       <div class="card-body">
         <div class="d-flex align-items-center gap-3 mb-3">
           <span class="badge px-4 py-2" style="font-size: 1rem;"
-                [class.bg-danger]="incidencia.estado === 'Abierta'"
-                [class.bg-warning]="incidencia.estado === 'En progreso'"
-                [class.bg-success]="incidencia.estado === 'Resuelta'">
-            {{ incidencia.estado }}
+                [class.bg-danger]="incidencia.estadoIncidencia === 'ABIERTA'"
+                [class.bg-warning]="incidencia.estadoIncidencia === 'EN_PROGRESO'"
+                [class.bg-success]="incidencia.estadoIncidencia === 'RESUELTA'">
+            {{ incidencia.estadoIncidencia }}
           </span>
           <span class="badge px-3 py-2"
-                [class.bg-info]="incidencia.prioridad === 'Baja'"
-                [class.bg-warning]="incidencia.prioridad === 'Media'"
-                [class.bg-danger]="incidencia.prioridad === 'Alta'">
+                [class.bg-info]="incidencia.prioridad === 'BAJA'"
+                [class.bg-warning]="incidencia.prioridad === 'MEDIA'"
+                [class.bg-danger]="incidencia.prioridad === 'ALTA'">
             Prioridad: {{ incidencia.prioridad }}
           </span>
         </div>

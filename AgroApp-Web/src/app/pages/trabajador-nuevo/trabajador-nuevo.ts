@@ -57,7 +57,7 @@ export class TrabajadorNuevoComponent {
       error: (error) => {
         console.error('Error al crear trabajador:', error);
         this.isLoading = false;
-        this.errorMessage = error.error?.message || 'Error al crear el trabajador';
+        this.errorMessage = error.error?.detail || 'Error al crear el trabajador';
       }
     });
   }

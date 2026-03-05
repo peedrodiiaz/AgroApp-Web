@@ -91,10 +91,11 @@ export class TrabajadoresComponent implements OnInit {
   }
 
   eliminarTrabajador(trabajador: any) {
-    if (confirm(`¿Desactivar "${trabajador.nombre}"?`)) {
+    const accion = trabajador.enabled ? 'Desactivar' : 'Activar';
+    if (confirm(`¿${accion} a "${trabajador.nombre}"?`)) {
       this.trabajadorService.toggleActivacion(trabajador.id).subscribe({
         next: () => this.cargarTrabajadores(),
-        error: () => alert('Error al desactivar')
+        error: () => alert(`Error al ${accion.toLowerCase()} al trabajador`)
       });
     }
     this.menuAbierto = null;

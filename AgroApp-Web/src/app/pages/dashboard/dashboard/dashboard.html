@@ -167,36 +167,6 @@
         </div>
       </div>
 
-      <!-- Estadísticas de Máquinas por Tipo -->
-      <div class="col-lg-12">
-        <div class="card shadow-sm border-0">
-          <div class="card-header bg-white border-0 pt-3">
-            <h5 class="text-success fw-bold mb-0">
-              <i class="bi bi-tools"></i> Máquinas por Tipo
-            </h5>
-          </div>
-          <div class="card-body">
-            @if (getTipos().length === 0) {
-              <p class="text-muted text-center py-4">No hay datos disponibles</p>
-            }
-            @if (getTipos().length > 0) {
-              <div class="row g-3">
-                @for (tipo of getTipos(); track tipo) {
-                  <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card border">
-                      <div class="card-body text-center">
-                        <i class="bi bi-tools text-success display-4 mb-2"></i>
-                        <h4 class="fw-bold text-primary mb-1">{{ maquinasPorTipo[tipo] }}</h4>
-                        <p class="text-muted mb-0 text-capitalize">{{ tipo }}</p>
-                      </div>
-                    </div>
-                  </div>
-                }
-              </div>
-            }
-          </div>
-        </div>
-      </div>
     </div>
   }
 </div>

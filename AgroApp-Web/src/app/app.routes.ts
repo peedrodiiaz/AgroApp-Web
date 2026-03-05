@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login.page/login.pages';
+import { authGuard } from './guards/auth.guard';
 import { DashboardComponent } from './pages/dashboard/dashboard/dashboard';
 import { MaquinasComponent } from './pages/maquinas/maquinas';
 import { MaquinaDetalleComponent } from './pages/maquina-detalle/maquina-detalle';
@@ -25,6 +26,7 @@ export const routes: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',

@@ -31,7 +31,7 @@ export class MaquinaService {
   }
 
   update(id: number, data: UpdateMaquinaDto): Observable<Maquina> {
-    return this.http.put<Maquina>(`${ApiConfig.MAQUINAS}/${id}/estado`, data);
+    return this.http.put<Maquina>(`${ApiConfig.MAQUINAS}/${id}`, data);
   }
 
   cambiarEstado(id: number, estado: 'ACTIVA' | 'MANTENIMIENTO' | 'INACTIVA'): Observable<Maquina> {

@@ -22,6 +22,7 @@ export class MaquinasComponent implements OnInit {
   isLoading = false;
   searchTerm = '';
   maquinas: any[] = [];
+  errorMessage = '';
 
   form = new FormGroup({
     nombre: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -109,22 +110,27 @@ export class MaquinasComponent implements OnInit {
 
   abrirModal() {
     this.modalAbierto = true;
+    this.errorMessage = '';
     this.form.reset();
   }
 
   cerrarModal() {
     this.modalAbierto = false;
+    this.errorMessage = '';
     this.form.reset();
   }
 
   guardarMaquina() {
     if (this.form.invalid) return;
+    this.errorMessage = '';
     this.maquinaService.create(this.form.value as any).subscribe({
       next: () => {
         this.cargarMaquinas();
         this.cerrarModal();
       },
-      error: () => alert('Error al crear máquina')
+      error: (error) => {
+        this.errorMessage = error.error?.detail || 'Error al crear la máquina';
+      }
     });
   }
 }
