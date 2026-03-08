@@ -43,10 +43,10 @@
 
     <div class="row g-4">
 
-      <!-- Columna Izquierda - Información General -->
+      
       <div class="col-12 col-lg-7">
 
-        <!-- Card INFORMACIÓN GENERAL -->
+        
         <div class="card shadow-sm border-0 mb-4">
           <div class="card-header bg-white border-bottom py-3">
             <h5 class="mb-0 fw-bold">
@@ -83,7 +83,7 @@
           </div>
         </div>
 
-        <!-- Botones de Acción -->
+        
         <div class="d-flex gap-3">
           <button class="btn btn-success flex-fill py-2 shadow-sm" (click)="abrirModalEditar()">
             <i class="bi bi-pencil-square me-2"></i>Editar Información
@@ -96,6 +96,36 @@
       </div>
 
       <div class="col-12 col-lg-5">
+
+        
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-header bg-white border-bottom py-3">
+            <h5 class="mb-0 fw-bold">
+              <i class="bi bi-image text-primary me-2"></i>Imagen
+            </h5>
+          </div>
+          <div class="card-body p-4 text-center">
+            @if (imagenUrl) {
+              <img [src]="imagenUrl" alt="Imagen de la máquina"
+                   class="img-fluid rounded mb-3"
+                   style="max-height: 220px; object-fit: cover; width: 100%;">
+            } @else {
+              <div class="bg-light rounded d-flex align-items-center justify-content-center mb-3"
+                   style="height: 180px;">
+                <div class="text-muted text-center">
+                  <i class="bi bi-image fs-1 d-block mb-2"></i>
+                  <small>Sin imagen</small>
+                </div>
+              </div>
+            }
+            <label class="btn btn-outline-primary btn-sm w-100" [class.disabled]="uploadingImagen">
+              <i class="bi bi-upload me-1"></i>
+              @if (uploadingImagen) { Subiendo... } @else { Subir imagen }
+              <input type="file" accept="image/*" class="d-none"
+                     (change)="onImagenSelected($event)" [disabled]="uploadingImagen">
+            </label>
+          </div>
+        </div>
 
         <div class="card shadow-sm border-0">
           <div class="card-header bg-white border-bottom py-3">

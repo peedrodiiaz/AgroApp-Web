@@ -28,8 +28,22 @@
     <div class="card shadow-sm mb-4">
       <div class="card-body">
         <div class="d-flex align-items-center gap-4">
-          <div class="avatar-big bg-primary text-white d-flex align-items-center justify-content-center rounded-circle">
-            {{ getInitials(trabajador.nombre) }}
+          <div class="avatar-edit-wrapper">
+            @if (trabajador.fotoPerfil) {
+              <img class="avatar-big" [src]="getFotoUrl(trabajador.fotoPerfil)" [alt]="trabajador.nombre">
+            } @else {
+              <div class="avatar-big bg-primary text-white d-flex align-items-center justify-content-center rounded-circle">
+                {{ getInitials(trabajador.nombre) }}
+              </div>
+            }
+            <label class="avatar-upload-btn" [class.uploading]="uploadingFoto" title="Cambiar foto">
+              @if (uploadingFoto) {
+                <span class="spinner-border spinner-border-sm text-white"></span>
+              } @else {
+                <i class="bi bi-camera-fill"></i>
+              }
+              <input type="file" accept="image/*" style="display:none;" (change)="onFotoChange($event)" [disabled]="uploadingFoto">
+            </label>
           </div>
           <div class="flex-grow-1">
             <h2 class="fw-bold mb-2 page-title">

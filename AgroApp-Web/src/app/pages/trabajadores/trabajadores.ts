@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ApiConfig } from '../../config/api.config';
 
 @Component({
   selector: 'app-trabajadores',
@@ -107,6 +108,10 @@ export class TrabajadoresComponent implements OnInit {
       success => console.log('Navegación exitosa:', success),
       error => console.error('Error en navegación:', error)
     );
+  }
+
+  getFotoUrl(fotoPerfil: string): string {
+    return ApiConfig.imagenUrl(fotoPerfil) || '';
   }
 
   getInitials(nombre: string): string {

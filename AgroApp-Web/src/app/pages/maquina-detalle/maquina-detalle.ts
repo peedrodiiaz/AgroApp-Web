@@ -9,6 +9,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
 import { MaquinaService } from '../../services/maquina.service';
+import { ApiConfig } from '../../config/api.config';
 
 @Component({
   selector: 'app-maquina-detalle',
@@ -25,8 +26,14 @@ export class MaquinaDetalleComponent implements OnInit {
   maquinaId: number = 0;
   modalEditarAbierto: boolean = false;
   isLoading: boolean = false;
+  selectedImagenFile: File | null = null;
+  uploadingImagen = false;
 
   maquina: any = null;
+
+  get imagenUrl(): string | null {
+    return ApiConfig.imagenUrl(this.maquina?.imagen);
+  }
 
   editarMaquinaForm = new FormGroup({
     nombre: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -160,5 +167,30 @@ export class MaquinaDetalleComponent implements OnInit {
 
   volverListado() {
     this.router.navigate(['/maquinas']);
+  }
+
+  onImagenSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedImagenFile = input.files[0];
+      this.uploadImagen();
+    }
+  }
+
+  uploadImagen() {
+    if (!this.selectedImagenFile) return;
+    this.uploadingImagen = true;
+    this.maquinaService.uploadImagen(this.maquinaId, this.selectedImagenFile).subscribe({
+      next: (response: any) => {
+        this.maquina = response;
+        this.uploadingImagen = false;
+        this.selectedImagenFile = null;
+      },
+      error: (error: any) => {
+        console.error('Error al subir imagen:', error);
+        this.uploadingImagen = false;
+        alert('Error al subir la imagen');
+      }
+    });
   }
 }

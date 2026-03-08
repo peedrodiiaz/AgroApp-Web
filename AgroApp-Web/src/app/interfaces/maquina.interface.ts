@@ -5,6 +5,7 @@ export interface Maquina {
   numSerie: string;
   fechaCompra: string;
   estado: 'ACTIVA' | 'MANTENIMIENTO' | 'INACTIVA';
+  imagen?: string;
 }
 
 export interface CreateMaquinaRequest {

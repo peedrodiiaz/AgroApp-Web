@@ -8,6 +8,7 @@ export interface Trabajador {
   rol: string;
   fechaAlta: string;
   enabled?: boolean;
+  fotoPerfil?: string;
 }
 
 export interface CreateTrabajadorRequest {

@@ -35,4 +35,16 @@ export class TrabajadorService {
   toggleActivacion(id: number): Observable<Trabajador> {
     return this.http.patch<Trabajador>(`${ApiConfig.TRABAJADORES}/${id}/activacion`, {});
   }
+
+  uploadFotoMe(file: File): Observable<Trabajador> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.put<Trabajador>(`${ApiConfig.TRABAJADORES}/me/foto`, formData);
+  }
+
+  uploadFoto(id: number, file: File): Observable<Trabajador> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.put<Trabajador>(`${ApiConfig.TRABAJADORES}/${id}/foto`, formData);
+  }
 }

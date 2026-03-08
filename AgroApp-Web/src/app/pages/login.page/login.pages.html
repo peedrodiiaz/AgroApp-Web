@@ -7,7 +7,7 @@
                 <p class="login-subtitle">Ingrese sus detalles</p>
 
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                    <!-- Mensaje de error general -->
+                    
                     @if (errorMessage) {
                         <div class="alert-error">
                             {{ errorMessage }}

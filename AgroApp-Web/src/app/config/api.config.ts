@@ -15,4 +15,10 @@ export class ApiConfig {
   static readonly MAQUINAS = `${ApiConfig.BASE_URL}/maquinas`;
   static readonly INCIDENCIAS = `${ApiConfig.BASE_URL}/incidencias`;
   static readonly ASIGNACIONES = `${ApiConfig.BASE_URL}/asignaciones`;
+  static readonly FICHEROS = `${ApiConfig.BASE_URL}/ficheros`;
+
+  static imagenUrl(filename: string | null | undefined): string | null {
+    if (!filename) return null;
+    return `${ApiConfig.FICHEROS}/${filename}`;
+  }
 }

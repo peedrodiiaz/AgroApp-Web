@@ -1,6 +1,3 @@
-/* =========================================
-   Dashboard Wrapper
-   ========================================= */
 .dashboard-wrapper {
   padding: 0.25rem 0 1.5rem;
 }
@@ -13,9 +10,6 @@
   gap: 1rem;
 }
 
-/* =========================================
-   KPI Cards
-   ========================================= */
 .kpi-card {
   border-radius: 16px;
   padding: 1.25rem;
@@ -99,9 +93,6 @@
   color: white;
 }
 
-/* =========================================
-   Cards
-   ========================================= */
 .card {
   border-radius: 14px !important;
 }
@@ -113,9 +104,6 @@
   background: white;
 }
 
-/* =========================================
-   Incidencia Badges
-   ========================================= */
 .badge-abierta  { background-color: #dc3545; color: white; }
 .badge-progreso { background-color: #fd7e14; color: white; }
 .badge-resuelta { background-color: #198754; color: white; }
@@ -124,9 +112,6 @@
 .badge-media { background-color: #ffc107; color: #212529; }
 .badge-baja  { background-color: #0dcaf0; color: #212529; }
 
-/* =========================================
-   Status Dots
-   ========================================= */
 .status-dot {
   display: inline-block;
   width: 9px;
@@ -139,9 +124,6 @@
 .dot-yellow { background-color: #f59e0b; }
 .dot-red    { background-color: #ef4444; }
 
-/* =========================================
-   Assignment Cards
-   ========================================= */
 .asig-card {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
@@ -182,4 +164,3 @@
   padding-top: 0.5rem;
   border-top: 1px solid #e2e8f0;
 }
-

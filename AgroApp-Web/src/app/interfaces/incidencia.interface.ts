@@ -6,11 +6,14 @@ export interface Incidencia {
   titulo: string;
   descripcion: string;
   estado: 'ABIERTA' | 'EN_PROGRESO' | 'RESUELTA';
+  estadoIncidencia?: 'ABIERTA' | 'EN_PROGRESO' | 'RESUELTA';
   prioridad: 'BAJA' | 'MEDIA' | 'ALTA';
   fechaApertura: string;
   fechaCierre?: string;
   maquina: Maquina;
   trabajador: Trabajador;
+  latitud?: number;
+  longitud?: number;
 }
 
 export interface CreateIncidenciaRequest {
@@ -20,6 +23,8 @@ export interface CreateIncidenciaRequest {
   maquinaId: number;
   trabajadorId: number;
   prioridad: 'BAJA' | 'MEDIA' | 'ALTA';
+  latitud?: number;
+  longitud?: number;
 }
 
 export interface UpdateIncidenciaRequest {

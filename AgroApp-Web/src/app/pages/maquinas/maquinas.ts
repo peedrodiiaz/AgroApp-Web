@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormsModule } 
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MaquinaService } from '../../services/maquina.service';
+import { ApiConfig } from '../../config/api.config';
 
 @Component({
   selector: 'app-maquinas',
@@ -23,6 +24,10 @@ export class MaquinasComponent implements OnInit {
   searchTerm = '';
   maquinas: any[] = [];
   errorMessage = '';
+
+  imagenUrl(filename: string | null | undefined): string | null {
+    return ApiConfig.imagenUrl(filename);
+  }
 
   form = new FormGroup({
     nombre: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -134,4 +139,3 @@ export class MaquinasComponent implements OnInit {
     });
   }
 }
-

@@ -4,7 +4,6 @@ import { SidebarComponent } from '../sidebar/sidebar';
 import { TopbarComponent } from '../topbar/topbar';
 import { RouterOutlet } from '@angular/router';
 
-
 @Component({
   selector: 'app-admin-layout',
   standalone: true,

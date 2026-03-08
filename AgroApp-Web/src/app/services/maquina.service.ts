@@ -46,4 +46,10 @@ export class MaquinaService {
   getStats(): Observable<MaquinaStatsDto> {
     return this.http.get<MaquinaStatsDto>(`${ApiConfig.MAQUINAS}/stats`);
   }
+
+  uploadImagen(id: number, file: File): Observable<Maquina> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.put<Maquina>(`${ApiConfig.MAQUINAS}/${id}/imagen`, formData);
+  }
 }

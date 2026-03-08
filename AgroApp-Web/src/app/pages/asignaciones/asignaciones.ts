@@ -151,7 +151,6 @@ export class AsignacionesComponent implements OnInit {
     return fin < hoy;
   }
 
-
   cerrarModal() {
     this.modalAbierto = false;
     this.esEdicion = false;

@@ -134,7 +134,6 @@ export class IncidenciasComponent implements OnInit {
     );
   }
 
-
   cambiarEstadoIncidencia(id: number, nuevoEstado: string) {
     const incidenciaActual = this.incidencias.find(i => i.id === id);
 
@@ -160,10 +159,6 @@ export class IncidenciasComponent implements OnInit {
     });
   }
 
-
-
-
-
   cambiarEstado(estado: string) {
     this.estadoActivo = estado;
   }
@@ -171,9 +166,6 @@ export class IncidenciasComponent implements OnInit {
   verIncidencia(id: number) {
     this.router.navigate(['/incidencias', id]);
   }
-
-
-
 
   abrirModal() {
     this.modalAbierto = true;
@@ -264,7 +256,5 @@ export class IncidenciasComponent implements OnInit {
       }
     });
   }
-
-
 
 }

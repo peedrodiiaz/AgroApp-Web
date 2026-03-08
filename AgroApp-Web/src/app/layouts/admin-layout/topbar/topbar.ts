@@ -41,7 +41,7 @@ export class TopbarComponent implements OnInit {
   }
 
   toggleSidebar() {
-    console.log('BOTÓN HAMBURGUESA CLICKEADO'); // Debug
+    console.log('BOTÓN HAMBURGUESA CLICKEADO');
     this.toggleSidebarEvent.emit();
   }
 }

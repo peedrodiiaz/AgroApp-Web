@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TrabajadorService } from '../../services/trabajador.service';
+import { ApiConfig } from '../../config/api.config';
 
 @Component({
   selector: 'app-trabajador-detalle',
@@ -19,6 +20,7 @@ export class TrabajadorDetalleComponent implements OnInit {
   trabajadorId: number = 0;
   trabajador: any = null;
   isLoading: boolean = false;
+  uploadingFoto: boolean = false;
 
   constructor() { }
 
@@ -70,6 +72,30 @@ export class TrabajadorDetalleComponent implements OnInit {
         }
       });
     }
+  }
+
+  getFotoUrl(fotoPerfil: string): string {
+    return ApiConfig.imagenUrl(fotoPerfil) || '';
+  }
+
+  onFotoChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+    const file = input.files[0];
+    this.uploadingFoto = true;
+    this.trabajadorService.uploadFoto(this.trabajadorId, file).subscribe({
+      next: (updated) => {
+        this.trabajador = { ...this.trabajador, fotoPerfil: updated.fotoPerfil };
+        this.uploadingFoto = false;
+        input.value = '';
+      },
+      error: (err) => {
+        console.error('Error al subir foto:', err);
+        alert('Error al subir la foto');
+        this.uploadingFoto = false;
+        input.value = '';
+      }
+    });
   }
 
   getInitials(nombre: string): string {

@@ -200,7 +200,6 @@ tbody tr {
   overflow-y: auto;
 }
 
-/* Scrollbar personalizado */
 .modal-body-custom::-webkit-scrollbar {
   width: 8px;
 }
@@ -307,7 +306,6 @@ tbody tr {
   transform: translateY(0);
 }
 
-/* Responsive */
 @media (max-width: 576px) {
   .modal-content {
     width: 95%;
@@ -326,7 +324,7 @@ tbody tr {
   }
 
   .form-control-custom {
-    font-size: 16px; /* Evita zoom en iOS */
+    font-size: 16px; 
   }
 
   .modal-footer-custom {
@@ -361,4 +359,3 @@ tbody tr {
   border-color: #dc3545 !important;
   background-color: #fff5f5 !important;
 }
-

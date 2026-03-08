@@ -26,17 +26,13 @@ export class AsignacionService {
     return this.http.get<Asignacion[]>(`${ApiConfig.ASIGNACIONES}/trabajador/${trabajadorId}`);
   }
 
-
   getByMaquina(maquinaId: number): Observable<Asignacion[]> {
     return this.http.get<Asignacion[]>(`${ApiConfig.ASIGNACIONES}/maquina/${maquinaId}`);
   }
 
-
-
   getActivas(): Observable<Asignacion[]> {
     return this.http.get<Asignacion[]>(`${ApiConfig.ASIGNACIONES}/activas`);
   }
-
 
   getMisAsignaciones(): Observable<Asignacion[]> {
     return this.http.get<Asignacion[]>(`${ApiConfig.ASIGNACIONES}/mis-asignaciones`);

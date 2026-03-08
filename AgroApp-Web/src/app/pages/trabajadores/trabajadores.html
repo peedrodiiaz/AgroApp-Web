@@ -61,7 +61,11 @@
                   </td>
                   <td>
                     <div class="d-flex align-items-center gap-2">
-                      <div class="avatar-small">{{ getInitials(trabajador.nombre) }}</div>
+                      @if (trabajador.fotoPerfil) {
+                        <img class="avatar-small" [src]="getFotoUrl(trabajador.fotoPerfil)" [alt]="trabajador.nombre">
+                      } @else {
+                        <div class="avatar-small">{{ getInitials(trabajador.nombre) }}</div>
+                      }
                       <span class="fw-semibold">{{ trabajador.nombre }}</span>
                     </div>
                   </td>
